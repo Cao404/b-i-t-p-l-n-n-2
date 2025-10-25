@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bảng sản phẩm</title>
-  <link rel="stylesheet" href="product.css" />
+  <title>Danh sách Sản phẩm - Larkon</title>
+  <link rel="stylesheet" href="./css/product.css" />
+  <script src="./js/auth-guard.js"></script>
 </head>
 <body>
 <div class="layout">
@@ -13,32 +14,61 @@
   <aside class="sidebar">
     <div class="brand">
       <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="#f9a44d" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="#f9a44d" stroke-width="1.5"/></svg>
-      <span>Larkon</span>
+      <span class="brand-text">Larkon</span>
+      <div class="toggle-btn" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </div>
     </div>
 
     <nav class="nav">
-      <h6>GENERAL</h6>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l9-8 9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8z" stroke="currentColor"/></svg><span>Dashboard</span></a>
-      <a class="active" href="#"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor"/><path d="M3 9h18" stroke="currentColor"/></svg><span>Products</span></a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor"/><path d="M8 12h8" stroke="currentColor"/></svg><span>Category</span></a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="6" width="16" height="12" rx="2" stroke="currentColor"/><path d="M4 10h16" stroke="currentColor"/></svg><span>Orders</span></a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l9-8 9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8z" stroke="currentColor"/></svg><span>Dashboard</span></a>
-      <a class="active" href="#"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor"/><path d="M3 9h18" stroke="currentColor"/></svg><span>Products</span></a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor"/><path d="M8 12h8" stroke="currentColor"/></svg><span>Category</span></a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="6" width="16" height="12" rx="2" stroke="currentColor"/><path d="M4 10h16" stroke="currentColor"/></svg><span>Orders</span></a>
+      <h6>TỔNG HỢP</h6>
+      <a href="dashboard.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l9-8 9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8z" stroke="currentColor"/></svg><span>Bảng điều khiển</span></a>
       
-      <h6>USERS</h6>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor"/><path d="M4 20c2-4 6-4 8-4s6 0 8 4" stroke="currentColor"/></svg><span>Profile</span></a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor"/></svg><span>Permissions</span></a>
+      <div class="nav-item open">
+        <a onclick="toggleSubmenu(this)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span>Sản phẩm</span>
+          </div>
+          <svg class="nav-toggle" viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="m18 15-6-6-6 6" stroke="currentColor" stroke-width="2"/></svg>
+        </a>
+        <div class="submenu">
+          <a href="product-list.html" class="active">Danh sách</a>
+          <a href="product-grid.html">Lưới</a>
+          <a href="product-details.html">Chi tiết</a>
+          <a href="product-edit.html">Sửa đổi</a>
+          <a href="product-create.html">Tạo</a>
+        </div>
+      </div>
+      
+      <h6>DANH MỤC</h6>
+      <a href="category-list.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor"/></svg><span>Danh sách</span></a>
+      <a href="category-edit.html"><svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor"/></svg><span>Sửa đổi</span></a>
+      <a href="category-add.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v16m8-8H4" stroke="currentColor"/></svg><span>Tạo</span></a>
+      
+      <h6>HÀNG TỒN KHO</h6>
+      <a href="inventory-warehouse.html"><svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor"/></svg><span>Kho hàng</span></a>
+      <a href="inventory-received-orders.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.5 6M17 13l2.5 6M9.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM17.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" stroke="currentColor"/></svg><span>Đã nhận được đơn đặt hàng</span></a>
+      
+      <h6>NGƯỜI DÙNG</h6>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor"/><path d="M4 20c2-4 6-4 8-4s6 0 8 4" stroke="currentColor"/></svg><span>Hồ sơ</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor"/></svg><span>Vai trò</span></a>
     </nav>
 
     <div class="grow"></div>
 
     <div class="user">
       <div class="avatar"></div>
-      <div>
-        <div style="font-weight:700">Cao</div>
+      <div style="flex:1">
+        <div style="font-weight:700">Admin</div>
         <div class="sub">Quản trị viên</div>
+      </div>
+      <div class="icon-btn" onclick="logout()" title="Đăng xuất" style="width:32px;height:32px;margin-left:4px">
+        <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2"/>
+        </svg>
       </div>
     </div>
   </aside>
@@ -48,117 +78,372 @@
 
     <!-- TOPBAR -->
     <div class="topbar">
-      <div class="title">PRODUCT LIST</div>
+      <div class="title">DANH SÁCH SẢN PHẨM</div>
       <div class="actions">
         <div class="icon-btn" title="Chế độ tối">
           <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M21 12a9 9 0 1 1-8-8 7 7 0 0 0 8 8z" stroke="#b9c7e5"/></svg>
         </div>
         <div class="icon-btn" title="Thông báo">
-          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M15 17h5l-1-2v-4a7 7 0 0 0-14 0v4l-1 2h5m6 0a3 3 0 0 1-6 0" stroke="#b9c7e5"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" stroke="#b9c7e5"/></svg>
         </div>
-        <label class="search">
-          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><circle cx="11" cy="11" r="7" stroke="#7f95bd"/><path d="M21 21l-3.5-3.5" stroke="#7f95bd"/></svg>
-          <input placeholder="Tìm kiếm..." />
-        </label>
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="11" cy="11" r="8" stroke="#7a8fb0"/><path d="m21 21-4.35-4.35" stroke="#7a8fb0"/></svg>
+          <input type="text" placeholder="Tìm kiếm..." id="searchInput" />
+        </div>
       </div>
     </div>
 
     <!-- CONTENT -->
     <div class="content">
+      
       <div class="card">
         <div class="card-header">
-          <div>Tất cả sản phẩm</div>
-          <button class="btn">+ Thêm sản phẩm</button>
+          <div style="font-weight:700;font-size:16px">Tất cả Danh sách sản phẩm</div>
+          <div style="display:flex;gap:10px">
+            <button class="btn" onclick="window.location.href='product-create.html'">Thêm sản phẩm</button>
+            <select style="background:var(--panel);border:1px solid var(--line);color:var(--text);padding:8px 12px;border-radius:8px">
+              <option>Tháng Này</option>
+              <option>Tuần Này</option>
+              <option>Hôm Nay</option>
+            </select>
+          </div>
         </div>
 
-        <div style="overflow:auto">
           <table class="table">
             <thead>
               <tr>
-                <th class="chk"><input type="checkbox"></th>
-                <th>Sản phẩm & kích cỡ</th>
-                <th class="opt-hide">Giá</th>
-                <th>Tồn kho</th>
-                <th class="opt-hide">Danh mục</th>
+              <th style="width:32px"><input type="checkbox" id="selectAll" /></th>
+              <th>Tên sản phẩm & Kích thước</th>
+              <th>Giá</th>
+              <th>Cỡ phiếu</th>
+              <th>Danh mục</th>
                 <th>Đánh giá</th>
-                <th>Thao tác</th>
+              <th>Hành động</th>
               </tr>
             </thead>
-            <tbody>
-              <!-- Hàng mẫu 1 -->
-              <tr>
-                <td class="chk"><input type="checkbox"></td>
-                <td>
-                  <div class="product">
-                    <div class="thumb"><img src="https://picsum.photos/seed/t1/80/80" alt=""></div>
-                    <div>
-                      <div class="name">Áo thun đen</div>
-                      <div class="sub">Size: S, M, L, XL</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="price opt-hide">$80.00</td>
-                <td class="stock"><div>486 sản phẩm</div><div class="sub">155 đã bán</div></td>
-                <td class="opt-hide"><span class="tag">Thời trang</span></td>
-                <td>
-                  <div class="rating">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="color:#fbbf24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                    4.5 <span class="sub">· 55 đánh giá</span>
-                  </div>
-                </td>
-                <td>
-                  <div class="act">
-                    <div class="pill view" title="Xem">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" stroke="currentColor"/><circle cx="12" cy="12" r="3" stroke="currentColor"/></svg>
-                    </div>
-                    <div class="pill edit" title="Sửa">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z" stroke="currentColor"/></svg>
-                    </div>
-                    <div class="pill del" title="Xóa">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M6 7h12M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-9 0 1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12" stroke="currentColor"/></svg>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- Hàng mẫu 2 -->
-              <tr>
-                <td class="chk"><input type="checkbox"></td>
-                <td>
-                  <div class="product">
-                    <div class="thumb"><img src="https://picsum.photos/seed/bag/80/80" alt=""></div>
-                    <div>
-                      <div class="name">Túi da xanh olive</div>
-                      <div class="sub">Size: S, M</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="price opt-hide">$136.00</td>
-                <td class="stock"><div>784 sản phẩm</div><div class="sub">674 đã bán</div></td>
-                <td class="opt-hide"><span class="tag">Túi xách</span></td>
-                <td>
-                  <div class="rating">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="color:#fbbf24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                    4.1 <span class="sub">· 143 đánh giá</span>
-                  </div>
-                </td>
-                <td>
-                  <div class="act">
-                    <div class="pill view"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" stroke="currentColor"/><circle cx="12" cy="12" r="3" stroke="currentColor"/></svg></div>
-                    <div class="pill edit"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z" stroke="currentColor"/></svg></div>
-                    <div class="pill del"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M6 7h12M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-9 0 1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12" stroke="currentColor"/></svg></div>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- Thêm các hàng khác tương tự -->
+          <tbody id="productTableBody">
+            <!-- Products will be rendered here by JavaScript -->
             </tbody>
           </table>
+
+        <!-- Pagination -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px;border-top:1px solid var(--line)">
+          <div style="color:var(--muted);font-size:13px" id="pageInfo">Hiển thị 1-10 trong 50 kết quả</div>
+          <div style="display:flex;gap:6px" id="pagination">
+            <!-- Pagination buttons will be rendered here -->
+          </div>
         </div>
       </div>
+
+      <!-- Footer -->
+      <div style="text-align:center;padding:24px 0;color:var(--muted);font-size:13px">
+        2025 © Larkon. Được chế tạo bởi <span style="color:var(--accent);font-weight:600">Cao, Trần Huy và Đào Huy</span>
+      </div>
+
     </div>
 
   </section>
+
 </div>
+
+<script>
+  // Product data
+    const products = [
+    {
+      id: 1,
+      name: 'Áo thun đen',
+      sizes: 'S, M, L, Xl',
+      price: 80.00,
+      stock: 466,
+      category: 'Thời trang',
+      rating: 4.5,
+      reviews: 55,
+      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100'
+    },
+    {
+      id: 2,
+      name: 'Túi da màu xanh ổ liu',
+      sizes: 'S, M',
+      price: 136.00,
+      stock: 784,
+      category: 'Túi xách tay',
+      rating: 4.1,
+      reviews: 143,
+      image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=100'
+    },
+    {
+      id: 3,
+      name: 'Phụ nữ vàng Dress',
+      sizes: 'S, M',
+      price: 219.00,
+      stock: 769,
+      category: 'Thời trang',
+      rating: 4.4,
+      reviews: 174,
+      image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=100'
+    },
+    {
+      id: 4,
+      name: 'Mũ Xám Cho Nam',
+      sizes: 'S, M, L',
+      price: 76.00,
+      stock: 571,
+      category: 'Mũ lưỡi trai',
+      rating: 4.2,
+      reviews: 23,
+      image: 'https://images.unsplash.com/photo-1588099768523-f4e6a5679d88?w=100'
+    },
+    {
+      id: 5,
+      name: 'Pent chờ hàng màu xanh đậm',
+      sizes: 'S, M, L, Xl',
+      price: 110.00,
+      stock: 241,
+      category: 'Thời trang',
+      rating: 4.4,
+      reviews: 109,
+      image: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=100'
+    },
+    {
+      id: 6,
+      name: 'Tai nghe đa màu cam',
+      sizes: 'S, M',
+      price: 231.00,
+      stock: 821,
+      category: 'Điện tử',
+      rating: 4.2,
+      reviews: 200,
+      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100'
+    },
+    {
+      id: 7,
+      name: "Giày Kid's Yellow",
+      sizes: '18, 19, 20, 21',
+      price: 89.00,
+      stock: 321,
+      category: 'Giày',
+      rating: 4.5,
+      reviews: 321,
+      image: 'https://images.unsplash.com/photo-1514989940723-e8e51635b782?w=100'
+    },
+    {
+      id: 8,
+      name: 'Ví Nam Màu Nâu Đen',
+      sizes: 'S, M',
+      price: 132.00,
+      stock: 190,
+      category: 'Ví',
+      rating: 4.1,
+      reviews: 190,
+      image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=100'
+    },
+    {
+      id: 9,
+      name: 'Kính rầm Sky Blue',
+      sizes: 'S, M',
+      price: 77.00,
+      stock: 784,
+      category: 'Kính rầm',
+      rating: 3.5,
+      reviews: 298,
+      image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=100'
+    },
+    {
+      id: 10,
+      name: 'Áo thun màu vàng của trẻ em',
+      sizes: 'S',
+      price: 110.00,
+      stock: 650,
+      category: 'Thời trang',
+      rating: 4.1,
+      reviews: 156,
+      image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=100'
+    },
+    {
+      id: 11,
+      name: 'Đồng hồ thông minh White Rubber Band',
+      sizes: 'S, M',
+      price: 77.00,
+      stock: 98,
+      category: 'Điện tử',
+      rating: 3.4,
+      reviews: 201,
+      image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100'
+    },
+    {
+      id: 12,
+      name: 'Giày da nam màu nâu',
+      sizes: '40, 41, 42, 43',
+      price: 222.00,
+      stock: 176,
+      category: 'Giày',
+      rating: 4.1,
+      reviews: 370,
+      image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=100'
+    }
+  ];
+
+  let currentPage = 1;
+  const itemsPerPage = 10;
+  let filteredProducts = [...products];
+
+  // Render products
+  function renderProducts() {
+    const tbody = document.getElementById('productTableBody');
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageProducts = filteredProducts.slice(start, end);
+    
+    tbody.innerHTML = pageProducts.map(product => `
+      <tr>
+        <td class="chk"><input type="checkbox" /></td>
+          <td>
+            <div class="product">
+            <div class="thumb">
+              <img src="${product.image}" alt="${product.name}" />
+            </div>
+              <div>
+              <div class="name">${product.name}</div>
+              <div class="sub">Kích thước: ${product.sizes}</div>
+            </div>
+          </div>
+        </td>
+        <td class="price">$${product.price.toFixed(2)}</td>
+        <td>
+          <div>${product.stock} Mục Trái</div>
+          <div class="sub">${Math.floor(product.stock / 10)} Đã bán</div>
+          </td>
+        <td>${product.category}</td>
+        <td>
+          <div class="rating">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="color:#fbbf24">
+              <polygon points="12 2 15 8 22 9 17 14 18 21 12 18 6 21 7 14 2 9 9 8"/>
+            </svg>
+            ${product.rating}
+            </div>
+          <div class="sub">${product.reviews} Đánh giá</div>
+          </td>
+          <td>
+          <div class="act">
+            <div class="pill view" title="Xem" onclick="window.location.href='product-details.html'">
+              <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+                <circle cx="12" cy="12" r="3" stroke="currentColor"/>
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="currentColor"/>
+              </svg>
+            </div>
+            <div class="pill edit" title="Sửa" onclick="window.location.href='product-edit.html'">
+              <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor"/>
+                <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor"/>
+              </svg>
+            </div>
+            <div class="pill del" title="Xóa" onclick="deleteProduct(${product.id})">
+              <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+                <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z" stroke="currentColor"/>
+              </svg>
+            </div>
+            </div>
+          </td>
+      </tr>
+    `).join('');
+    
+    renderPagination();
+    updatePageInfo();
+  }
+
+  // Render pagination
+  function renderPagination() {
+    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+    const pagination = document.getElementById('pagination');
+    
+    let html = `
+      <button style="padding:6px 12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--muted);cursor:pointer" 
+        onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Trước đó</button>
+    `;
+    
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === currentPage) {
+        html += `<button style="padding:6px 12px;background:var(--accent);border:1px solid var(--accent);border-radius:6px;color:#2b1606;font-weight:700;cursor:pointer">${i}</button>`;
+      } else if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+        html += `<button style="padding:6px 12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--text);cursor:pointer" 
+          onclick="changePage(${i})">${i}</button>`;
+      } else if (i === currentPage - 2 || i === currentPage + 2) {
+        html += `<span style="padding:6px 8px;color:var(--muted)">...</span>`;
+      }
+    }
+    
+    html += `
+      <button style="padding:6px 12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--text);cursor:pointer" 
+        onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Tiếp theo</button>
+    `;
+    
+    pagination.innerHTML = html;
+  }
+
+  // Change page
+  function changePage(page) {
+    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+    if (page < 1 || page > totalPages) return;
+    currentPage = page;
+    renderProducts();
+  }
+
+  // Update page info
+  function updatePageInfo() {
+    const start = (currentPage - 1) * itemsPerPage + 1;
+    const end = Math.min(currentPage * itemsPerPage, filteredProducts.length);
+    const total = filteredProducts.length;
+    document.getElementById('pageInfo').textContent = `Hiển thị ${start}-${end} trong ${total} kết quả`;
+  }
+
+  // Search products
+  document.getElementById('searchInput').addEventListener('input', function(e) {
+    const query = e.target.value.toLowerCase();
+    filteredProducts = products.filter(p => 
+      p.name.toLowerCase().includes(query) || 
+      p.category.toLowerCase().includes(query)
+    );
+    currentPage = 1;
+    renderProducts();
+  });
+
+  // Select all
+  document.getElementById('selectAll').addEventListener('change', function() {
+    const checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+    checkboxes.forEach(cb => cb.checked = this.checked);
+  });
+
+  // Delete product
+  function deleteProduct(id) {
+    if (confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
+      const index = products.findIndex(p => p.id === id);
+      if (index > -1) {
+        products.splice(index, 1);
+        filteredProducts = [...products];
+        renderProducts();
+      }
+    }
+  }
+
+  // Toggle sidebar
+  function toggleSidebar() {
+    document.querySelector('.layout').classList.toggle('collapsed');
+    localStorage.setItem('sidebarCollapsed', document.querySelector('.layout').classList.contains('collapsed'));
+  }
+
+  // Restore sidebar state
+  if (localStorage.getItem('sidebarCollapsed') === 'true') {
+    document.querySelector('.layout').classList.add('collapsed');
+  }
+
+  // Toggle submenu
+  function toggleSubmenu(element) {
+    const navItem = element.parentElement;
+    navItem.classList.toggle('open');
+  }
+
+  // Initial render
+  renderProducts();
+</script>
 </body>
 </html>

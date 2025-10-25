@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Danh sách Kho - Larkon</title>
+  <link rel="stylesheet" href="./css/product.css" />
+  <script src="./js/auth-guard.js"></script>
+  <style>
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .stat-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,.4);
+    }
+    
+    .stat-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    
+    .stat-icon svg {
+      width: 28px;
+      height: 28px;
+      color: var(--accent);
+    }
+    
+    .stat-info {
+      flex: 1;
+    }
+    
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    
+    .stat-label {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    
+    .stat-change {
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    
+    .stat-change.up {
+      color: #10b981;
+    }
+    
+    .stat-change.down {
+      color: #ef4444;
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="#f9a44d" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="#f9a44d" stroke-width="1.5"/></svg>
+      <span class="brand-text">Larkon</span>
+      <div class="toggle-btn" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <h6>TỔNG HỢP</h6>
+      <a href="dashboard.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l9-8 9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8z" stroke="currentColor"/></svg><span>Bảng điều khiển</span></a>
+      
+      <div class="nav-item">
+        <a onclick="toggleSubmenu(this)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span>Sản phẩm</span>
+          </div>
+          <svg class="nav-toggle" viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="m18 15-6-6-6 6" stroke="currentColor" stroke-width="2"/></svg>
+        </a>
+        <div class="submenu">
+          <a href="product-list.html">Danh sách</a>
+          <a href="product-grid.html">Lưới</a>
+          <a href="product-details.html">Chi tiết</a>
+          <a href="product-edit.html">Sửa đổi</a>
+          <a href="product-create.html">Tạo</a>
+        </div>
+      </div>
+      
+      <h6>DANH MỤC</h6>
+      <a href="category-list.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor"/></svg><span>Danh sách</span></a>
+      <a href="category-edit.html"><svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor"/></svg><span>Sửa đổi</span></a>
+      <a href="category-add.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v16m8-8H4" stroke="currentColor"/></svg><span>Tạo</span></a>
+      
+      <h6>HÀNG TỒN KHO</h6>
+      <a href="inventory-warehouse.html" class="active"><svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor"/></svg><span>Kho hàng</span></a>
+      <a href="inventory-received-orders.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.5 6M17 13l2.5 6M9.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM17.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" stroke="currentColor"/></svg><span>Đã nhận được đơn đặt hàng</span></a>
+      
+      <h6>NGƯỜI DÙNG</h6>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor"/><path d="M4 20c2-4 6-4 8-4s6 0 8 4" stroke="currentColor"/></svg><span>Hồ sơ</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor"/></svg><span>Vai trò</span></a>
+    </nav>
+
+    <div class="grow"></div>
+
+    <div class="user">
+      <div class="avatar"></div>
+      <div style="flex:1">
+        <div style="font-weight:700">Admin</div>
+        <div class="sub">Quản trị viên</div>
+      </div>
+      <div class="icon-btn" onclick="logout()" title="Đăng xuất" style="width:32px;height:32px;margin-left:4px">
+        <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <section class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="title">DANH SÁCH KHO</div>
+      <div class="actions">
+        <div class="icon-btn" title="Chế độ tối">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M21 12a9 9 0 1 1-8-8 7 7 0 0 0 8 8z" stroke="#b9c7e5"/></svg>
+        </div>
+        <div class="icon-btn" title="Thông báo">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" stroke="#b9c7e5"/></svg>
+        </div>
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="11" cy="11" r="8" stroke="#7a8fb0"/><path d="m21 21-4.35-4.35" stroke="#7a8fb0"/></svg>
+          <input type="text" placeholder="Search..." />
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+      
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: linear-gradient(135deg, rgba(255, 143, 61, 0.1), rgba(255, 143, 61, 0.05));">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">3521</div>
+            <div class="stat-label">(Vật phẩm)</div>
+            <div class="stat-label">Tổng số mặt hàng sản phẩm</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: linear-gradient(135deg, rgba(255, 143, 61, 0.1), rgba(255, 143, 61, 0.05));">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="3" y="3" width="18" height="18" rx="2" stroke-width="2"/>
+              <path d="M3 9h18M9 3v18" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">1311</div>
+            <div class="stat-label">(Vật phẩm)</div>
+            <div class="stat-label">Trong kho Sản phẩm</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: linear-gradient(135deg, rgba(255, 143, 61, 0.1), rgba(255, 143, 61, 0.05));">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke-width="2"/>
+              <path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">231</div>
+            <div class="stat-label">(Vật phẩm)</div>
+            <div class="stat-label">Sản phẩm hết hàng</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: linear-gradient(135deg, rgba(255, 143, 61, 0.1), rgba(255, 143, 61, 0.05));">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke-width="2"/>
+              <circle cx="9" cy="7" r="4" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">2334</div>
+            <div class="stat-label">(Tuần trước)</div>
+            <div class="stat-label">Tổng số khách hàng đã truy cập</div>
+            <div class="stat-change down">↓ 4.4%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="card">
+        <div class="card-header">
+          <div style="font-weight:700;font-size:16px">Tất cả Kho Danh sách</div>
+          <select style="background:var(--panel);border:1px solid var(--line);color:var(--text);padding:8px 12px;border-radius:8px">
+            <option>Tháng Này</option>
+            <option>Tuần Này</option>
+            <option>Hôm Nay</option>
+          </select>
+        </div>
+
+        <table class="table" id="warehouseTable">
+          <thead>
+            <tr>
+              <th style="width:32px"><input type="checkbox" /></th>
+              <th>ID kho</th>
+              <th>Tên Kho</th>
+              <th>Vị trí</th>
+              <th>Quản lý</th>
+              <th>Số liên lạc</th>
+              <th>Hàng cỡ sản</th>
+              <th>Văn chuyển chứng khoản</th>
+              <th>Doanh thu kho</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <!-- Data will be inserted here -->
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px;border-top:1px solid var(--line)">
+          <div style="color:var(--muted);font-size:13px">Hiển thị 1-10 trong 30 kết quả</div>
+          <div style="display:flex;gap:6px">
+            <button style="padding:6px 12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--muted);cursor:pointer">Trước đó</button>
+            <button style="padding:6px 12px;background:var(--accent);border:1px solid var(--accent);border-radius:6px;color:#2b1606;font-weight:700">1</button>
+            <button style="padding:6px 12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--text);cursor:pointer">2</button>
+            <button style="padding:6px 12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--text);cursor:pointer">3</button>
+            <button style="padding:6px 12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--text);cursor:pointer">Tiếp theo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="text-align:center;padding:24px 0;color:var(--muted);font-size:13px">
+        2025 © Larkon. Được chế tạo bởi <span style="color:var(--accent);font-weight:600">Cao, Trần Huy và Đào Huy</span>
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+
+<script>
+  // Warehouse data
+  const warehouses = [
+    { id: '#WH-001', name: 'Thực hiện trung tâm', location: '123 Commerce St, NY', manager: 'John Doe', phone: '+1 (555) 123-4567', stock: 6490, transfer: 3022, revenue: '25,737 USD' },
+    { id: '#WH-002', name: 'East Coast Hub', location: '456 Market Ave, NY', manager: 'Jane Smith', phone: '+1 (555) 234-5678', stock: 7362, transfer: 4253, revenue: '$67,351' },
+    { id: '#WH-003', name: 'West Coast Depot', location: '789 Trade Blvd, CA', manager: 'Richard Roe', phone: '+1 (555) 345-6789', stock: 8842, transfer: 3221, revenue: '$45,865' },
+    { id: '#WH-004', name: 'Southern Distribution', location: '101 Supply Rd, TX', manager: 'Alice Johnson', phone: '+1 (555) 456-7890', stock: 5463, transfer: 2100, revenue: '$54,655' },
+    { id: '#WH-005', name: 'Northern Fulfillment', location: '202 Logistics Ln, IL', manager: 'Michael Brown', phone: '+1 (555) 567-8901', stock: 12643, transfer: 7008, revenue: '$92,533' },
+    { id: '#WH-006', name: 'Midwest Center', location: '303 Central St, MO', manager: 'Emily Davis', phone: '+1 (555) 678-9012', stock: 7553, transfer: 5600, revenue: '$43,898' },
+    { id: '#WH-007', name: 'Southeast Storage', location: '404 Storage Dr, FL', manager: 'William Green', phone: '+1 (555) 789-0123', stock: 9381, transfer: 5343, revenue: '$76,909' },
+    { id: '#WH-008', name: 'Northwest Hub', location: '505 Commerce Pl, WA', manager: 'Jessica White', phone: '+1 (555) 890-1234', stock: 6500, transfer: 3453, revenue: '$32,765' },
+    { id: '#WH-009', name: 'Southwest Fulfillment', location: '606 Trade Ave, AZ', manager: 'Christopher Black', phone: '+1 (555) 901-2345', stock: 7555, transfer: 9000, revenue: '$67,565' },
+    { id: '#WH-010', name: 'Northeast Depot', location: '707 Distribution Rd, MA', manager: 'Patricia Clark', phone: '+1 (555) 012-3456', stock: 5499, transfer: 3433, revenue: '$43,765' }
+  ];
+
+  // Render table
+  function renderTable() {
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = warehouses.map(w => `
+      <tr>
+        <td class="chk"><input type="checkbox" /></td>
+        <td><div class="tag">${w.id}</div></td>
+        <td><div class="name">${w.name}</div></td>
+        <td>${w.location}</td>
+        <td>${w.manager}</td>
+        <td>${w.phone}</td>
+        <td>${w.stock}</td>
+        <td>${w.transfer}</td>
+        <td style="font-weight:700;color:var(--accent)">${w.revenue}</td>
+        <td>
+          <div class="act">
+            <div class="pill view" title="Xem">
+              <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+                <circle cx="12" cy="12" r="3" stroke="currentColor"/>
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="currentColor"/>
+              </svg>
+            </div>
+            <div class="pill edit" title="Sửa">
+              <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor"/>
+                <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor"/>
+              </svg>
+            </div>
+            <div class="pill del" title="Xóa">
+              <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+                <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z" stroke="currentColor"/>
+              </svg>
+            </div>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  // Toggle sidebar
+  function toggleSidebar() {
+    document.querySelector('.layout').classList.toggle('collapsed');
+    localStorage.setItem('sidebarCollapsed', document.querySelector('.layout').classList.contains('collapsed'));
+  }
+
+  // Restore sidebar state
+  if (localStorage.getItem('sidebarCollapsed') === 'true') {
+    document.querySelector('.layout').classList.add('collapsed');
+  }
+
+  // Toggle submenu
+  function toggleSubmenu(element) {
+    const navItem = element.parentElement;
+    navItem.classList.toggle('open');
+  }
+
+  // Initial render
+  renderTable();
+</script>
+</body>
+</html>
+
