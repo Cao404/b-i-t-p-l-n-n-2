@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lưới Sản Phẩm - Larkon</title>
+  <link rel="stylesheet" href="./css/product.css" />
+  <style>
+    /* Custom styles for grid layout */
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+      padding: 18px;
+    }
+    
+    /* Filter Sidebar */
+    .filter-sidebar {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      height: fit-content;
+      position: sticky;
+      top: 18px;
+    }
+    
+    .filter-section {
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    
+    .filter-section:last-child {
+      border-bottom: none;
+    }
+    
+    .filter-title {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 12px;
+      color: #d7e0f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .filter-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    
+    .filter-checkbox input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+    
+    .filter-checkbox:hover {
+      color: var(--text);
+    }
+    
+    .filter-count {
+      margin-left: auto;
+      color: #6e86b2;
+      font-size: 12px;
+    }
+    
+    /* Product Grid */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    
+    .product-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,.45);
+      border-color: #2f4a6f;
+    }
+    
+    .product-image {
+      width: 100%;
+      height: 240px;
+      background: linear-gradient(135deg, #1a2435 0%, #202e49 100%);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .wishlist-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(20, 28, 43, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+    
+    .wishlist-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+    }
+    
+    .wishlist-btn.active {
+      background: rgba(239, 68, 68, 0.3);
+      border-color: #ef4444;
+    }
+    
+    .wishlist-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: #d7e0f0;
+      transition: all 0.2s;
+    }
+    
+    .wishlist-btn:hover svg,
+    .wishlist-btn.active svg {
+      fill: #ef4444;
+      stroke: #ef4444;
+    }
+    
+    .product-info {
+      padding: 14px;
+    }
+    
+    .product-name {
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 8px;
+      color: #d7e0f0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .product-rating {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+    
+    .product-rating svg {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .product-price {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    
+    .current-price {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ff8f3d;
+    }
+    
+    .old-price {
+      font-size: 14px;
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+    
+    .discount-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+    
+    .add-to-cart-btn {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(135deg, var(--accent), #ff9f5d);
+      border: none;
+      border-radius: 8px;
+      color: #2b1606;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .add-to-cart-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 143, 61, 0.4);
+    }
+    
+    .header-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    
+    .view-toggle {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .view-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+    
+    .view-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    
+    .view-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .sort-select {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      outline: none;
+    }
+    
+    .results-info {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+    
+    @media (max-width: 1200px) {
+      .grid-layout {
+        grid-template-columns: 240px 1fr;
+      }
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+    }
+    
+    @media (max-width: 900px) {
+      .grid-layout {
+        grid-template-columns: 1fr;
+      }
+      .filter-sidebar {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="#f9a44d" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="#f9a44d" stroke-width="1.5"/></svg>
+      <span class="brand-text">Larkon</span>
+      <div class="toggle-btn" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <h6>TỔNG HỢP</h6>
+      <a href="dashboard.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l9-8 9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8z" stroke="currentColor"/></svg><span>Bảng điều khiển</span></a>
+      
+      <div class="nav-item open">
+        <a onclick="toggleSubmenu(this)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span>Sản phẩm</span>
+          </div>
+          <svg class="nav-toggle" viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="m18 15-6-6-6 6" stroke="currentColor" stroke-width="2"/></svg>
+        </a>
+        <div class="submenu">
+          <a href="product-list.html">Danh sách</a>
+          <a href="product-grid.html" class="active">Lưới</a>
+          <a href="product-details.html">Chi tiết</a>
+          <a href="product-edit.html">Sửa đổi</a>
+          <a href="product-create.html">Tạo</a>
+        </div>
+      </div>
+      
+      <h6>DANH MỤC</h6>
+      <a href="category-list.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor"/></svg><span>Danh sách</span></a>
+      <a href="category-edit.html"><svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor"/></svg><span>Sửa đổi</span></a>
+      <a href="category-add.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v16m8-8H4" stroke="currentColor"/></svg><span>Tạo</span></a>
+      
+      <h6>QUẢN TRỊ</h6>
+      <a href="admin-seller-approval.html"><svg viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M20 8v6M23 11h-6" stroke="currentColor" stroke-width="2"/></svg><span>Duyệt Người Bán</span></a>
+      <a href="admin-content-moderation.html"><svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 0 0 1.946-.806 3.42 3.42 0 0 1 3.438 0 3.42 3.42 0 0 0 1.946.806 3.42 3.42 0 0 1 3.138 3.138 3.42 3.42 0 0 0 .806 1.946 3.42 3.42 0 0 1 0 3.438 3.42 3.42 0 0 0-.806 1.946 3.42 3.42 0 0 1-3.138 3.138 3.42 3.42 0 0 0-1.946.806 3.42 3.42 0 0 1-3.438 0 3.42 3.42 0 0 0-1.946-.806 3.42 3.42 0 0 1-3.138-3.138 3.42 3.42 0 0 0-.806-1.946 3.42 3.42 0 0 1 0-3.438 3.42 3.42 0 0 0 .806-1.946 3.42 3.42 0 0 1 3.138-3.138z" stroke="currentColor" stroke-width="2"/></svg><span>Kiểm Duyệt Nội Dung</span></a>
+      <a href="admin-category-attributes.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2"/></svg><span>Danh Mục & Thuộc Tính</span></a>
+      <a href="admin-promotions.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/></svg><span>Khuyến Mãi</span></a>
+      <a href="admin-shipping.html"><svg viewBox="0 0 24 24" fill="none"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z" stroke="currentColor" stroke-width="2"/><circle cx="5.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="2"/><circle cx="18.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="2"/></svg><span>Vận Chuyển</span></a>
+      <a href="admin-finance.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/></svg><span>Tài Chính</span></a>
+      <a href="admin-disputes.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" stroke="currentColor" stroke-width="2"/><path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2"/></svg><span>Khiếu Nại & Tranh Chấp</span></a>
+      <a href="admin-reports.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18M7 16l4-4 4 4 6-6" stroke="currentColor" stroke-width="2"/></svg><span>Báo Cáo & Giám Sát</span></a>
+      <a href="admin-permissions.html"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" stroke-width="2"/></svg><span>Phân Quyền & Nhật Ký</span></a>
+      
+      <h6>HÀNG TỒN KHO</h6>
+      <a href="inventory-warehouse.html"><svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor"/></svg><span>Kho hàng</span></a>
+      <a href="inventory-received-orders.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.5 6M17 13l2.5 6M9.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM17.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" stroke="currentColor"/></svg><span>Đã nhận được đơn đặt hàng</span></a>
+      
+      <h6>NGƯỜI DÙNG</h6>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor"/><path d="M4 20c2-4 6-4 8-4s6 0 8 4" stroke="currentColor"/></svg><span>Hồ sơ</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor"/></svg><span>Vai trò</span></a>
+    </nav>
+
+    <div class="grow"></div>
+
+    <div class="user">
+      <div class="avatar"></div>
+      <div>
+        <div style="font-weight:700">Admin</div>
+        <div class="sub">Quản trị</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <section class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="title">LƯỚI SẢN PHẨM</div>
+      <div class="actions">
+        <div class="icon-btn" title="Chế độ tối">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M21 12a9 9 0 1 1-8-8 7 7 0 0 0 8 8z" stroke="#b9c7e5"/></svg>
+        </div>
+        <div class="icon-btn" title="Thông báo">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M15 17h5l-1-2v-4a7 7 0 0 0-14 0v4l-1 2h5m6 0a3 3 0 0 1-6 0" stroke="#b9c7e5"/><circle cx="18" cy="6" r="3" fill="#ef4444"/></svg>
+        </div>
+        <label class="search">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><circle cx="11" cy="11" r="7" stroke="#7f95bd"/><path d="M21 21l-3.5-3.5" stroke="#7f95bd"/></svg>
+          <input placeholder="Tìm kiếm..." id="searchInput" />
+        </label>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="grid-layout">
+      <!-- FILTER SIDEBAR -->
+      <div class="filter-sidebar">
+        <div class="filter-section">
+          <div class="filter-title">
+            <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M3 7h18M6 12h12M9 17h6" stroke="currentColor"/></svg>
+            Danh mục
+          </div>
+          <label class="filter-checkbox">
+            <input type="checkbox" checked />
+            <span>Tất cả danh mục</span>
+            <span class="filter-count">5,786</span>
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" />
+            <span>Thời trang Nam, Nữ & Trẻ em</span>
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" />
+            <span>Đồ mặt & Kính râm</span>
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" />
+            <span>Đồng hồ</span>
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" />
+            <span>Vật phẩm điện tử</span>
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" />
+            <span>Nội thất</span>
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" />
+            <span>Tai nghe</span>
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" />
+            <span>Lắm đẹp & Sức khỏe</span>
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" />
+            <span>Đồ chân</span>
+          </label>
+        </div>
+
+        <div class="filter-section">
+          <div class="filter-title">
+            <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M12 2v20M2 12h20" stroke="currentColor"/></svg>
+            Giá Sản Phẩm
+          </div>
+          <label class="filter-checkbox">
+            <input type="checkbox" />
+            <span>Tất cả giá</span>
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" />
+            <span>Dưới $200</span>
+            <span class="filter-count">(145)</span>
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" />
+            <span>$200 - $500</span>
+            <span class="filter-count">(1,885)</span>
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" />
+            <span>$500 - $800</span>
+            <span class="filter-count">(2,276)</span>
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" />
+            <span>$800 - $1000</span>
+            <span class="filter-count">(12,676)</span>
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" />
+            <span>$1000 - $1100</span>
+            <span class="filter-count">(13,123)</span>
+          </label>
+        </div>
+
+        <div class="filter-section" style="border-bottom: none;">
+          <div class="filter-title">
+            <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><polygon points="12 2 15 8 22 9 17 14 18 21 12 18 6 21 7 14 2 9 9 8" stroke="currentColor"/></svg>
+            Phạm vi giá túy chỉnh
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <input type="number" placeholder="Min" style="width: 100%; padding: 8px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; color: var(--text); outline: none;" />
+            <input type="number" placeholder="Max" style="width: 100%; padding: 8px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; color: var(--text); outline: none;" />
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCTS AREA -->
+      <div>
+        <div class="header-actions">
+          <div class="results-info">
+            Hiển thị tất cả <strong>5,786</strong> kết quả items
+          </div>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <select class="sort-select" id="sortSelect">
+              <option>Mới nhất</option>
+              <option>Giá: Thấp đến Cao</option>
+              <option>Giá: Cao đến Thấp</option>
+              <option>Đánh giá cao nhất</option>
+            </select>
+            <div class="view-toggle">
+              <div class="view-btn active">
+                <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+              </div>
+              <div class="view-btn">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="products-grid" id="productsGrid">
+          <!-- Products will be rendered here by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+<script>
+  // Product data
+  const products = [
+    {
+      id: 1,
+      name: 'Áo thun nam màu đen Slim Fit',
+      price: 80,
+      oldPrice: 100,
+      discount: 30,
+      rating: 4.5,
+      reviews: 65,
+      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400',
+      category: 'Fashion'
+    },
+    {
+      id: 2,
+      name: 'Túi da màu xanh ô liu',
+      price: 136,
+      oldPrice: 150,
+      discount: 30,
+      rating: 4.1,
+      reviews: 143,
+      image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=400',
+      category: 'Hand Bag'
+    },
+    {
+      id: 3,
+      name: 'Phụ nữ vàng Dress',
+      price: 219,
+      oldPrice: 250,
+      discount: 30,
+      rating: 4.4,
+      reviews: 174,
+      image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400',
+      category: 'Fashion'
+    },
+    {
+      id: 4,
+      name: 'Mũ Xám Cho Nam',
+      price: 76,
+      oldPrice: 100,
+      discount: 30,
+      rating: 4.2,
+      reviews: 23,
+      image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400',
+      category: 'Cap'
+    },
+    {
+      id: 5,
+      name: 'Dark Green Cargo Pent',
+      price: 110,
+      oldPrice: null,
+      discount: null,
+      rating: 4.4,
+      reviews: 109,
+      image: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400',
+      category: 'Fashion'
+    },
+    {
+      id: 6,
+      name: 'Orange Multi Color Headphone',
+      price: 231,
+      oldPrice: null,
+      discount: null,
+      rating: 4.2,
+      reviews: 200,
+      image: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400',
+      category: 'Electronics'
+    },
+    {
+      id: 7,
+      name: "Kid's Yellow Shoes",
+      price: 89,
+      oldPrice: null,
+      discount: null,
+      rating: 4.5,
+      reviews: 321,
+      image: 'https://images.unsplash.com/photo-1514989940723-e8e51635b782?w=400',
+      category: 'Shoes'
+    },
+    {
+      id: 8,
+      name: 'Men Dark Brown Wallet',
+      price: 132,
+      oldPrice: null,
+      discount: null,
+      rating: 4.1,
+      reviews: 190,
+      image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=400',
+      category: 'Wallet'
+    }
+  ];
+
+  // Render products
+  function renderProducts(productsToRender = products) {
+    const grid = document.getElementById('productsGrid');
+    grid.innerHTML = '';
+    
+    productsToRender.forEach(product => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.onclick = () => window.location.href = 'product-details.html';
+      
+      card.innerHTML = `
+        <div class="product-image">
+          <img src="${product.image}" alt="${product.name}" />
+          ${product.discount ? `<div class="discount-badge">Giảm ${product.discount}%</div>` : ''}
+          <div class="wishlist-btn" onclick="event.stopPropagation(); toggleWishlist(this)">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">${product.name}</div>
+          <div class="product-rating">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="color:#fbbf24">
+              <polygon points="12 2 15 8 22 9 17 14 18 21 12 18 6 21 7 14 2 9 9 8"/>
+            </svg>
+            ${product.rating} <span style="color: var(--muted)">· ${product.reviews} Đánh giá</span>
+          </div>
+          <div class="product-price">
+            <div class="current-price">$${product.price}</div>
+            ${product.oldPrice ? `<div class="old-price">$${product.oldPrice}</div>` : ''}
+          </div>
+          <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(${product.id})">
+            <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+              <path d="M9 2L7 7H3l4 4-1 6h12l-1-6 4-4h-4l-2-5z" stroke="currentColor" stroke-width="2"/>
+              <path d="M6 7h12l-1.5 9H7.5L6 7z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Thêm vào giỏ hàng
+          </button>
+        </div>
+      `;
+      
+      grid.appendChild(card);
+    });
+  }
+
+  // Toggle wishlist
+  function toggleWishlist(btn) {
+    btn.classList.toggle('active');
+  }
+
+  // Add to cart
+  function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    alert(`Đã thêm "${product.name}" vào giỏ hàng!`);
+  }
+
+  // Search functionality
+  document.getElementById('searchInput').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const filtered = products.filter(p => 
+      p.name.toLowerCase().includes(searchTerm) || 
+      p.category.toLowerCase().includes(searchTerm)
+    );
+    renderProducts(filtered);
+  });
+
+  // Sort functionality
+  document.getElementById('sortSelect').addEventListener('change', function(e) {
+    let sorted = [...products];
+    switch(e.target.value) {
+      case 'Giá: Thấp đến Cao':
+        sorted.sort((a, b) => a.price - b.price);
+        break;
+      case 'Giá: Cao đến Thấp':
+        sorted.sort((a, b) => b.price - a.price);
+        break;
+      case 'Đánh giá cao nhất':
+        sorted.sort((a, b) => b.rating - a.rating);
+        break;
+    }
+    renderProducts(sorted);
+  });
+
+  // View toggle
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      
+      // Toggle between grid and list view
+      if (this === document.querySelectorAll('.view-btn')[1]) {
+        window.location.href = 'product-list.html';
+      }
+    });
+  });
+
+  // Initial render
+  renderProducts();
+
+  // Toggle sidebar
+  function toggleSidebar() {
+    document.querySelector('.layout').classList.toggle('collapsed');
+    localStorage.setItem('sidebarCollapsed', document.querySelector('.layout').classList.contains('collapsed'));
+  }
+
+  // Restore sidebar state on load
+  if (localStorage.getItem('sidebarCollapsed') === 'true') {
+    document.querySelector('.layout').classList.add('collapsed');
+  }
+
+  // Toggle submenu
+  function toggleSubmenu(element) {
+    const navItem = element.parentElement;
+    navItem.classList.toggle('open');
+  }
+
+</script>
+</body>
+</html>
+

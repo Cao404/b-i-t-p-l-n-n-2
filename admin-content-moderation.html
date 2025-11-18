@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kiểm Duyệt Nội Dung - Larkon</title>
+  <link rel="stylesheet" href="./css/product.css" />
+  <script src="./js/auth-guard.js"></script>
+  <style>
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-block;
+    }
+    .status-pending { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+    .status-approved { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .status-rejected { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .status-violation { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    
+    .violation-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .violation-tag {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+    
+    .image-preview {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .image-preview img {
+      width: 60px;
+      height: 60px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 1px solid var(--line);
+      cursor: pointer;
+    }
+    
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      padding: 4px;
+      background: var(--panel-2);
+      border-radius: 10px;
+    }
+    .filter-tab {
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+    }
+    .filter-tab.active {
+      background: var(--accent);
+      color: #2b1606;
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="#f9a44d" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="#f9a44d" stroke-width="1.5"/></svg>
+      <span class="brand-text">Larkon</span>
+      <div class="toggle-btn" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <h6>TỔNG HỢP</h6>
+      <a href="dashboard.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l9-8 9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8z" stroke="currentColor"/></svg><span>Bảng điều khiển</span></a>
+      
+      <h6>QUẢN TRỊ</h6>
+      <a href="admin-seller-approval.html"><svg viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M20 8v6M23 11h-6" stroke="currentColor" stroke-width="2"/></svg><span>Duyệt Người Bán</span></a>
+      <a href="admin-content-moderation.html" class="active"><svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 0 0 1.946-.806 3.42 3.42 0 0 1 3.438 0 3.42 3.42 0 0 0 1.946.806 3.42 3.42 0 0 1 3.138 3.138 3.42 3.42 0 0 0 .806 1.946 3.42 3.42 0 0 1 0 3.438 3.42 3.42 0 0 0-.806 1.946 3.42 3.42 0 0 1-3.138 3.138 3.42 3.42 0 0 0-1.946.806 3.42 3.42 0 0 1-3.438 0 3.42 3.42 0 0 0-1.946-.806 3.42 3.42 0 0 1-3.138-3.138 3.42 3.42 0 0 0-.806-1.946 3.42 3.42 0 0 1 0-3.438 3.42 3.42 0 0 0 .806-1.946 3.42 3.42 0 0 1 3.138-3.138z" stroke="currentColor" stroke-width="2"/></svg><span>Kiểm Duyệt Nội Dung</span></a>
+      <a href="admin-category-attributes.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2"/></svg><span>Danh Mục & Thuộc Tính</span></a>
+      <a href="admin-promotions.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/></svg><span>Khuyến Mãi</span></a>
+      <a href="admin-shipping.html"><svg viewBox="0 0 24 24" fill="none"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z" stroke="currentColor" stroke-width="2"/><circle cx="5.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="2"/><circle cx="18.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="2"/></svg><span>Vận Chuyển</span></a>
+      <a href="admin-finance.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/></svg><span>Tài Chính</span></a>
+      <a href="admin-disputes.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" stroke="currentColor" stroke-width="2"/><path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2"/></svg><span>Khiếu Nại & Tranh Chấp</span></a>
+      <a href="admin-reports.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18M7 16l4-4 4 4 6-6" stroke="currentColor" stroke-width="2"/></svg><span>Báo Cáo & Giám Sát</span></a>
+      <a href="admin-permissions.html"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" stroke-width="2"/></svg><span>Phân Quyền & Nhật Ký</span></a>
+    </nav>
+
+    <div class="grow"></div>
+
+    <div class="user">
+      <div class="avatar"></div>
+      <div style="flex:1">
+        <div style="font-weight:700">Admin</div>
+        <div class="sub">Quản trị viên</div>
+      </div>
+      <div class="icon-btn" onclick="logout()" title="Đăng xuất" style="width:32px;height:32px;margin-left:4px">
+        <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <section class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="title">KIỂM DUYỆT NỘI DUNG</div>
+      <div class="actions">
+        <div class="icon-btn" title="Chế độ tối">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M21 12a9 9 0 1 1-8-8 7 7 0 0 0 8 8z" stroke="#b9c7e5"/></svg>
+        </div>
+        <div class="icon-btn" title="Thông báo">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" stroke="#b9c7e5"/></svg>
+        </div>
+        <label class="search">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><circle cx="11" cy="11" r="7" stroke="#7f95bd"/><path d="M21 21l-3.5-3.5" stroke="#7f95bd"/></svg>
+          <input placeholder="Tìm kiếm..." id="searchInput" />
+        </label>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+      
+      <!-- Filter Tabs -->
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="filterContent('all')">Tất cả</button>
+        <button class="filter-tab" onclick="filterContent('pending')">Chờ duyệt (23)</button>
+        <button class="filter-tab" onclick="filterContent('violation')">Vi phạm (8)</button>
+        <button class="filter-tab" onclick="filterContent('approved')">Đã duyệt (156)</button>
+        <button class="filter-tab" onclick="filterContent('rejected')">Từ chối (12)</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div style="font-weight:700;font-size:16px">Nội Dung Cần Kiểm Duyệt</div>
+          <div style="display:flex;gap:10px">
+            <select style="background:var(--panel);border:1px solid var(--line);color:var(--text);padding:8px 12px;border-radius:8px">
+              <option>Loại: Tất cả</option>
+              <option>Sản phẩm</option>
+              <option>Ảnh</option>
+              <option>Thuộc tính</option>
+            </select>
+          </div>
+        </div>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width:32px"><input type="checkbox" /></th>
+              <th>Nội Dung</th>
+              <th>Loại</th>
+              <th>Người Tạo</th>
+              <th>Ngày Tạo</th>
+              <th>Trạng Thái</th>
+              <th>Vi Phạm</th>
+              <th>Hành Động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="chk"><input type="checkbox" /></td>
+              <td>
+                <div class="product">
+                  <div class="thumb">
+                    <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100" alt="" />
+                  </div>
+                  <div>
+                    <div class="name">Áo thun đen cao cấp</div>
+                    <div class="sub">Sản phẩm #12345</div>
+                    <div class="image-preview">
+                      <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100" onclick="viewImage(this.src)" />
+                      <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100" onclick="viewImage(this.src)" />
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>Sản phẩm</td>
+              <td>
+                <div>Nguyễn Văn A</div>
+                <div class="sub">Shop ABC</div>
+              </td>
+              <td>
+                <div>16/01/2025</div>
+                <div class="sub">1 giờ trước</div>
+              </td>
+              <td><span class="status-badge status-pending">Chờ duyệt</span></td>
+              <td>
+                <div class="violation-tags">
+                  <span class="violation-tag">Nội dung nhạy cảm</span>
+                </div>
+              </td>
+              <td>
+                <div class="act">
+                  <div class="pill view" title="Xem chi tiết" onclick="viewDetails(1)">
+                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="12" cy="12" r="3" stroke="currentColor"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="currentColor"/></svg>
+                  </div>
+                  <div class="pill edit" title="Duyệt" onclick="approveContent(1)" style="color:#10b981">
+                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2"/></svg>
+                  </div>
+                  <div class="pill del" title="Gỡ vi phạm" onclick="removeViolation(1)">
+                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z" stroke="currentColor"/></svg>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="chk"><input type="checkbox" /></td>
+              <td>
+                <div class="product">
+                  <div class="thumb">
+                    <img src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=100" alt="" />
+                  </div>
+                  <div>
+                    <div class="name">Túi da xanh lá</div>
+                    <div class="sub">Sản phẩm #12346</div>
+                    <div class="image-preview">
+                      <img src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=100" onclick="viewImage(this.src)" />
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>Sản phẩm</td>
+              <td>
+                <div>Lê Thị B</div>
+                <div class="sub">Shop XYZ</div>
+              </td>
+              <td>
+                <div>16/01/2025</div>
+                <div class="sub">2 giờ trước</div>
+              </td>
+              <td><span class="status-badge status-violation">Vi phạm</span></td>
+              <td>
+                <div class="violation-tags">
+                  <span class="violation-tag">Ảnh không phù hợp</span>
+                  <span class="violation-tag">Mô tả sai</span>
+                </div>
+              </td>
+              <td>
+                <div class="act">
+                  <div class="pill view" title="Xem chi tiết" onclick="viewDetails(2)">
+                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="12" cy="12" r="3" stroke="currentColor"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="currentColor"/></svg>
+                  </div>
+                  <div class="pill edit" title="Duyệt" onclick="approveContent(2)" style="color:#10b981">
+                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2"/></svg>
+                  </div>
+                  <div class="pill del" title="Gỡ vi phạm" onclick="removeViolation(2)">
+                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z" stroke="currentColor"/></svg>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="chk"><input type="checkbox" /></td>
+              <td>
+                <div class="product">
+                  <div>
+                    <div class="name">Thuộc tính: Màu sắc</div>
+                    <div class="sub">Giá trị: "Đỏ máu", "Xanh rêu"</div>
+                  </div>
+                </div>
+              </td>
+              <td>Thuộc tính</td>
+              <td>
+                <div>Trần Văn C</div>
+                <div class="sub">Shop 123</div>
+              </td>
+              <td>
+                <div>15/01/2025</div>
+                <div class="sub">1 ngày trước</div>
+              </td>
+              <td><span class="status-badge status-rejected">Từ chối</span></td>
+              <td>
+                <div class="violation-tags">
+                  <span class="violation-tag">Thuộc tính nhạy cảm</span>
+                </div>
+              </td>
+              <td>
+                <div class="act">
+                  <div class="pill view" title="Xem chi tiết" onclick="viewDetails(3)">
+                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="12" cy="12" r="3" stroke="currentColor"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="currentColor"/></svg>
+                  </div>
+                  <div class="pill edit" title="Duyệt lại" onclick="approveContent(3)" style="color:#10b981">
+                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2"/></svg>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px;border-top:1px solid var(--line)">
+          <div style="color:var(--muted);font-size:13px">Hiển thị 1-3 trong 199 kết quả</div>
+          <div style="display:flex;gap:6px">
+            <button style="padding:6px 12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--muted);cursor:pointer">Trước đó</button>
+            <button style="padding:6px 12px;background:var(--accent);border:1px solid var(--accent);border-radius:6px;color:#2b1606;font-weight:700;cursor:pointer">1</button>
+            <button style="padding:6px 12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--text);cursor:pointer">2</button>
+            <button style="padding:6px 12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--text);cursor:pointer">Tiếp theo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="text-align:center;padding:24px 0;color:var(--muted);font-size:13px">
+        2025 © Larkon. Được chế tạo bởi <span style="color:var(--accent);font-weight:600">Cao, Trần Huy và Đào Huy</span>
+      </div>
+
+    </div>
+
+  </section>
+</div>
+
+<script>
+  function toggleSidebar() {
+    document.querySelector('.layout').classList.toggle('collapsed');
+    localStorage.setItem('sidebarCollapsed', document.querySelector('.layout').classList.contains('collapsed'));
+  }
+
+  if (localStorage.getItem('sidebarCollapsed') === 'true') {
+    document.querySelector('.layout').classList.add('collapsed');
+  }
+
+  function filterContent(status) {
+    document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  function viewDetails(id) {
+    alert('Xem chi tiết nội dung #' + id);
+  }
+
+  function approveContent(id) {
+    if (confirm('Bạn có chắc muốn duyệt nội dung này?')) {
+      alert('Đã duyệt nội dung thành công!');
+    }
+  }
+
+  function removeViolation(id) {
+    if (confirm('Bạn có chắc muốn gỡ vi phạm và duyệt nội dung này?')) {
+      alert('Đã gỡ vi phạm và duyệt nội dung!');
+    }
+  }
+
+  function viewImage(src) {
+    window.open(src, '_blank');
+  }
+</script>
+</body>
+</html>

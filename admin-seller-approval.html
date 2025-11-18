@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Duyệt Người Bán - Larkon</title>
+  <link rel="stylesheet" href="./css/product.css" />
+  <script src="./js/auth-guard.js"></script>
+  <style>
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-block;
+    }
+    .status-submitted { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+    .status-approved { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .status-rejected { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .status-suspended { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    .status-locked { background: rgba(107, 114, 128, 0.2); color: #6b7280; }
+    
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      padding: 4px;
+      background: var(--panel-2);
+      border-radius: 10px;
+    }
+    .filter-tab {
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+    }
+    .filter-tab.active {
+      background: var(--accent);
+      color: #2b1606;
+    }
+    
+    .kyc-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--panel-2);
+      border-radius: 8px;
+    }
+    .kyc-item {
+      font-size: 13px;
+    }
+    .kyc-label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+    .kyc-value {
+      font-weight: 600;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-small {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-approve {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .btn-approve:hover {
+      background: rgba(16, 185, 129, 0.3);
+    }
+    .btn-reject {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .btn-reject:hover {
+      background: rgba(239, 68, 68, 0.3);
+    }
+    .btn-suspend {
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .btn-suspend:hover {
+      background: rgba(245, 158, 11, 0.3);
+    }
+    .btn-lock {
+      background: rgba(107, 114, 128, 0.2);
+      color: #6b7280;
+      border: 1px solid rgba(107, 114, 128, 0.3);
+    }
+    .btn-lock:hover {
+      background: rgba(107, 114, 128, 0.3);
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="#f9a44d" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="#f9a44d" stroke-width="1.5"/></svg>
+      <span class="brand-text">Larkon</span>
+      <div class="toggle-btn" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <h6>TỔNG HỢP</h6>
+      <a href="dashboard.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l9-8 9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8z" stroke="currentColor"/></svg><span>Bảng điều khiển</span></a>
+      
+      <div class="nav-item">
+        <a onclick="toggleSubmenu(this)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span>Sản phẩm</span>
+          </div>
+          <svg class="nav-toggle" viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="m18 15-6-6-6 6" stroke="currentColor" stroke-width="2"/></svg>
+        </a>
+        <div class="submenu">
+          <a href="product-list.html">Danh sách</a>
+          <a href="product-grid.html">Lưới</a>
+          <a href="product-details.html">Chi tiết</a>
+          <a href="product-edit.html">Sửa đổi</a>
+          <a href="product-create.html">Tạo</a>
+        </div>
+      </div>
+      
+      <h6>DANH MỤC</h6>
+      <a href="category-list.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor"/></svg><span>Danh sách</span></a>
+      <a href="category-edit.html"><svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor"/></svg><span>Sửa đổi</span></a>
+      <a href="category-add.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v16m8-8H4" stroke="currentColor"/></svg><span>Tạo</span></a>
+      
+      <h6>QUẢN TRỊ</h6>
+      <a href="admin-seller-approval.html" class="active"><svg viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M20 8v6M23 11h-6" stroke="currentColor" stroke-width="2"/></svg><span>Duyệt Người Bán</span></a>
+      <a href="admin-content-moderation.html"><svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 0 0 1.946-.806 3.42 3.42 0 0 1 3.438 0 3.42 3.42 0 0 0 1.946.806 3.42 3.42 0 0 1 3.138 3.138 3.42 3.42 0 0 0 .806 1.946 3.42 3.42 0 0 1 0 3.438 3.42 3.42 0 0 0-.806 1.946 3.42 3.42 0 0 1-3.138 3.138 3.42 3.42 0 0 0-1.946.806 3.42 3.42 0 0 1-3.438 0 3.42 3.42 0 0 0-1.946-.806 3.42 3.42 0 0 1-3.138-3.138 3.42 3.42 0 0 0-.806-1.946 3.42 3.42 0 0 1 0-3.438 3.42 3.42 0 0 0 .806-1.946 3.42 3.42 0 0 1 3.138-3.138z" stroke="currentColor" stroke-width="2"/></svg><span>Kiểm Duyệt Nội Dung</span></a>
+      <a href="admin-category-attributes.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2"/></svg><span>Danh Mục & Thuộc Tính</span></a>
+      <a href="admin-promotions.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/></svg><span>Khuyến Mãi</span></a>
+      <a href="admin-shipping.html"><svg viewBox="0 0 24 24" fill="none"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z" stroke="currentColor" stroke-width="2"/><circle cx="5.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="2"/><circle cx="18.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="2"/></svg><span>Vận Chuyển</span></a>
+      <a href="admin-finance.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/></svg><span>Tài Chính</span></a>
+      <a href="admin-disputes.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" stroke="currentColor" stroke-width="2"/><path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2"/></svg><span>Khiếu Nại & Tranh Chấp</span></a>
+      <a href="admin-reports.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18M7 16l4-4 4 4 6-6" stroke="currentColor" stroke-width="2"/></svg><span>Báo Cáo & Giám Sát</span></a>
+      <a href="admin-permissions.html"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" stroke-width="2"/></svg><span>Phân Quyền & Nhật Ký</span></a>
+      
+      <h6>HÀNG TỒN KHO</h6>
+      <a href="inventory-warehouse.html"><svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor"/></svg><span>Kho hàng</span></a>
+      <a href="inventory-received-orders.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.5 6M17 13l2.5 6M9.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM17.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" stroke="currentColor"/></svg><span>Đã nhận được đơn đặt hàng</span></a>
+    </nav>
+
+    <div class="grow"></div>
+
+    <div class="user">
+      <div class="avatar"></div>
+      <div style="flex:1">
+        <div style="font-weight:700">Admin</div>
+        <div class="sub">Quản trị viên</div>
+      </div>
+      <div class="icon-btn" onclick="logout()" title="Đăng xuất" style="width:32px;height:32px;margin-left:4px">
+        <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <section class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="title">DUYỆT NGƯỜI BÁN</div>
+      <div class="actions">
+        <div class="icon-btn" title="Chế độ tối">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M21 12a9 9 0 1 1-8-8 7 7 0 0 0 8 8z" stroke="#b9c7e5"/></svg>
+        </div>
+        <div class="icon-btn" title="Thông báo">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" stroke="#b9c7e5"/></svg>
+        </div>
+        <label class="search">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><circle cx="11" cy="11" r="7" stroke="#7f95bd"/><path d="M21 21l-3.5-3.5" stroke="#7f95bd"/></svg>
+          <input placeholder="Tìm kiếm người bán..." id="searchInput" />
+        </label>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+      
+      <!-- Filter Tabs -->
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="filterSellers('all')">Tất cả</button>
+        <button class="filter-tab" onclick="filterSellers('submitted')">Đang chờ (12)</button>
+        <button class="filter-tab" onclick="filterSellers('approved')">Đã duyệt (45)</button>
+        <button class="filter-tab" onclick="filterSellers('rejected')">Từ chối (8)</button>
+        <button class="filter-tab" onclick="filterSellers('suspended')">Tạm ngưng (5)</button>
+        <button class="filter-tab" onclick="filterSellers('locked')">Đã khóa (3)</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div style="font-weight:700;font-size:16px">Danh sách Người Bán</div>
+          <div style="display:flex;gap:10px">
+            <select style="background:var(--panel);border:1px solid var(--line);color:var(--text);padding:8px 12px;border-radius:8px">
+              <option>Sắp xếp: Mới nhất</option>
+              <option>Cũ nhất</option>
+              <option>Theo tên</option>
+            </select>
+          </div>
+        </div>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width:32px"><input type="checkbox" /></th>
+              <th>Người Bán</th>
+              <th>Email / SĐT</th>
+              <th>KYC</th>
+              <th>Trạng Thái</th>
+              <th>Ngày Đăng Ký</th>
+              <th>Hành Động</th>
+            </tr>
+          </thead>
+          <tbody id="sellerTableBody">
+            <tr>
+              <td class="chk"><input type="checkbox" /></td>
+              <td>
+                <div class="product">
+                  <div class="thumb" style="background:linear-gradient(135deg,#667eea,#764ba2)">
+                    <div style="color:white;font-weight:700">NV</div>
+                  </div>
+                  <div>
+                    <div class="name">Nguyễn Văn A</div>
+                    <div class="sub">Shop Thời Trang ABC</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div>nguyenvana@email.com</div>
+                <div class="sub">0123456789</div>
+              </td>
+              <td>
+                <div class="kyc-info">
+                  <div class="kyc-item">
+                    <div class="kyc-label">CMND/CCCD</div>
+                    <div class="kyc-value" style="color:#10b981">✓ Đã xác minh</div>
+                  </div>
+                  <div class="kyc-item">
+                    <div class="kyc-label">Giấy phép KD</div>
+                    <div class="kyc-value" style="color:#10b981">✓ Đã xác minh</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="status-badge status-submitted">Đang chờ</span></td>
+              <td>
+                <div>15/01/2025</div>
+                <div class="sub">2 ngày trước</div>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-small btn-approve" onclick="approveSeller(1)">Duyệt</button>
+                  <button class="btn-small btn-reject" onclick="rejectSeller(1)">Từ chối</button>
+                  <button class="btn-small btn-suspend" onclick="suspendSeller(1)">Tạm ngưng</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="chk"><input type="checkbox" /></td>
+              <td>
+                <div class="product">
+                  <div class="thumb" style="background:linear-gradient(135deg,#f093fb,#f5576c)">
+                    <div style="color:white;font-weight:700">LT</div>
+                  </div>
+                  <div>
+                    <div class="name">Lê Thị B</div>
+                    <div class="sub">Cửa Hàng Điện Tử XYZ</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div>lethib@email.com</div>
+                <div class="sub">0987654321</div>
+              </td>
+              <td>
+                <div class="kyc-info">
+                  <div class="kyc-item">
+                    <div class="kyc-label">CMND/CCCD</div>
+                    <div class="kyc-value" style="color:#f59e0b">⏳ Đang xử lý</div>
+                  </div>
+                  <div class="kyc-item">
+                    <div class="kyc-label">Giấy phép KD</div>
+                    <div class="kyc-value" style="color:#ef4444">✗ Chưa có</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="status-badge status-submitted">Đang chờ</span></td>
+              <td>
+                <div>14/01/2025</div>
+                <div class="sub">3 ngày trước</div>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-small btn-approve" onclick="approveSeller(2)">Duyệt</button>
+                  <button class="btn-small btn-reject" onclick="rejectSeller(2)">Từ chối</button>
+                  <button class="btn-small btn-suspend" onclick="suspendSeller(2)">Tạm ngưng</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="chk"><input type="checkbox" /></td>
+              <td>
+                <div class="product">
+                  <div class="thumb" style="background:linear-gradient(135deg,#4facfe,#00f2fe)">
+                    <div style="color:white;font-weight:700">TC</div>
+                  </div>
+                  <div>
+                    <div class="name">Trần Văn C</div>
+                    <div class="sub">Shop Đồ Gia Dụng 123</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div>tranvanc@email.com</div>
+                <div class="sub">0912345678</div>
+              </td>
+              <td>
+                <div class="kyc-info">
+                  <div class="kyc-item">
+                    <div class="kyc-label">CMND/CCCD</div>
+                    <div class="kyc-value" style="color:#10b981">✓ Đã xác minh</div>
+                  </div>
+                  <div class="kyc-item">
+                    <div class="kyc-label">Giấy phép KD</div>
+                    <div class="kyc-value" style="color:#10b981">✓ Đã xác minh</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="status-badge status-approved">Đã duyệt</span></td>
+              <td>
+                <div>10/01/2025</div>
+                <div class="sub">7 ngày trước</div>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-small btn-suspend" onclick="suspendSeller(3)">Tạm ngưng</button>
+                  <button class="btn-small btn-lock" onclick="lockSeller(3)">Khóa</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="chk"><input type="checkbox" /></td>
+              <td>
+                <div class="product">
+                  <div class="thumb" style="background:linear-gradient(135deg,#fa709a,#fee140)">
+                    <div style="color:white;font-weight:700">PD</div>
+                  </div>
+                  <div>
+                    <div class="name">Phạm Thị D</div>
+                    <div class="sub">Shop Mỹ Phẩm Beauty</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div>phamthid@email.com</div>
+                <div class="sub">0901234567</div>
+              </td>
+              <td>
+                <div class="kyc-info">
+                  <div class="kyc-item">
+                    <div class="kyc-label">CMND/CCCD</div>
+                    <div class="kyc-value" style="color:#ef4444">✗ Không hợp lệ</div>
+                  </div>
+                  <div class="kyc-item">
+                    <div class="kyc-label">Giấy phép KD</div>
+                    <div class="kyc-value" style="color:#ef4444">✗ Chưa có</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="status-badge status-rejected">Từ chối</span></td>
+              <td>
+                <div>08/01/2025</div>
+                <div class="sub">9 ngày trước</div>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-small btn-approve" onclick="approveSeller(4)">Duyệt lại</button>
+                  <button class="btn-small btn-lock" onclick="lockSeller(4)">Khóa</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="chk"><input type="checkbox" /></td>
+              <td>
+                <div class="product">
+                  <div class="thumb" style="background:linear-gradient(135deg,#30cfd0,#330867)">
+                    <div style="color:white;font-weight:700">HH</div>
+                  </div>
+                  <div>
+                    <div class="name">Hoàng Văn E</div>
+                    <div class="sub">Shop Thực Phẩm Sạch</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div>hoangvane@email.com</div>
+                <div class="sub">0923456789</div>
+              </td>
+              <td>
+                <div class="kyc-info">
+                  <div class="kyc-item">
+                    <div class="kyc-label">CMND/CCCD</div>
+                    <div class="kyc-value" style="color:#10b981">✓ Đã xác minh</div>
+                  </div>
+                  <div class="kyc-item">
+                    <div class="kyc-label">Giấy phép KD</div>
+                    <div class="kyc-value" style="color:#10b981">✓ Đã xác minh</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="status-badge status-suspended">Tạm ngưng</span></td>
+              <td>
+                <div>05/01/2025</div>
+                <div class="sub">12 ngày trước</div>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-small btn-approve" onclick="approveSeller(5)">Kích hoạt</button>
+                  <button class="btn-small btn-lock" onclick="lockSeller(5)">Khóa</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px;border-top:1px solid var(--line)">
+          <div style="color:var(--muted);font-size:13px">Hiển thị 1-5 trong 73 kết quả</div>
+          <div style="display:flex;gap:6px">
+            <button style="padding:6px 12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--muted);cursor:pointer">Trước đó</button>
+            <button style="padding:6px 12px;background:var(--accent);border:1px solid var(--accent);border-radius:6px;color:#2b1606;font-weight:700;cursor:pointer">1</button>
+            <button style="padding:6px 12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--text);cursor:pointer">2</button>
+            <button style="padding:6px 12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--text);cursor:pointer">3</button>
+            <button style="padding:6px 12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--text);cursor:pointer">Tiếp theo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="text-align:center;padding:24px 0;color:var(--muted);font-size:13px">
+        2025 © Larkon. Được chế tạo bởi <span style="color:var(--accent);font-weight:600">Cao, Trần Huy và Đào Huy</span>
+      </div>
+
+    </div>
+
+  </section>
+</div>
+
+<script>
+  function toggleSidebar() {
+    document.querySelector('.layout').classList.toggle('collapsed');
+    localStorage.setItem('sidebarCollapsed', document.querySelector('.layout').classList.contains('collapsed'));
+  }
+
+  if (localStorage.getItem('sidebarCollapsed') === 'true') {
+    document.querySelector('.layout').classList.add('collapsed');
+  }
+
+  function toggleSubmenu(element) {
+    const navItem = element.parentElement;
+    navItem.classList.toggle('open');
+  }
+
+  function filterSellers(status) {
+    document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+    event.target.classList.add('active');
+    // Filter logic here
+    console.log('Filter by:', status);
+  }
+
+  function approveSeller(id) {
+    if (confirm('Bạn có chắc muốn duyệt người bán này?')) {
+      alert('Đã duyệt người bán thành công!');
+      // Update status logic here
+    }
+  }
+
+  function rejectSeller(id) {
+    const reason = prompt('Nhập lý do từ chối:');
+    if (reason) {
+      alert('Đã từ chối người bán. Lý do: ' + reason);
+      // Update status logic here
+    }
+  }
+
+  function suspendSeller(id) {
+    const days = prompt('Nhập số ngày tạm ngưng (hoặc để trống cho vô thời hạn):');
+    if (confirm('Bạn có chắc muốn tạm ngưng người bán này?')) {
+      alert('Đã tạm ngưng người bán ' + (days ? days + ' ngày' : 'vô thời hạn'));
+      // Update status logic here
+    }
+  }
+
+  function lockSeller(id) {
+    if (confirm('Bạn có chắc muốn khóa tài khoản người bán này? Hành động này không thể hoàn tác.')) {
+      alert('Đã khóa tài khoản người bán!');
+      // Update status logic here
+    }
+  }
+
+  // Search
+  document.getElementById('searchInput').addEventListener('input', function(e) {
+    const query = e.target.value.toLowerCase();
+    // Search logic here
+    console.log('Search:', query);
+  });
+</script>
+</body>
+</html>

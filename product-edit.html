@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chỉnh Sửa Sản Phẩm - Larkon</title>
+  <link rel="stylesheet" href="./css/product.css" />
+  <style>
+    /* Product Edit/Create Styles */
+    .edit-content {
+      padding: 18px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .edit-layout {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 24px;
+    }
+    
+    .product-preview {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      height: fit-content;
+      position: sticky;
+      top: 18px;
+    }
+    
+    .preview-image {
+      width: 100%;
+      height: 320px;
+      background: var(--panel-2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    
+    .preview-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    
+    .preview-info {
+      text-align: center;
+    }
+    
+    .preview-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    
+    .preview-subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+    
+    .preview-price {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    
+    .price-new {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    
+    .price-old {
+      font-size: 16px;
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+    
+    .preview-sizes,
+    .preview-colors {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin: 12px 0;
+    }
+    
+    .size-pill {
+      width: 36px;
+      height: 36px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .size-pill.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #2b1606;
+    }
+    
+    .color-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--line);
+      cursor: pointer;
+    }
+    
+    .product-form {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+    
+    .form-section {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+    
+    .form-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+    
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .form-row.single {
+      grid-template-columns: 1fr;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .form-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    .form-input,
+    .form-select,
+    .form-textarea {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--text);
+      outline: none;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255, 143, 61, 0.1);
+    }
+    
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    .upload-area {
+      border: 2px dashed var(--line);
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: var(--panel-2);
+    }
+    
+    .upload-area:hover {
+      border-color: var(--accent);
+      background: rgba(255, 143, 61, 0.05);
+    }
+    
+    .upload-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+      color: var(--accent);
+    }
+    
+    .upload-text {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .upload-hint {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    
+    .size-options,
+    .color-options {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .option-btn {
+      padding: 8px 16px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    .option-btn:hover {
+      border-color: var(--accent);
+    }
+    
+    .option-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #2b1606;
+    }
+    
+    .color-picker {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 2px solid var(--line);
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    
+    .color-picker:hover {
+      transform: scale(1.1);
+      border-color: var(--accent);
+    }
+    
+    .color-picker.active::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 18px;
+      font-weight: 900;
+      text-shadow: 0 0 3px rgba(0,0,0,0.5);
+    }
+    
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+    }
+    
+    .btn-secondary {
+      padding: 12px 24px;
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-secondary:hover {
+      background: var(--panel-2);
+    }
+    
+    .btn-primary {
+      padding: 12px 32px;
+      background: linear-gradient(135deg, var(--accent), #ff9f5d);
+      border: none;
+      border-radius: 10px;
+      color: #2b1606;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 143, 61, 0.4);
+    }
+    
+    @media (max-width: 1024px) {
+      .edit-layout {
+        grid-template-columns: 1fr;
+      }
+      
+      .product-preview {
+        position: static;
+      }
+      
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="#f9a44d" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="#f9a44d" stroke-width="1.5"/></svg>
+      <span class="brand-text">Larkon</span>
+      <div class="toggle-btn" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <h6>TỔNG HỢP</h6>
+      <a href="dashboard.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l9-8 9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8z" stroke="currentColor"/></svg><span>Bảng điều khiển</span></a>
+      
+      <div class="nav-item open">
+        <a onclick="toggleSubmenu(this)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span>Sản phẩm</span>
+          </div>
+          <svg class="nav-toggle" viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="m18 15-6-6-6 6" stroke="currentColor" stroke-width="2"/></svg>
+        </a>
+        <div class="submenu">
+          <a href="product-list.html">Danh sách</a>
+          <a href="product-grid.html">Lưới</a>
+          <a href="product-details.html">Chi tiết</a>
+          <a href="product-edit.html" class="active">Sửa đổi</a>
+          <a href="product-create.html">Tạo</a>
+        </div>
+      </div>
+      
+      <h6>DANH MỤC</h6>
+      <a href="category-list.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor"/></svg><span>Danh sách</span></a>
+      <a href="category-edit.html"><svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor"/></svg><span>Sửa đổi</span></a>
+      <a href="category-add.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v16m8-8H4" stroke="currentColor"/></svg><span>Tạo</span></a>
+      
+      <h6>QUẢN TRỊ</h6>
+      <a href="admin-seller-approval.html"><svg viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M20 8v6M23 11h-6" stroke="currentColor" stroke-width="2"/></svg><span>Duyệt Người Bán</span></a>
+      <a href="admin-content-moderation.html"><svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 0 0 1.946-.806 3.42 3.42 0 0 1 3.438 0 3.42 3.42 0 0 0 1.946.806 3.42 3.42 0 0 1 3.138 3.138 3.42 3.42 0 0 0 .806 1.946 3.42 3.42 0 0 1 0 3.438 3.42 3.42 0 0 0-.806 1.946 3.42 3.42 0 0 1-3.138 3.138 3.42 3.42 0 0 0-1.946.806 3.42 3.42 0 0 1-3.438 0 3.42 3.42 0 0 0-1.946-.806 3.42 3.42 0 0 1-3.138-3.138 3.42 3.42 0 0 0-.806-1.946 3.42 3.42 0 0 1 0-3.438 3.42 3.42 0 0 0 .806-1.946 3.42 3.42 0 0 1 3.138-3.138z" stroke="currentColor" stroke-width="2"/></svg><span>Kiểm Duyệt Nội Dung</span></a>
+      <a href="admin-category-attributes.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2"/></svg><span>Danh Mục & Thuộc Tính</span></a>
+      <a href="admin-promotions.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/></svg><span>Khuyến Mãi</span></a>
+      <a href="admin-shipping.html"><svg viewBox="0 0 24 24" fill="none"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z" stroke="currentColor" stroke-width="2"/><circle cx="5.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="2"/><circle cx="18.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="2"/></svg><span>Vận Chuyển</span></a>
+      <a href="admin-finance.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/></svg><span>Tài Chính</span></a>
+      <a href="admin-disputes.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" stroke="currentColor" stroke-width="2"/><path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2"/></svg><span>Khiếu Nại & Tranh Chấp</span></a>
+      <a href="admin-reports.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18M7 16l4-4 4 4 6-6" stroke="currentColor" stroke-width="2"/></svg><span>Báo Cáo & Giám Sát</span></a>
+      <a href="admin-permissions.html"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" stroke-width="2"/></svg><span>Phân Quyền & Nhật Ký</span></a>
+      
+      <h6>HÀNG TỒN KHO</h6>
+      <a href="inventory-warehouse.html"><svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor"/></svg><span>Kho hàng</span></a>
+      <a href="inventory-received-orders.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.5 6M17 13l2.5 6M9.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM17.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" stroke="currentColor"/></svg><span>Đã nhận được đơn đặt hàng</span></a>
+      
+      <h6>NGƯỜI DÙNG</h6>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor"/><path d="M4 20c2-4 6-4 8-4s6 0 8 4" stroke="currentColor"/></svg><span>Hồ sơ</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor"/></svg><span>Vai trò</span></a>
+    </nav>
+
+    <div class="grow"></div>
+
+    <div class="user">
+      <div class="avatar"></div>
+      <div>
+        <div style="font-weight:700">Admin</div>
+        <div class="sub">Quản trị</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <section class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="title">PRODUCT EDIT</div>
+      <div class="actions">
+        <div class="icon-btn" title="Chế độ tối">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M21 12a9 9 0 1 1-8-8 7 7 0 0 0 8 8z" stroke="#b9c7e5"/></svg>
+        </div>
+        <div class="icon-btn" title="Thông báo">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M15 17h5l-1-2v-4a7 7 0 0 0-14 0v4l-1 2h5m6 0a3 3 0 0 1-6 0" stroke="#b9c7e5"/><circle cx="18" cy="6" r="3" fill="#ef4444"/></svg>
+        </div>
+        <label class="search">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><circle cx="11" cy="11" r="7" stroke="#7f95bd"/><path d="M21 21l-3.5-3.5" stroke="#7f95bd"/></svg>
+          <input placeholder="Tìm kiếm..." />
+        </label>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="edit-content">
+      <div class="edit-layout">
+        
+        <!-- Product Preview -->
+        <div class="product-preview">
+          <div class="preview-image" id="previewImage">
+            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400" alt="Product" />
+          </div>
+          
+          <div class="preview-info">
+            <div class="preview-title" id="previewTitle">Men Black Slim Fit T-shirt</div>
+            <div class="preview-subtitle" id="previewSubtitle">(Fashion)</div>
+            
+            <div class="preview-price">
+              <div class="price-new" id="previewPriceNew">$80</div>
+              <div class="price-old" id="previewPriceOld">$100</div>
+              <div class="discount-badge" id="previewDiscount">20% OFF</div>
+            </div>
+            
+            <div style="margin: 16px 0;">
+              <div style="font-size: 11px; color: var(--muted); margin-bottom: 8px;">Size :</div>
+              <div class="preview-sizes" id="previewSizes">
+                <div class="size-pill">S</div>
+                <div class="size-pill active">M</div>
+                <div class="size-pill">L</div>
+                <div class="size-pill">XL</div>
+              </div>
+            </div>
+            
+            <div>
+              <div style="font-size: 11px; color: var(--muted); margin-bottom: 8px;">Colors :</div>
+              <div class="preview-colors" id="previewColors">
+                <div class="color-circle" style="background: #1a1a1a;"></div>
+                <div class="color-circle" style="background: #fbbf24;"></div>
+                <div class="color-circle" style="background: #ef4444;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Form -->
+        <div class="product-form">
+          
+          <!-- Upload Photo Section -->
+          <div class="form-section">
+            <div class="section-title">Add Product Photo</div>
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+              <svg class="upload-icon" viewBox="0 0 24 24" fill="none">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2"/>
+                <polyline points="17 8 12 3 7 8" stroke="currentColor" stroke-width="2"/>
+                <line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <div class="upload-text">Drop your images here, or <span style="color: var(--accent);">click to browse</span></div>
+              <div class="upload-hint">1600 x 1200 (4:3) recommended. PNG, JPG and GIF files are allowed</div>
+            </div>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFileSelect(event)" />
+          </div>
+
+          <!-- Product Information -->
+          <div class="form-section">
+            <div class="section-title">Product Information</div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Product Name</label>
+                <input type="text" class="form-input" value="Men Black Slim Fit T-shirt" id="productName" oninput="updatePreview()" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Product Categories</label>
+                <select class="form-select" id="productCategory" onchange="updatePreview()">
+                  <option value="Fashion" selected>Fashion</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Shoes">Shoes</option>
+                  <option value="Hand Bag">Hand Bag</option>
+                  <option value="Wallet">Wallet</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Brand</label>
+                <input type="text" class="form-input" value="Larkon Fashion" placeholder="Enter brand name" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Weight</label>
+                <input type="text" class="form-input" value="300gm" placeholder="e.g., 500g" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Gender</label>
+                <select class="form-select">
+                  <option value="Men" selected>Men</option>
+                  <option value="Women">Women</option>
+                  <option value="Unisex">Unisex</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row single">
+              <div class="form-group">
+                <label class="form-label">Size :</label>
+                <div class="size-options" id="sizeOptions">
+                  <div class="option-btn" onclick="toggleOption(this)">XS</div>
+                  <div class="option-btn active" onclick="toggleOption(this)">S</div>
+                  <div class="option-btn active" onclick="toggleOption(this)">M</div>
+                  <div class="option-btn active" onclick="toggleOption(this)">L</div>
+                  <div class="option-btn" onclick="toggleOption(this)">XL</div>
+                  <div class="option-btn" onclick="toggleOption(this)">3XL</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row single">
+              <div class="form-group">
+                <label class="form-label">Colors :</label>
+                <div class="color-options" id="colorOptions">
+                  <div class="color-picker active" style="background: #1a1a1a;" onclick="toggleColor(this)"></div>
+                  <div class="color-picker" style="background: #fbbf24;" onclick="toggleColor(this)"></div>
+                  <div class="color-picker" style="background: #ffffff; border-color: #ddd;" onclick="toggleColor(this)"></div>
+                  <div class="color-picker" style="background: #ef4444;" onclick="toggleColor(this)"></div>
+                  <div class="color-picker" style="background: #10b981;" onclick="toggleColor(this)"></div>
+                  <div class="color-picker" style="background: #3b82f6;" onclick="toggleColor(this)"></div>
+                  <div class="color-picker" style="background: #8b5cf6;" onclick="toggleColor(this)"></div>
+                  <div class="color-picker" style="background: #ec4899;" onclick="toggleColor(this)"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row single">
+              <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea class="form-textarea" placeholder="Product description...">Top in sweatshirt fabric made from a cotton blend with a soft brushed inside. Relaxed fit with dropped shoulders, long sleeves and ribbing around the neckline, cuffs and hem. Small metal text applique.</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Details -->
+          <div class="form-section">
+            <div class="section-title">Product Details</div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Tag Number</label>
+                <input type="text" class="form-input" value="36294007" placeholder="e.g., SKU123" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Stock</label>
+                <input type="number" class="form-input" value="485" placeholder="Quantity" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tag</label>
+                <div style="padding: 10px 12px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; display: inline-flex; gap: 6px;">
+                  <span style="background: var(--accent); color: #2b1606; padding: 2px 10px; border-radius: 4px; font-size: 12px; font-weight: 600;">Fashion</span>
+                  <span style="background: #3b82f6; color: white; padding: 2px 10px; border-radius: 4px; font-size: 12px; font-weight: 600;">New</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pricing Details -->
+          <div class="form-section">
+            <div class="section-title">Pricing Details</div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Price</label>
+                <div style="position: relative;">
+                  <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted);">$</span>
+                  <input type="number" class="form-input" value="80" style="padding-left: 32px;" id="productPrice" oninput="updatePreview()" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Discount</label>
+                <div style="position: relative;">
+                  <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted);">%</span>
+                  <input type="number" class="form-input" value="30" style="padding-left: 32px;" id="productDiscount" oninput="updatePreview()" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tax</label>
+                <div style="position: relative;">
+                  <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted);">%</span>
+                  <input type="number" class="form-input" value="5" style="padding-left: 32px;" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button class="btn-secondary" onclick="window.location.href='product-list.html'">Reset</button>
+            <button class="btn-primary" onclick="saveProduct()">Save</button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+</div>
+
+<script>
+  // Toggle size/option selection
+  function toggleOption(element) {
+    element.classList.toggle('active');
+  }
+
+  // Toggle color selection
+  function toggleColor(element) {
+    element.classList.toggle('active');
+  }
+
+  // Handle file selection
+  function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.querySelector('#previewImage img').src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // Update preview
+  function updatePreview() {
+    const name = document.getElementById('productName').value;
+    const category = document.getElementById('productCategory').value;
+    const price = document.getElementById('productPrice').value;
+    const discount = document.getElementById('productDiscount').value;
+    
+    document.getElementById('previewTitle').textContent = name;
+    document.getElementById('previewSubtitle').textContent = `(${category})`;
+    document.getElementById('previewPriceNew').textContent = `$${price}`;
+    
+    if (discount > 0) {
+      const oldPrice = Math.round(price / (1 - discount / 100));
+      document.getElementById('previewPriceOld').textContent = `$${oldPrice}`;
+      document.getElementById('previewDiscount').textContent = `${discount}% OFF`;
+      document.getElementById('previewPriceOld').style.display = 'block';
+      document.getElementById('previewDiscount').style.display = 'block';
+    } else {
+      document.getElementById('previewPriceOld').style.display = 'none';
+      document.getElementById('previewDiscount').style.display = 'none';
+    }
+  }
+
+  // Save product
+  function saveProduct() {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      z-index: 10000;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    `;
+    notification.innerHTML = '<span style="font-size: 20px;">✓</span><span>Sản phẩm đã được cập nhật thành công!</span>';
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+      // window.location.href = 'product-list.html';
+    }, 2000);
+  }
+
+  // Drag and drop
+  const uploadArea = document.querySelector('.upload-area');
+  
+  uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = 'var(--accent)';
+    uploadArea.style.background = 'rgba(255, 143, 61, 0.1)';
+  });
+  
+  uploadArea.addEventListener('dragleave', () => {
+    uploadArea.style.borderColor = '';
+    uploadArea.style.background = '';
+  });
+  
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = '';
+    uploadArea.style.background = '';
+    
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.querySelector('#previewImage img').src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Toggle sidebar
+  function toggleSidebar() {
+    document.querySelector('.layout').classList.toggle('collapsed');
+    localStorage.setItem('sidebarCollapsed', document.querySelector('.layout').classList.contains('collapsed'));
+  }
+
+  // Toggle submenu
+  function toggleSubmenu(element) {
+    const navItem = element.parentElement;
+    navItem.classList.toggle('open');
+  }
+
+  // Restore sidebar state on load
+  if (localStorage.getItem('sidebarCollapsed') === 'true') {
+    document.querySelector('.layout').classList.add('collapsed');
+  }
+</script>
+</body>
+</html>
+
