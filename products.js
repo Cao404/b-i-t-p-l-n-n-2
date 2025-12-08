@@ -1,7 +1,7 @@
 // Products JavaScript
 // Dùng cho product-grid.html, product-list.html, product-details.html
 
-// Sample product data
+// Sample product data (dùng làm dữ liệu khởi tạo cho kho localStorage)
 const PRODUCTS_DATA = [
   {
     id: 1,
@@ -125,6 +125,44 @@ const PRODUCTS_DATA = [
   }
 ];
 
+// Kho sản phẩm trong localStorage
+const PRODUCT_STORAGE_KEY = 'larkon_products';
+
+// Đọc toàn bộ sản phẩm từ localStorage, nếu chưa có thì seed từ PRODUCTS_DATA
+function getAllProducts() {
+  try {
+    const raw = localStorage.getItem(PRODUCT_STORAGE_KEY);
+    if (!raw) {
+      const seed = Array.isArray(PRODUCTS_DATA) ? PRODUCTS_DATA.slice() : [];
+      localStorage.setItem(PRODUCT_STORAGE_KEY, JSON.stringify(seed));
+      return seed;
+    }
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return Array.isArray(PRODUCTS_DATA) ? PRODUCTS_DATA.slice() : [];
+    }
+    return parsed;
+  } catch (e) {
+    console.error('Không thể đọc kho sản phẩm, dùng PRODUCTS_DATA mặc định', e);
+    return Array.isArray(PRODUCTS_DATA) ? PRODUCTS_DATA.slice() : [];
+  }
+}
+
+// Ghi toàn bộ danh sách sản phẩm vào localStorage
+function saveAllProducts(products) {
+  try {
+    localStorage.setItem(PRODUCT_STORAGE_KEY, JSON.stringify(products || []));
+  } catch (e) {
+    console.error('Không thể lưu kho sản phẩm', e);
+  }
+}
+
+// Lấy 1 sản phẩm theo id từ kho
+function getProductById(id) {
+  const products = getAllProducts();
+  return products.find(function (p) { return p.id === id; }) || null;
+}
+
 // Product Grid Functions
 function initProductGrid() {
   const grid = document.getElementById('productsGrid');
@@ -133,7 +171,8 @@ function initProductGrid() {
   
   if (!grid) return;
   
-  let currentProducts = [...PRODUCTS_DATA];
+  // Luôn lấy dữ liệu mới nhất từ kho
+  let currentProducts = getAllProducts();
   
   // Render products
   function renderProducts(products = currentProducts) {
@@ -156,6 +195,10 @@ function initProductGrid() {
     const card = document.createElement('div');
     card.className = 'product-card';
     card.onclick = () => {
+      // Lưu thông tin sản phẩm được chọn để trang chi tiết sử dụng
+      if (product && typeof product.id !== 'undefined') {
+        localStorage.setItem('selectedProductId', String(product.id));
+      }
       localStorage.setItem('selectedProduct', JSON.stringify(product));
       window.location.href = 'product-details.html';
     };
@@ -198,11 +241,14 @@ function initProductGrid() {
   // Search functionality
   if (searchInput) {
     searchInput.addEventListener('input', function(e) {
+      const allProducts = getAllProducts();
       const searchTerm = e.target.value.toLowerCase();
-      const filtered = PRODUCTS_DATA.filter(p => 
-        p.name.toLowerCase().includes(searchTerm) || 
-        p.category.toLowerCase().includes(searchTerm)
-      );
+      const filtered = allProducts.filter(function (p) {
+        return (
+          (p.name || '').toLowerCase().includes(searchTerm) ||
+          (p.category || '').toLowerCase().includes(searchTerm)
+        );
+      });
       currentProducts = filtered;
       renderProducts(currentProducts);
     });
@@ -211,19 +257,21 @@ function initProductGrid() {
   // Sort functionality
   if (sortSelect) {
     sortSelect.addEventListener('change', function(e) {
-      let sorted = [...currentProducts];
+      let sorted = currentProducts.slice();
       switch(e.target.value) {
         case 'Giá: Thấp đến Cao':
-          sorted.sort((a, b) => a.price - b.price);
+          sorted.sort(function (a, b) { return (a.price || 0) - (b.price || 0); });
           break;
         case 'Giá: Cao đến Thấp':
-          sorted.sort((a, b) => b.price - a.price);
+          sorted.sort(function (a, b) { return (b.price || 0) - (a.price || 0); });
           break;
         case 'Đánh giá cao nhất':
-          sorted.sort((a, b) => b.rating - a.rating);
+          sorted.sort(function (a, b) { return (b.rating || 0) - (a.rating || 0); });
           break;
         default:
-          sorted = [...PRODUCTS_DATA];
+          // trả về danh sách đầy đủ từ kho
+          sorted = getAllProducts();
+          currentProducts = sorted.slice();
       }
       renderProducts(sorted);
     });
@@ -257,10 +305,28 @@ function initProductGrid() {
 
 // Product Details Functions
 function initProductDetails() {
-  const savedProduct = localStorage.getItem('selectedProduct');
-  
-  if (savedProduct) {
-    const product = JSON.parse(savedProduct);
+  let product = null;
+
+  // Ưu tiên id sản phẩm được chọn
+  const idRaw = localStorage.getItem('selectedProductId');
+  const id = idRaw ? Number(idRaw) : NaN;
+  if (!isNaN(id)) {
+    product = getProductById(id);
+  }
+
+  // Fallback: selectedProduct cũ (nếu còn dùng ở nơi khác)
+  if (!product) {
+    const savedProduct = localStorage.getItem('selectedProduct');
+    if (savedProduct) {
+      try {
+        product = JSON.parse(savedProduct);
+      } catch (e) {
+        product = null;
+      }
+    }
+  }
+
+  if (product) {
     displayProductDetails(product);
   }
   
@@ -281,14 +347,48 @@ function initProductDetails() {
 }
 
 function displayProductDetails(product) {
-  // Update product title, price, etc.
+  if (!product) return;
+
+  // Cập nhật ảnh chính
+  const mainImage = document.querySelector('#mainImage img');
+  if (mainImage && product.image) {
+    mainImage.src = product.image;
+    mainImage.alt = product.name || '';
+  }
+
+  // Tiêu đề sản phẩm
   const titleElement = document.querySelector('.product-title');
-  if (titleElement) titleElement.textContent = product.name;
-  
+  if (titleElement) {
+    titleElement.textContent = product.name || '';
+  }
+
+  // Giá hiện tại
   const priceElement = document.querySelector('.current-price');
-  if (priceElement) priceElement.textContent = `$${product.price}`;
-  
-  // Add more dynamic content updates here
+  if (priceElement) {
+    priceElement.textContent = `$${product.price || 0}`;
+  }
+
+  // Giá cũ (nếu có)
+  const oldPriceElement = document.querySelector('.price-section .old-price');
+  if (oldPriceElement) {
+    if (product.oldPrice) {
+      oldPriceElement.textContent = `$${product.oldPrice}`;
+      oldPriceElement.style.display = 'inline-block';
+    } else {
+      oldPriceElement.style.display = 'none';
+    }
+  }
+
+  // Badge giảm giá (nếu có)
+  const discountBadge = document.querySelector('.price-section .discount-badge');
+  if (discountBadge) {
+    if (product.discount) {
+      discountBadge.textContent = `Giảm ${product.discount}%`;
+      discountBadge.style.display = 'inline-block';
+    } else {
+      discountBadge.style.display = 'none';
+    }
+  }
 }
 
 function setupImageGallery() {

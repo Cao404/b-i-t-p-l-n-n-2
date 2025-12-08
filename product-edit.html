@@ -626,9 +626,11 @@
     </div>
 
   </section>
-</div>
+ </div>
 
+<script src="./js/products.js"></script>
 <script>
+  let currentProductId = null;
   // Toggle size/option selection
   function toggleOption(element) {
     element.classList.toggle('active');
@@ -674,8 +676,51 @@
     }
   }
 
-  // Save product
+  // Save product: cập nhật lại trong kho localStorage
   function saveProduct() {
+    if (currentProductId == null) {
+      alert('Không xác định được sản phẩm cần sửa. Hãy quay lại danh sách và chọn lại.');
+      return;
+    }
+
+    const nameInput = document.getElementById('productName');
+    const categorySelect = document.getElementById('productCategory');
+    const priceInput = document.getElementById('productPrice');
+    const discountInput = document.getElementById('productDiscount');
+
+    const name = nameInput ? nameInput.value.trim() : '';
+    const category = categorySelect ? categorySelect.value : '';
+    const price = priceInput ? Number(priceInput.value || 0) : 0;
+    const discount = discountInput ? Number(discountInput.value || 0) : 0;
+
+    // Lấy ảnh hiện tại từ preview
+    let image = '';
+    const previewImg = document.querySelector('#previewImage img');
+    if (previewImg && previewImg.src) {
+      image = previewImg.src;
+    }
+
+    const products = typeof getAllProducts === 'function' ? getAllProducts() : [];
+    const index = products.findIndex(function (p) { return p.id === currentProductId; });
+    if (index === -1) {
+      alert('Không tìm thấy sản phẩm trong kho.');
+      return;
+    }
+
+    const existing = products[index];
+    products[index] = Object.assign({}, existing, {
+      name: name || existing.name,
+      category: category || existing.category,
+      price: price || existing.price,
+      discount: discount > 0 ? discount : null,
+      oldPrice: discount > 0 ? Math.round(price / (1 - discount / 100)) : existing.oldPrice || null,
+      image: image || existing.image
+    });
+
+    if (typeof saveAllProducts === 'function') {
+      saveAllProducts(products);
+    }
+
     const notification = document.createElement('div');
     notification.style.cssText = `
       position: fixed;
@@ -692,12 +737,12 @@
       align-items: center;
       gap: 12px;
     `;
-    notification.innerHTML = '<span style="font-size: 20px;">✓</span><span>Sản phẩm đã được cập nhật thành công!</span>';
+    notification.innerHTML = '<span style="font-size: 20px;">✓</span><span>Sản phẩm đã được cập nhật và lưu vào kho!</span>';
     document.body.appendChild(notification);
     
-    setTimeout(() => {
+    setTimeout(function () {
       notification.remove();
-      // window.location.href = 'product-list.html';
+      window.location.href = 'product-list.html';
     }, 2000);
   }
 
@@ -746,6 +791,64 @@
   if (localStorage.getItem('sidebarCollapsed') === 'true') {
     document.querySelector('.layout').classList.add('collapsed');
   }
+
+  // Khi DOM sẵn sàng, đọc sản phẩm được chọn và đổ vào form
+  document.addEventListener('DOMContentLoaded', function () {
+    const idRaw = localStorage.getItem('selectedProductId');
+    const id = idRaw ? Number(idRaw) : NaN;
+    let product = null;
+    if (!isNaN(id) && typeof getProductById === 'function') {
+      product = getProductById(id);
+    }
+
+    if (!product && typeof getAllProducts === 'function') {
+      const all = getAllProducts();
+      product = all && all.length ? all[0] : null;
+    }
+
+    if (!product) return;
+    currentProductId = product.id;
+
+    // Đổ dữ liệu cơ bản vào preview + form
+    const previewImg = document.querySelector('#previewImage img');
+    if (previewImg && product.image) previewImg.src = product.image;
+
+    const previewTitle = document.getElementById('previewTitle');
+    const previewSubtitle = document.getElementById('previewSubtitle');
+    const previewPriceNew = document.getElementById('previewPriceNew');
+    const previewPriceOld = document.getElementById('previewPriceOld');
+    const previewDiscount = document.getElementById('previewDiscount');
+
+    if (previewTitle) previewTitle.textContent = product.name || '';
+    if (previewSubtitle) previewSubtitle.textContent = `(${product.category || ''})`;
+    if (previewPriceNew) previewPriceNew.textContent = `$${product.price || 0}`;
+    if (previewPriceOld) {
+      if (product.oldPrice) {
+        previewPriceOld.textContent = `$${product.oldPrice}`;
+        previewPriceOld.style.display = 'block';
+      } else {
+        previewPriceOld.style.display = 'none';
+      }
+    }
+    if (previewDiscount) {
+      if (product.discount) {
+        previewDiscount.textContent = `${product.discount}% OFF`;
+        previewDiscount.style.display = 'block';
+      } else {
+        previewDiscount.style.display = 'none';
+      }
+    }
+
+    const nameInput = document.getElementById('productName');
+    const categorySelect = document.getElementById('productCategory');
+    const priceInput = document.getElementById('productPrice');
+    const discountInput = document.getElementById('productDiscount');
+
+    if (nameInput) nameInput.value = product.name || '';
+    if (categorySelect && product.category) categorySelect.value = product.category;
+    if (priceInput) priceInput.value = product.price || 0;
+    if (discountInput) discountInput.value = product.discount || 0;
+  });
 </script>
 </body>
 </html>

@@ -68,6 +68,143 @@
       align-items: center;
       gap: 6px;
     }
+
+    .empty-state {
+      padding: 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      border-radius: 8px;
+      border: 1px dashed var(--line);
+      background: var(--panel-2);
+    }
+
+    .inline-actions {
+      display: flex;
+      gap: 6px;
+      margin-left: auto;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .inline-action-btn {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0 4px;
+      font-size: 11px;
+    }
+
+    .inline-action-btn:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 520px;
+      background: var(--panel);
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      padding: 18px 18px 14px;
+      box-shadow: 0 22px 45px rgba(15, 23, 42, 0.45);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .modal-close {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+    }
+
+    .modal-close:hover {
+      background: var(--panel-2);
+    }
+
+    .modal-form {
+      display: grid;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .modal-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .modal-field label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .modal-field input,
+    .modal-field select,
+    .modal-field textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 13px;
+      resize: vertical;
+      min-height: 36px;
+    }
+
+    .modal-field textarea {
+      min-height: 60px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .btn-secondary {
+      background: var(--panel-2);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
   </style>
 </head>
 <body>
@@ -144,46 +281,11 @@
       <div class="card">
         <div class="card-header">
           <div style="font-weight:700;font-size:16px">Cây Danh Mục</div>
-          <button class="btn" onclick="addCategory()">Thêm Danh Mục</button>
+          <button class="btn" onclick="openCategoryModal()">Thêm Danh Mục</button>
         </div>
         
         <div style="padding:20px">
-          <div class="category-tree">
-            <div class="tree-item has-children" onclick="toggleTree(this)">
-              <span>Thời Trang</span>
-              <span style="margin-left:auto;color:var(--muted);font-size:12px">1,234 sản phẩm</span>
-            </div>
-            <div class="tree-children">
-              <div class="tree-item" onclick="editCategory(1)">
-                <span>Thời Trang Nam</span>
-                <span style="margin-left:auto;color:var(--muted);font-size:12px">456 sản phẩm</span>
-              </div>
-              <div class="tree-item" onclick="editCategory(2)">
-                <span>Thời Trang Nữ</span>
-                <span style="margin-left:auto;color:var(--muted);font-size:12px">678 sản phẩm</span>
-              </div>
-            </div>
-            
-            <div class="tree-item has-children" onclick="toggleTree(this)">
-              <span>Điện Tử</span>
-              <span style="margin-left:auto;color:var(--muted);font-size:12px">890 sản phẩm</span>
-            </div>
-            <div class="tree-children">
-              <div class="tree-item" onclick="editCategory(3)">
-                <span>Điện Thoại</span>
-                <span style="margin-left:auto;color:var(--muted);font-size:12px">234 sản phẩm</span>
-              </div>
-              <div class="tree-item" onclick="editCategory(4)">
-                <span>Laptop</span>
-                <span style="margin-left:auto;color:var(--muted);font-size:12px">456 sản phẩm</span>
-              </div>
-            </div>
-            
-            <div class="tree-item" onclick="editCategory(5)">
-              <span>Nội Thất</span>
-              <span style="margin-left:auto;color:var(--muted);font-size:12px">567 sản phẩm</span>
-            </div>
-          </div>
+          <div class="category-tree" id="category-tree"></div>
         </div>
       </div>
 
@@ -191,92 +293,11 @@
       <div class="card">
         <div class="card-header">
           <div style="font-weight:700;font-size:16px">Nhóm Thuộc Tính</div>
-          <button class="btn" onclick="addAttributeGroup()">Thêm Nhóm Thuộc Tính</button>
+          <button class="btn" onclick="openAttributeModal()">Thêm Nhóm Thuộc Tính</button>
         </div>
         
         <div style="padding:20px">
-          <div class="attribute-group">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-              <div>
-                <div style="font-weight:700;font-size:16px">Kích Thước (Size)</div>
-                <div style="color:var(--muted);font-size:13px;margin-top:4px">Áp dụng cho: Thời Trang</div>
-              </div>
-              <div class="act">
-                <div class="pill edit" title="Sửa" onclick="editAttributeGroup(1)">
-                  <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor"/></svg>
-                </div>
-              </div>
-            </div>
-            <div class="attribute-values">
-              <span class="attribute-value">XS <span style="color:var(--muted)">×</span></span>
-              <span class="attribute-value">S <span style="color:var(--muted)">×</span></span>
-              <span class="attribute-value">M <span style="color:var(--muted)">×</span></span>
-              <span class="attribute-value">L <span style="color:var(--muted)">×</span></span>
-              <span class="attribute-value">XL <span style="color:var(--muted)">×</span></span>
-              <span class="attribute-value">XXL <span style="color:var(--muted)">×</span></span>
-            </div>
-          </div>
-          
-          <div class="attribute-group">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-              <div>
-                <div style="font-weight:700;font-size:16px">Màu Sắc (Color)</div>
-                <div style="color:var(--muted);font-size:13px;margin-top:4px">Áp dụng cho: Tất cả</div>
-              </div>
-              <div class="act">
-                <div class="pill edit" title="Sửa" onclick="editAttributeGroup(2)">
-                  <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor"/></svg>
-                </div>
-              </div>
-            </div>
-            <div class="attribute-values">
-              <span class="attribute-value">
-                <span style="width:16px;height:16px;background:#ef4444;border-radius:50%;display:inline-block;margin-right:6px"></span>
-                Đỏ <span style="color:var(--muted)">×</span>
-              </span>
-              <span class="attribute-value">
-                <span style="width:16px;height:16px;background:#3b82f6;border-radius:50%;display:inline-block;margin-right:6px"></span>
-                Xanh dương <span style="color:var(--muted)">×</span>
-              </span>
-              <span class="attribute-value">
-                <span style="width:16px;height:16px;background:#10b981;border-radius:50%;display:inline-block;margin-right:6px"></span>
-                Xanh lá <span style="color:var(--muted)">×</span>
-              </span>
-              <span class="attribute-value">
-                <span style="width:16px;height:16px;background:#f59e0b;border-radius:50%;display:inline-block;margin-right:6px"></span>
-                Vàng <span style="color:var(--muted)">×</span>
-              </span>
-              <span class="attribute-value">
-                <span style="width:16px;height:16px;background:#1f2937;border-radius:50%;display:inline-block;margin-right:6px"></span>
-                Đen <span style="color:var(--muted)">×</span>
-              </span>
-              <span class="attribute-value">
-                <span style="width:16px;height:16px;background:#ffffff;border:1px solid var(--line);border-radius:50%;display:inline-block;margin-right:6px"></span>
-                Trắng <span style="color:var(--muted)">×</span>
-              </span>
-            </div>
-          </div>
-          
-          <div class="attribute-group">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-              <div>
-                <div style="font-weight:700;font-size:16px">Chất Liệu (Material)</div>
-                <div style="color:var(--muted);font-size:13px;margin-top:4px">Áp dụng cho: Thời Trang, Nội Thất</div>
-              </div>
-              <div class="act">
-                <div class="pill edit" title="Sửa" onclick="editAttributeGroup(3)">
-                  <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor"/></svg>
-                </div>
-              </div>
-            </div>
-            <div class="attribute-values">
-              <span class="attribute-value">Cotton <span style="color:var(--muted)">×</span></span>
-              <span class="attribute-value">Polyester <span style="color:var(--muted)">×</span></span>
-              <span class="attribute-value">Silk <span style="color:var(--muted)">×</span></span>
-              <span class="attribute-value">Leather <span style="color:var(--muted)">×</span></span>
-              <span class="attribute-value">Wood <span style="color:var(--muted)">×</span></span>
-            </div>
-          </div>
+          <div id="attribute-groups"></div>
         </div>
       </div>
 
@@ -290,6 +311,66 @@
   </section>
 </div>
 
+<!-- Modal Danh Mục -->
+<div class="modal-backdrop" id="category-modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="category-modal-title">Thêm danh mục</div>
+      <button type="button" class="modal-close" onclick="closeCategoryModal()">✕</button>
+    </div>
+    <form id="category-form" class="modal-form">
+      <div class="modal-field">
+        <label for="category-name">Tên danh mục</label>
+        <input id="category-name" name="name" type="text" placeholder="Thời Trang Nam" required />
+      </div>
+      <div class="modal-row">
+        <div class="modal-field">
+          <label for="category-parent">Danh mục cha</label>
+          <select id="category-parent" name="parentId">
+            <option value="">(Không có)</option>
+          </select>
+        </div>
+        <div class="modal-field">
+          <label for="category-product-count">Số sản phẩm (hiển thị)</label>
+          <input id="category-product-count" name="productCount" type="number" min="0" step="1" placeholder="0" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeCategoryModal()">Hủy</button>
+        <button type="submit" class="btn">Lưu</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Nhóm Thuộc Tính -->
+<div class="modal-backdrop" id="attribute-modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="attribute-modal-title">Thêm nhóm thuộc tính</div>
+      <button type="button" class="modal-close" onclick="closeAttributeModal()">✕</button>
+    </div>
+    <form id="attribute-form" class="modal-form">
+      <div class="modal-field">
+        <label for="attr-name">Tên nhóm thuộc tính</label>
+        <input id="attr-name" name="name" type="text" placeholder="Kích thước (Size)" required />
+      </div>
+      <div class="modal-field">
+        <label for="attr-applies">Áp dụng cho danh mục (mỗi tên cách nhau bởi dấu phẩy)</label>
+        <input id="attr-applies" name="appliesTo" type="text" placeholder="Thời Trang, Nội Thất" />
+      </div>
+      <div class="modal-field">
+        <label for="attr-values">Danh sách giá trị (mỗi giá trị cách nhau bởi dấu phẩy)</label>
+        <textarea id="attr-values" name="values" placeholder="XS, S, M, L, XL"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeAttributeModal()">Hủy</button>
+        <button type="submit" class="btn">Lưu</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
   function toggleSidebar() {
     document.querySelector('.layout').classList.toggle('collapsed');
@@ -300,28 +381,406 @@
     document.querySelector('.layout').classList.add('collapsed');
   }
 
-  function toggleTree(element) {
-    element.classList.toggle('expanded');
-  }
+  const CATEGORY_STORAGE_KEY = 'larkon_categories';
+  const ATTRIBUTE_STORAGE_KEY = 'larkon_attribute_groups';
 
-  function addCategory() {
-    const name = prompt('Nhập tên danh mục mới:');
-    if (name) {
-      alert('Đã thêm danh mục: ' + name);
+  let categories = [];
+  let attributeGroups = [];
+  let editingCategoryId = null;
+  let editingAttributeId = null;
+
+  function loadCategories() {
+    try {
+      const raw = localStorage.getItem(CATEGORY_STORAGE_KEY);
+      if (!raw) {
+        categories = [];
+        return;
+      }
+      const parsed = JSON.parse(raw);
+      categories = Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      console.error('Không thể đọc danh mục', e);
+      categories = [];
     }
   }
 
-  function editCategory(id) {
-    alert('Chỉnh sửa danh mục #' + id);
+  function saveCategories() {
+    try {
+      localStorage.setItem(CATEGORY_STORAGE_KEY, JSON.stringify(categories));
+    } catch (e) {
+      console.error('Không thể lưu danh mục', e);
+    }
   }
 
-  function addAttributeGroup() {
-    alert('Thêm nhóm thuộc tính mới');
+  function loadAttributeGroups() {
+    try {
+      const raw = localStorage.getItem(ATTRIBUTE_STORAGE_KEY);
+      if (!raw) {
+        attributeGroups = [];
+        return;
+      }
+      const parsed = JSON.parse(raw);
+      attributeGroups = Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      console.error('Không thể đọc nhóm thuộc tính', e);
+      attributeGroups = [];
+    }
   }
 
-  function editAttributeGroup(id) {
-    alert('Chỉnh sửa nhóm thuộc tính #' + id);
+  function saveAttributeGroups() {
+    try {
+      localStorage.setItem(ATTRIBUTE_STORAGE_KEY, JSON.stringify(attributeGroups));
+    } catch (e) {
+      console.error('Không thể lưu nhóm thuộc tính', e);
+    }
   }
+
+  function buildCategoryTree(parentId) {
+    return categories
+      .filter(function (c) { return (c.parentId || null) === (parentId || null); })
+      .sort(function (a, b) { return (a.name || '').localeCompare(b.name || ''); });
+  }
+
+  function renderCategoryTree() {
+    const container = document.getElementById('category-tree');
+    if (!container) return;
+
+    if (!categories || categories.length === 0) {
+      container.innerHTML = '<div class="empty-state">Chưa có danh mục nào. Bấm "Thêm Danh Mục" để tạo danh mục gốc.</div>';
+      return;
+    }
+
+    function renderNodes(parentId) {
+      const nodes = buildCategoryTree(parentId);
+      if (!nodes.length) return '';
+
+      return nodes
+        .map(function (c) {
+          const children = buildCategoryTree(c.id);
+          const hasChildren = children.length > 0;
+          const productText = (c.productCount || 0) + ' sản phẩm';
+
+          const item = [
+            '<div class="tree-item ' + (hasChildren ? 'has-children' : '') + '" data-id="' + c.id + '">',
+            '  <span>' + (c.name || '') + '</span>',
+            '  <span style="margin-left:auto;color:var(--muted);font-size:12px">' + productText + '</span>',
+            '  <div class="inline-actions">',
+            '    <button class="inline-action-btn" type="button" onclick="event.stopPropagation(); openCategoryModal(' + c.id + ')">Sửa</button>',
+            '    <button class="inline-action-btn" type="button" onclick="event.stopPropagation(); deleteCategory(' + c.id + ')">Xóa</button>',
+            '  </div>',
+            '</div>'
+          ].join('');
+
+          let childrenHtml = '';
+          if (hasChildren) {
+            childrenHtml = '<div class="tree-children">' + renderNodes(c.id) + '</div>';
+          }
+          return item + childrenHtml;
+        })
+        .join('');
+    }
+
+    container.innerHTML = renderNodes(null);
+
+    container.querySelectorAll('.tree-item.has-children').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        if (e.target.closest('.inline-actions')) return;
+        el.classList.toggle('expanded');
+      });
+    });
+  }
+
+  function renderAttributeGroups() {
+    const container = document.getElementById('attribute-groups');
+    if (!container) return;
+
+    if (!attributeGroups || attributeGroups.length === 0) {
+      container.innerHTML = '<div class="empty-state">Chưa có nhóm thuộc tính nào. Bấm "Thêm Nhóm Thuộc Tính" để tạo mới.</div>';
+      return;
+    }
+
+    container.innerHTML = attributeGroups
+      .sort(function (a, b) { return (a.name || '').localeCompare(b.name || ''); })
+      .map(function (g) {
+        const appliesText = g.appliesToText || 'Tất cả';
+        const values = Array.isArray(g.values) ? g.values : [];
+        const valuesHtml = values
+          .map(function (v, index) {
+            return (
+              '<span class="attribute-value">' +
+              v +
+              ' <button type="button" class="inline-action-btn" onclick="removeAttributeValue(' + g.id + ',' + index + ');event.stopPropagation();">×</button></span>'
+            );
+          })
+          .join('');
+
+        return [
+          '<div class="attribute-group">',
+          '  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">',
+          '    <div>',
+          '      <div style="font-weight:700;font-size:16px">' + (g.name || '') + '</div>',
+          '      <div style="color:var(--muted);font-size:13px;margin-top:4px">Áp dụng cho: ' + appliesText + '</div>',
+          '    </div>',
+          '    <div class="act" style="display:flex;gap:6px">',
+          '      <div class="pill edit" title="Sửa" onclick="openAttributeModal(' + g.id + ')">',
+          '        <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor"/></svg>',
+          '      </div>',
+          '      <div class="pill del" title="Xóa" onclick="deleteAttributeGroup(' + g.id + ')">',
+          '        <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z" stroke="currentColor"/></svg>',
+          '      </div>',
+          '    </div>',
+          '  </div>',
+          '  <div class="attribute-values">' + (valuesHtml || '<span class="attribute-value" style="color:var(--muted)">Chưa có giá trị</span>') + '</div>',
+          '</div>'
+        ].join('');
+      })
+      .join('');
+  }
+
+  function openCategoryModal(id) {
+    const backdrop = document.getElementById('category-modal-backdrop');
+    const title = document.getElementById('category-modal-title');
+    const nameInput = document.getElementById('category-name');
+    const parentSelect = document.getElementById('category-parent');
+    const countInput = document.getElementById('category-product-count');
+    if (!backdrop || !title || !nameInput || !parentSelect) return;
+
+    parentSelect.innerHTML = '<option value="">(Không có)</option>' +
+      categories
+        .filter(function (c) { return !id || c.id !== id; })
+        .map(function (c) { return '<option value="' + c.id + '">' + (c.name || '') + '</option>'; })
+        .join('');
+
+    if (id) {
+      const cat = categories.find(function (c) { return c.id === id; });
+      if (!cat) return;
+      editingCategoryId = id;
+      title.textContent = 'Chỉnh sửa danh mục';
+      nameInput.value = cat.name || '';
+      parentSelect.value = cat.parentId || '';
+      countInput.value = cat.productCount || '';
+    } else {
+      editingCategoryId = null;
+      title.textContent = 'Thêm danh mục';
+      nameInput.value = '';
+      parentSelect.value = '';
+      countInput.value = '';
+    }
+
+    backdrop.style.display = 'flex';
+  }
+
+  function closeCategoryModal() {
+    const backdrop = document.getElementById('category-modal-backdrop');
+    if (backdrop) backdrop.style.display = 'none';
+    editingCategoryId = null;
+  }
+
+  function openAttributeModal(id) {
+    const backdrop = document.getElementById('attribute-modal-backdrop');
+    const title = document.getElementById('attribute-modal-title');
+    const nameInput = document.getElementById('attr-name');
+    const appliesInput = document.getElementById('attr-applies');
+    const valuesInput = document.getElementById('attr-values');
+    if (!backdrop || !title || !nameInput || !appliesInput || !valuesInput) return;
+
+    if (id) {
+      const g = attributeGroups.find(function (ag) { return ag.id === id; });
+      if (!g) return;
+      editingAttributeId = id;
+      title.textContent = 'Chỉnh sửa nhóm thuộc tính';
+      nameInput.value = g.name || '';
+      appliesInput.value = g.appliesToText || '';
+      valuesInput.value = (Array.isArray(g.values) ? g.values : []).join(', ');
+    } else {
+      editingAttributeId = null;
+      title.textContent = 'Thêm nhóm thuộc tính';
+      nameInput.value = '';
+      appliesInput.value = '';
+      valuesInput.value = '';
+    }
+
+    backdrop.style.display = 'flex';
+  }
+
+  function closeAttributeModal() {
+    const backdrop = document.getElementById('attribute-modal-backdrop');
+    if (backdrop) backdrop.style.display = 'none';
+    editingAttributeId = null;
+  }
+
+  function deleteCategory(id) {
+    if (!confirm('Xóa danh mục này? Các danh mục con cũng sẽ bị xóa.')) return;
+    const collectIds = [id];
+    function collectChildren(parentId) {
+      categories
+        .filter(function (c) { return c.parentId === parentId; })
+        .forEach(function (c) {
+          collectIds.push(c.id);
+          collectChildren(c.id);
+        });
+    }
+    collectChildren(id);
+
+    categories = categories.filter(function (c) { return !collectIds.includes(c.id); });
+    saveCategories();
+    renderCategoryTree();
+  }
+
+  function deleteAttributeGroup(id) {
+    if (!confirm('Xóa nhóm thuộc tính này?')) return;
+    attributeGroups = attributeGroups.filter(function (g) { return g.id !== id; });
+    saveAttributeGroups();
+    renderAttributeGroups();
+  }
+
+  function removeAttributeValue(groupId, valueIndex) {
+    const g = attributeGroups.find(function (ag) { return ag.id === groupId; });
+    if (!g || !Array.isArray(g.values)) return;
+    g.values.splice(valueIndex, 1);
+    saveAttributeGroups();
+    renderAttributeGroups();
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    loadCategories();
+    loadAttributeGroups();
+
+    if (!categories || categories.length === 0) {
+      const now = Date.now();
+      categories = [
+        { id: 1, name: 'Thời Trang', parentId: null, productCount: 1234, createdAt: now },
+        { id: 2, name: 'Thời Trang Nam', parentId: 1, productCount: 456, createdAt: now + 1 },
+        { id: 3, name: 'Thời Trang Nữ', parentId: 1, productCount: 678, createdAt: now + 2 },
+        { id: 4, name: 'Điện Tử', parentId: null, productCount: 890, createdAt: now + 3 },
+        { id: 5, name: 'Điện Thoại', parentId: 4, productCount: 234, createdAt: now + 4 },
+        { id: 6, name: 'Laptop', parentId: 4, productCount: 456, createdAt: now + 5 },
+        { id: 7, name: 'Nội Thất', parentId: null, productCount: 567, createdAt: now + 6 }
+      ];
+      saveCategories();
+    }
+
+    if (!attributeGroups || attributeGroups.length === 0) {
+      attributeGroups = [
+        {
+          id: 1,
+          name: 'Kích Thước (Size)',
+          appliesToText: 'Thời Trang',
+          values: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+          createdAt: Date.now()
+        },
+        {
+          id: 2,
+          name: 'Màu Sắc (Color)',
+          appliesToText: 'Tất cả',
+          values: ['Đỏ', 'Xanh dương', 'Xanh lá', 'Vàng', 'Đen', 'Trắng'],
+          createdAt: Date.now() + 1
+        },
+        {
+          id: 3,
+          name: 'Chất Liệu (Material)',
+          appliesToText: 'Thời Trang, Nội Thất',
+          values: ['Cotton', 'Polyester', 'Silk', 'Leather', 'Wood'],
+          createdAt: Date.now() + 2
+        }
+      ];
+      saveAttributeGroups();
+    }
+
+    renderCategoryTree();
+    renderAttributeGroups();
+
+    const categoryForm = document.getElementById('category-form');
+    if (categoryForm) {
+      categoryForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const name = document.getElementById('category-name').value.trim();
+        const parentId = document.getElementById('category-parent').value || null;
+        const productCount = Number(document.getElementById('category-product-count').value || 0);
+        if (!name) {
+          alert('Vui lòng nhập tên danh mục');
+          return;
+        }
+        if (editingCategoryId) {
+          const index = categories.findIndex(function (c) { return c.id === editingCategoryId; });
+          if (index !== -1) {
+            categories[index] = Object.assign({}, categories[index], {
+              name: name,
+              parentId: parentId ? Number(parentId) : null,
+              productCount: productCount
+            });
+          }
+        } else {
+          const newId = categories.length ? Math.max.apply(null, categories.map(function (c) { return c.id; })) + 1 : 1;
+          categories.push({
+            id: newId,
+            name: name,
+            parentId: parentId ? Number(parentId) : null,
+            productCount: productCount,
+            createdAt: Date.now()
+          });
+        }
+        saveCategories();
+        renderCategoryTree();
+        closeCategoryModal();
+      });
+    }
+
+    const attrForm = document.getElementById('attribute-form');
+    if (attrForm) {
+      attrForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const name = document.getElementById('attr-name').value.trim();
+        const applies = document.getElementById('attr-applies').value.trim();
+        const valuesRaw = document.getElementById('attr-values').value.trim();
+        if (!name) {
+          alert('Vui lòng nhập tên nhóm thuộc tính');
+          return;
+        }
+        const values = valuesRaw
+          ? valuesRaw.split(',').map(function (v) { return v.trim(); }).filter(Boolean)
+          : [];
+
+        if (editingAttributeId) {
+          const index = attributeGroups.findIndex(function (g) { return g.id === editingAttributeId; });
+          if (index !== -1) {
+            attributeGroups[index] = Object.assign({}, attributeGroups[index], {
+              name: name,
+              appliesToText: applies || 'Tất cả',
+              values: values
+            });
+          }
+        } else {
+          const newId = attributeGroups.length ? Math.max.apply(null, attributeGroups.map(function (g) { return g.id; })) + 1 : 1;
+          attributeGroups.push({
+            id: newId,
+            name: name,
+            appliesToText: applies || 'Tất cả',
+            values: values,
+            createdAt: Date.now()
+          });
+        }
+
+        saveAttributeGroups();
+        renderAttributeGroups();
+        closeAttributeModal();
+      });
+    }
+
+    const catBackdrop = document.getElementById('category-modal-backdrop');
+    if (catBackdrop) {
+      catBackdrop.addEventListener('click', function (event) {
+        if (event.target === catBackdrop) closeCategoryModal();
+      });
+    }
+
+    const attrBackdrop = document.getElementById('attribute-modal-backdrop');
+    if (attrBackdrop) {
+      attrBackdrop.addEventListener('click', function (event) {
+        if (event.target === attrBackdrop) closeAttributeModal();
+      });
+    }
+  });
 </script>
 </body>
 </html>
