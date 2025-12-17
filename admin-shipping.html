@@ -6,20 +6,7 @@
   <title>Vận Chuyển & Đối Tác - Larkon</title>
   <link rel="stylesheet" href="./css/product.css" />
   <script src="./js/auth-guard.js"></script>
-  <style>
-    .shipping-partner {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin-bottom: 16px;
-    }
-    .status-active { background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; }
-    .status-inactive { background: rgba(107, 114, 128, 0.2); color: #6b7280; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; }
-    .fee-table { width: 100%; margin-top: 12px; }
-    .fee-table th, .fee-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--line); }
-    .fee-table th { color: var(--muted); font-size: 12px; font-weight: 700; }
-  </style>
+  <link rel="stylesheet" href="./css/admin-shipping.css" />
 </head>
 <body>
 <div class="layout">
@@ -83,7 +70,7 @@
         </div>
         <label class="search">
           <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><circle cx="11" cy="11" r="7" stroke="#7f95bd"/><path d="M21 21l-3.5-3.5" stroke="#7f95bd"/></svg>
-          <input placeholder="Tìm kiếm..." />
+          <input placeholder="Tìm kiếm..." id="shippingSearch" />
         </label>
       </div>
     </div>
@@ -97,90 +84,7 @@
           <button class="btn" onclick="addPartner()">Thêm Đối Tác</button>
         </div>
         
-        <div style="padding:20px">
-          <div class="shipping-partner">
-            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:16px">
-              <div>
-                <div style="font-weight:700;font-size:18px">GHN - Giao Hàng Nhanh</div>
-                <div style="color:var(--muted);font-size:13px;margin-top:4px">Webhook: https://api.ghn.vn/webhook/status</div>
-                <div style="color:var(--muted);font-size:13px">API Key: ••••••••••••••••</div>
-              </div>
-              <span class="status-active">Đang hoạt động</span>
-            </div>
-            
-            <div style="margin-bottom:16px">
-              <div style="font-weight:600;margin-bottom:8px">SLA (Service Level Agreement)</div>
-              <div style="color:var(--muted);font-size:13px">Thời gian giao hàng: 1-3 ngày làm việc</div>
-              <div style="color:var(--muted);font-size:13px">Tỷ lệ thành công: 98.5%</div>
-            </div>
-            
-            <div>
-              <div style="font-weight:600;margin-bottom:8px">Bảng Phí Vận Chuyển</div>
-              <table class="fee-table">
-                <thead>
-                  <tr>
-                    <th>Khu vực</th>
-                    <th>Phí cơ bản (kg đầu)</th>
-                    <th>Phí thêm (mỗi kg)</th>
-                    <th>Hành động</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Nội thành</td>
-                    <td>25,000đ</td>
-                    <td>5,000đ</td>
-                    <td>
-                      <div class="act">
-                        <div class="pill edit" onclick="editFee(1)">
-                          <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor"/></svg>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Liên tỉnh</td>
-                    <td>35,000đ</td>
-                    <td>8,000đ</td>
-                    <td>
-                      <div class="act">
-                        <div class="pill edit" onclick="editFee(2)">
-                          <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor"/></svg>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            
-            <div style="display:flex;gap:8px;margin-top:16px">
-              <button class="btn" style="background:var(--panel-2);color:var(--text);border:1px solid var(--line)" onclick="editPartner(1)">Chỉnh sửa</button>
-              <button class="btn" style="background:rgba(239,68,68,0.2);color:#ef4444;border:1px solid rgba(239,68,68,0.3)" onclick="disablePartner(1)">Vô hiệu hóa</button>
-            </div>
-          </div>
-          
-          <div class="shipping-partner">
-            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:16px">
-              <div>
-                <div style="font-weight:700;font-size:18px">GHTK - Giao Hàng Tiết Kiệm</div>
-                <div style="color:var(--muted);font-size:13px;margin-top:4px">Webhook: https://api.ghtk.vn/webhook/status</div>
-                <div style="color:var(--muted);font-size:13px">API Key: ••••••••••••••••</div>
-              </div>
-              <span class="status-active">Đang hoạt động</span>
-            </div>
-            
-            <div style="margin-bottom:16px">
-              <div style="font-weight:600;margin-bottom:8px">SLA</div>
-              <div style="color:var(--muted);font-size:13px">Thời gian giao hàng: 2-5 ngày làm việc</div>
-              <div style="color:var(--muted);font-size:13px">Tỷ lệ thành công: 97.2%</div>
-            </div>
-            
-            <div style="display:flex;gap:8px;margin-top:16px">
-              <button class="btn" style="background:var(--panel-2);color:var(--text);border:1px solid var(--line)" onclick="editPartner(2)">Chỉnh sửa</button>
-              <button class="btn" style="background:rgba(239,68,68,0.2);color:#ef4444;border:1px solid rgba(239,68,68,0.3)" onclick="disablePartner(2)">Vô hiệu hóa</button>
-            </div>
-          </div>
+        <div style="padding:20px" id="shipping-partners-container">
         </div>
       </div>
 
@@ -192,36 +96,87 @@
     </div>
 
   </section>
+    </div>
+
+  </section>
 </div>
 
-<script>
-  function toggleSidebar() {
-    document.querySelector('.layout').classList.toggle('collapsed');
-    localStorage.setItem('sidebarCollapsed', document.querySelector('.layout').classList.contains('collapsed'));
-  }
+<!-- Modal đối tác vận chuyển -->
+<div class="modal-backdrop" id="shipping-partner-modal-backdrop" style="display:none">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="shipping-partner-modal-title">Đối tác vận chuyển</div>
+      <button type="button" class="modal-close" onclick="closePartnerModal()">✕</button>
+    </div>
+    <form id="shipping-partner-form" class="modal-form">
+      <div class="modal-field">
+        <label for="partner-name">Tên đối tác</label>
+        <input id="partner-name" type="text" required />
+      </div>
+      <div class="modal-field">
+        <label for="partner-webhook">Webhook</label>
+        <input id="partner-webhook" type="text" />
+      </div>
+      <div class="modal-field">
+        <label for="partner-api-key">API Key (hiển thị dạng ẩn)</label>
+        <input id="partner-api-key" type="text" placeholder="••••••••••••••••" />
+      </div>
+      <div class="modal-row">
+        <div class="modal-field">
+          <label for="partner-sla">SLA</label>
+          <input id="partner-sla" type="text" placeholder="Thời gian giao hàng" />
+        </div>
+        <div class="modal-field">
+          <label for="partner-success">Tỷ lệ thành công (%)</label>
+          <input id="partner-success" type="number" min="0" max="100" step="0.1" />
+        </div>
+      </div>
+      <div class="modal-field">
+        <label for="partner-status">Trạng thái</label>
+        <select id="partner-status">
+          <option value="active">Đang hoạt động</option>
+          <option value="inactive">Vô hiệu hóa</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closePartnerModal()">Hủy</button>
+        <button type="submit" class="btn">Lưu</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-  if (localStorage.getItem('sidebarCollapsed') === 'true') {
-    document.querySelector('.layout').classList.add('collapsed');
-  }
+<!-- Modal bảng phí vận chuyển -->
+<div class="modal-backdrop" id="shipping-fee-modal-backdrop" style="display:none">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="shipping-fee-modal-title">Bảng phí vận chuyển</div>
+      <button type="button" class="modal-close" onclick="closeFeeModal()">✕</button>
+    </div>
+    <form id="shipping-fee-form" class="modal-form">
+      <div class="modal-field">
+        <label for="fee-region">Khu vực</label>
+        <input id="fee-region" type="text" required />
+      </div>
+      <div class="modal-row">
+        <div class="modal-field">
+          <label for="fee-base">Phí cơ bản (kg đầu)</label>
+          <input id="fee-base" type="text" required />
+        </div>
+        <div class="modal-field">
+          <label for="fee-extra">Phí thêm (mỗi kg)</label>
+          <input id="fee-extra" type="text" required />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeFeeModal()">Hủy</button>
+        <button type="submit" class="btn">Lưu</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-  function addPartner() {
-    alert('Thêm đối tác vận chuyển mới');
-  }
-
-  function editPartner(id) {
-    alert('Chỉnh sửa đối tác #' + id);
-  }
-
-  function editFee(id) {
-    alert('Chỉnh sửa bảng phí #' + id);
-  }
-
-  function disablePartner(id) {
-    if (confirm('Bạn có chắc muốn vô hiệu hóa đối tác này?')) {
-      alert('Đã vô hiệu hóa đối tác!');
-    }
-  }
-</script>
+<script src="./js/admin-shipping-page.js"></script>
 </body>
 </html>
 

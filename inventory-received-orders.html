@@ -6,94 +6,7 @@
   <title>Đã nhận được đơn đặt hàng - Larkon</title>
   <link rel="stylesheet" href="./css/product.css" />
   <script src="./js/auth-guard.js"></script>
-  <style>
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-    
-    .stat-card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      transition: all 0.3s ease;
-    }
-    
-    .stat-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0,0,0,.4);
-    }
-    
-    .stat-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-    }
-    
-    .stat-icon svg {
-      width: 28px;
-      height: 28px;
-      color: var(--accent);
-    }
-    
-    .stat-info {
-      flex: 1;
-    }
-    
-    .stat-value {
-      font-size: 28px;
-      font-weight: 800;
-      color: var(--text);
-    }
-    
-    .stat-label {
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-    
-    .badge {
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      display: inline-block;
-    }
-    
-    .badge.paid {
-      background: rgba(59, 130, 246, 0.15);
-      color: #60a5fa;
-    }
-    
-    .badge.cod {
-      background: rgba(251, 191, 36, 0.15);
-      color: #fbbf24;
-    }
-    
-    .badge.delivered {
-      background: rgba(16, 185, 129, 0.15);
-      color: #10b981;
-    }
-    
-    .badge.failed {
-      background: rgba(239, 68, 68, 0.15);
-      color: #ef4444;
-    }
-    
-    .badge.pending {
-      background: rgba(251, 191, 36, 0.15);
-      color: #fbbf24;
-    }
-  </style>
+  <link rel="stylesheet" href="./css/inventory-received-orders.css" />
 </head>
 <body>
 <div class="layout">
@@ -302,86 +215,58 @@
 
 </div>
 
-<script>
-  // Orders data
-  const orders = [
-    { id: '#583488/80', customer: 'Michael A. Miner', items: '03', amount: '$289,00', paymentStatus: 'paid', receivedStatus: 'delivered' },
-    { id: '#456754/80', customer: 'Theresa T. Brose', items: '05', amount: '$213,00', paymentStatus: 'cod', receivedStatus: 'failed' },
-    { id: '#578246/80', customer: 'Cecile D. Gordon', items: '03', amount: '$735,00', paymentStatus: 'paid', receivedStatus: 'delivered' },
-    { id: '#348930/80', customer: 'William Moreno', items: '02', amount: '$324,00', paymentStatus: 'cod', receivedStatus: 'pending' },
-    { id: '#391367/80', customer: 'Sarah M. Brooks', items: '07', amount: '$153,00', paymentStatus: 'cod', receivedStatus: 'delivered' },
-    { id: '#930447/80', customer: 'Joe K. Hall', items: '02', amount: '$424,00', paymentStatus: 'paid', receivedStatus: 'failed' },
-    { id: '#462397/80', customer: 'Ralph Hueber', items: '01', amount: '$521,00', paymentStatus: 'paid', receivedStatus: 'pending' },
-    { id: '#472356/80', customer: 'Sarah Drescher', items: '04', amount: '$313,00', paymentStatus: 'cod', receivedStatus: 'delivered' },
-    { id: '#448226/80', customer: 'Leonie Meister', items: '06', amount: '$219,00', paymentStatus: 'cod', receivedStatus: 'failed' }
-  ];
+<!-- Modal Đơn hàng tồn kho -->
+<div class="modal-backdrop" id="inventory-order-modal-backdrop" style="display:none">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="inventory-order-modal-title">Thông tin đơn hàng</div>
+      <button type="button" class="modal-close" onclick="closeInventoryOrderModal()">✕</button>
+    </div>
+    <form id="inventory-order-form" class="modal-form">
+      <div class="modal-field">
+        <label for="inv-order-id">ID đơn hàng</label>
+        <input id="inv-order-id" type="text" placeholder="#123456/80" />
+      </div>
+      <div class="modal-field">
+        <label for="inv-order-customer">Khách hàng</label>
+        <input id="inv-order-customer" type="text" placeholder="Tên khách hàng" />
+      </div>
+      <div class="modal-row">
+        <div class="modal-field">
+          <label for="inv-order-items">Số lượng vật phẩm</label>
+          <input id="inv-order-items" type="number" min="0" step="1" />
+        </div>
+        <div class="modal-field">
+          <label for="inv-order-amount">Số tiền</label>
+          <input id="inv-order-amount" type="text" placeholder="$0,00" />
+        </div>
+      </div>
+      <div class="modal-row">
+        <div class="modal-field">
+          <label for="inv-order-payment">Trạng thái thanh toán</label>
+          <select id="inv-order-payment">
+            <option value="paid">Đã thanh toán</option>
+            <option value="cod">Đã TUYỆT</option>
+          </select>
+        </div>
+        <div class="modal-field">
+          <label for="inv-order-received">Trạng thái đã nhận</label>
+          <select id="inv-order-received">
+            <option value="delivered">Giao hàng</option>
+            <option value="pending">Đang chờ xử lý</option>
+            <option value="failed">Thất bại</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeInventoryOrderModal()">Hủy</button>
+        <button type="submit" class="btn">Lưu</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-  // Status text mapping
-  const statusText = {
-    paid: 'Đã thanh toán',
-    cod: 'Đã TUYỆT',
-    delivered: 'Giao hàng',
-    failed: 'Thất bại',
-    pending: 'Đang chờ xử lý'
-  };
-
-  // Render table
-  function renderTable() {
-    const tbody = document.getElementById('tableBody');
-    tbody.innerHTML = orders.map(order => `
-      <tr>
-        <td class="chk"><input type="checkbox" /></td>
-        <td><div class="tag">${order.id}</div></td>
-        <td>${order.customer}</td>
-        <td>${order.items}</td>
-        <td style="font-weight:700">${order.amount}</td>
-        <td><span class="badge ${order.paymentStatus}">${statusText[order.paymentStatus]}</span></td>
-        <td><span class="badge ${order.receivedStatus}">${statusText[order.receivedStatus]}</span></td>
-        <td>
-          <div class="act">
-            <div class="pill view" title="Xem">
-              <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
-                <circle cx="12" cy="12" r="3" stroke="currentColor"/>
-                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="currentColor"/>
-              </svg>
-            </div>
-            <div class="pill edit" title="Sửa">
-              <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor"/>
-                <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor"/>
-              </svg>
-            </div>
-            <div class="pill del" title="Xóa">
-              <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
-                <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z" stroke="currentColor"/>
-              </svg>
-            </div>
-          </div>
-        </td>
-      </tr>
-    `).join('');
-  }
-
-  // Toggle sidebar
-  function toggleSidebar() {
-    document.querySelector('.layout').classList.toggle('collapsed');
-    localStorage.setItem('sidebarCollapsed', document.querySelector('.layout').classList.contains('collapsed'));
-  }
-
-  // Restore sidebar state
-  if (localStorage.getItem('sidebarCollapsed') === 'true') {
-    document.querySelector('.layout').classList.add('collapsed');
-  }
-
-  // Toggle submenu
-  function toggleSubmenu(element) {
-    const navItem = element.parentElement;
-    navItem.classList.toggle('open');
-  }
-
-  // Initial render
-  renderTable();
-</script>
+<script src="./js/inventory-received-orders.js"></script>
 </body>
 </html>
 

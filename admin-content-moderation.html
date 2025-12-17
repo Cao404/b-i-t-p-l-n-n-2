@@ -6,71 +6,7 @@
   <title>Kiểm Duyệt Nội Dung - Larkon</title>
   <link rel="stylesheet" href="./css/product.css" />
   <script src="./js/auth-guard.js"></script>
-  <style>
-    .status-badge {
-      padding: 4px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      display: inline-block;
-    }
-    .status-pending { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
-    .status-approved { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-    .status-rejected { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-    .status-violation { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-    
-    .violation-tags {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-    .violation-tag {
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      background: rgba(239, 68, 68, 0.2);
-      color: #ef4444;
-    }
-    
-    .image-preview {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-    }
-    .image-preview img {
-      width: 60px;
-      height: 60px;
-      border-radius: 6px;
-      object-fit: cover;
-      border: 1px solid var(--line);
-      cursor: pointer;
-    }
-    
-    .filter-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-      padding: 4px;
-      background: var(--panel-2);
-      border-radius: 10px;
-    }
-    .filter-tab {
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 13px;
-      transition: all 0.2s;
-      border: none;
-      background: transparent;
-      color: var(--muted);
-    }
-    .filter-tab.active {
-      background: var(--accent);
-      color: #2b1606;
-    }
-  </style>
+  <link rel="stylesheet" href="./css/admin-content-moderation.css" />
 </head>
 <body>
 <div class="layout">
@@ -144,11 +80,11 @@
       
       <!-- Filter Tabs -->
       <div class="filter-tabs">
-        <button class="filter-tab active" onclick="filterContent('all')">Tất cả</button>
-        <button class="filter-tab" onclick="filterContent('pending')">Chờ duyệt (23)</button>
-        <button class="filter-tab" onclick="filterContent('violation')">Vi phạm (8)</button>
-        <button class="filter-tab" onclick="filterContent('approved')">Đã duyệt (156)</button>
-        <button class="filter-tab" onclick="filterContent('rejected')">Từ chối (12)</button>
+        <button class="filter-tab active" id="tab-all" onclick="filterContent('all', event)">Tất cả</button>
+        <button class="filter-tab" id="tab-pending" onclick="filterContent('pending', event)">Chờ duyệt (0)</button>
+        <button class="filter-tab" id="tab-violation" onclick="filterContent('violation', event)">Vi phạm (0)</button>
+        <button class="filter-tab" id="tab-approved" onclick="filterContent('approved', event)">Đã duyệt (0)</button>
+        <button class="filter-tab" id="tab-rejected" onclick="filterContent('rejected', event)">Từ chối (0)</button>
       </div>
 
       <div class="card">
@@ -177,137 +113,9 @@
               <th>Hành Động</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td class="chk"><input type="checkbox" /></td>
-              <td>
-                <div class="product">
-                  <div class="thumb">
-                    <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100" alt="" />
-                  </div>
-                  <div>
-                    <div class="name">Áo thun đen cao cấp</div>
-                    <div class="sub">Sản phẩm #12345</div>
-                    <div class="image-preview">
-                      <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100" onclick="viewImage(this.src)" />
-                      <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100" onclick="viewImage(this.src)" />
-                    </div>
-                  </div>
-                </div>
-              </td>
-              <td>Sản phẩm</td>
-              <td>
-                <div>Nguyễn Văn A</div>
-                <div class="sub">Shop ABC</div>
-              </td>
-              <td>
-                <div>16/01/2025</div>
-                <div class="sub">1 giờ trước</div>
-              </td>
-              <td><span class="status-badge status-pending">Chờ duyệt</span></td>
-              <td>
-                <div class="violation-tags">
-                  <span class="violation-tag">Nội dung nhạy cảm</span>
-                </div>
-              </td>
-              <td>
-                <div class="act">
-                  <div class="pill view" title="Xem chi tiết" onclick="viewDetails(1)">
-                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="12" cy="12" r="3" stroke="currentColor"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="currentColor"/></svg>
-                  </div>
-                  <div class="pill edit" title="Duyệt" onclick="approveContent(1)" style="color:#10b981">
-                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2"/></svg>
-                  </div>
-                  <div class="pill del" title="Gỡ vi phạm" onclick="removeViolation(1)">
-                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z" stroke="currentColor"/></svg>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="chk"><input type="checkbox" /></td>
-              <td>
-                <div class="product">
-                  <div class="thumb">
-                    <img src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=100" alt="" />
-                  </div>
-                  <div>
-                    <div class="name">Túi da xanh lá</div>
-                    <div class="sub">Sản phẩm #12346</div>
-                    <div class="image-preview">
-                      <img src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=100" onclick="viewImage(this.src)" />
-                    </div>
-                  </div>
-                </div>
-              </td>
-              <td>Sản phẩm</td>
-              <td>
-                <div>Lê Thị B</div>
-                <div class="sub">Shop XYZ</div>
-              </td>
-              <td>
-                <div>16/01/2025</div>
-                <div class="sub">2 giờ trước</div>
-              </td>
-              <td><span class="status-badge status-violation">Vi phạm</span></td>
-              <td>
-                <div class="violation-tags">
-                  <span class="violation-tag">Ảnh không phù hợp</span>
-                  <span class="violation-tag">Mô tả sai</span>
-                </div>
-              </td>
-              <td>
-                <div class="act">
-                  <div class="pill view" title="Xem chi tiết" onclick="viewDetails(2)">
-                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="12" cy="12" r="3" stroke="currentColor"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="currentColor"/></svg>
-                  </div>
-                  <div class="pill edit" title="Duyệt" onclick="approveContent(2)" style="color:#10b981">
-                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2"/></svg>
-                  </div>
-                  <div class="pill del" title="Gỡ vi phạm" onclick="removeViolation(2)">
-                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z" stroke="currentColor"/></svg>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="chk"><input type="checkbox" /></td>
-              <td>
-                <div class="product">
-                  <div>
-                    <div class="name">Thuộc tính: Màu sắc</div>
-                    <div class="sub">Giá trị: "Đỏ máu", "Xanh rêu"</div>
-                  </div>
-                </div>
-              </td>
-              <td>Thuộc tính</td>
-              <td>
-                <div>Trần Văn C</div>
-                <div class="sub">Shop 123</div>
-              </td>
-              <td>
-                <div>15/01/2025</div>
-                <div class="sub">1 ngày trước</div>
-              </td>
-              <td><span class="status-badge status-rejected">Từ chối</span></td>
-              <td>
-                <div class="violation-tags">
-                  <span class="violation-tag">Thuộc tính nhạy cảm</span>
-                </div>
-              </td>
-              <td>
-                <div class="act">
-                  <div class="pill view" title="Xem chi tiết" onclick="viewDetails(3)">
-                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="12" cy="12" r="3" stroke="currentColor"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="currentColor"/></svg>
-                  </div>
-                  <div class="pill edit" title="Duyệt lại" onclick="approveContent(3)" style="color:#10b981">
-                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2"/></svg>
-                  </div>
-                </div>
-              </td>
-            </tr>
+          <tbody id="moderationTableBody">
           </tbody>
-        </table>
+          </table>
 
         <!-- Pagination -->
         <div style="display:flex;justify-content:space-between;align-items:center;padding:16px;border-top:1px solid var(--line)">
@@ -331,40 +139,42 @@
   </section>
 </div>
 
-<script>
-  function toggleSidebar() {
-    document.querySelector('.layout').classList.toggle('collapsed');
-    localStorage.setItem('sidebarCollapsed', document.querySelector('.layout').classList.contains('collapsed'));
-  }
+<!-- Modal chi tiết nội dung -->
+<div class="modal-backdrop" id="moderation-detail-backdrop" style="display:none">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="detail-title">Chi tiết nội dung</div>
+      <button type="button" class="modal-close" onclick="closeModerationDetail()">✕</button>
+    </div>
+    <div class="modal-form">
+      <div class="modal-field">
+        <label>Mô tả</label>
+        <div id="detail-subtitle" class="sub"></div>
+      </div>
+      <div class="modal-field">
+        <label>Người tạo</label>
+        <div id="detail-creator" class="sub"></div>
+      </div>
+      <div class="modal-field">
+        <label>Thời gian</label>
+        <div id="detail-date" class="sub"></div>
+      </div>
+      <div class="modal-field">
+        <label>Trạng thái</label>
+        <span id="detail-status" class="status-badge"></span>
+      </div>
+      <div class="modal-field">
+        <label>Vi phạm</label>
+        <div id="detail-violations" class="violation-tags"></div>
+      </div>
+      <div class="modal-field">
+        <label>Hình ảnh</label>
+        <div id="detail-images" class="image-preview"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  if (localStorage.getItem('sidebarCollapsed') === 'true') {
-    document.querySelector('.layout').classList.add('collapsed');
-  }
-
-  function filterContent(status) {
-    document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
-    event.target.classList.add('active');
-  }
-
-  function viewDetails(id) {
-    alert('Xem chi tiết nội dung #' + id);
-  }
-
-  function approveContent(id) {
-    if (confirm('Bạn có chắc muốn duyệt nội dung này?')) {
-      alert('Đã duyệt nội dung thành công!');
-    }
-  }
-
-  function removeViolation(id) {
-    if (confirm('Bạn có chắc muốn gỡ vi phạm và duyệt nội dung này?')) {
-      alert('Đã gỡ vi phạm và duyệt nội dung!');
-    }
-  }
-
-  function viewImage(src) {
-    window.open(src, '_blank');
-  }
-</script>
+<script src="./js/admin-content-moderation.js"></script>
 </body>
 </html>

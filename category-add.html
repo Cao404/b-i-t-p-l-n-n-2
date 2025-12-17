@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Category Tạo - Larkon</title>
   <link rel="stylesheet" href="./css/product.css" />
+  <script src="./js/auth-guard.js"></script>
   <style>
     .edit-layout {
       padding: 24px;
@@ -343,8 +344,8 @@
           </div>
           
           <div style="display:flex;gap:10px;margin-top:20px">
-            <button class="btn-secondary" style="flex:1">Create Category</button>
-            <button class="btn-primary" style="background:#ef4444;color:white;flex:1" onclick="window.location.href='category-list.html'">Cancel</button>
+            <button type="button" class="btn-primary" style="flex:1" onclick="createCategory()">Tạo danh mục</button>
+            <button type="button" class="btn-secondary" style="flex:1" onclick="window.location.href='category-list.html'">Hủy</button>
           </div>
         </div>
 
@@ -431,8 +432,8 @@
 
           <!-- Action Buttons -->
           <div class="action-buttons">
-            <button class="btn-secondary">Save Change</button>
-            <button class="btn-primary" onclick="window.location.href='category-list.html'">Cancel</button>
+            <button type="button" class="btn-secondary" onclick="window.location.href='category-list.html'">Hủy</button>
+            <button type="button" class="btn-primary" onclick="createCategory()">Tạo danh mục</button>
           </div>
 
         </div>
@@ -498,11 +499,18 @@
     localStorage.setItem('sidebarCollapsed', document.querySelector('.layout').classList.contains('collapsed'));
   }
 
+  // Toggle submenu
+  function toggleSubmenu(element) {
+    const navItem = element.parentElement;
+    navItem.classList.toggle('open');
+  }
+
   // Restore sidebar state on load
   if (localStorage.getItem('sidebarCollapsed') === 'true') {
     document.querySelector('.layout').classList.add('collapsed');
   }
 </script>
+<script src="./js/category-add.js"></script>
 </body>
 </html>
 

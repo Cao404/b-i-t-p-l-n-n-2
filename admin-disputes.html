@@ -6,12 +6,7 @@
   <title>Khiếu Nại & Tranh Chấp - Larkon</title>
   <link rel="stylesheet" href="./css/product.css" />
   <script src="./js/auth-guard.js"></script>
-  <style>
-    .status-pending { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; }
-    .status-processing { background: rgba(245, 158, 11, 0.2); color: #f59e0b; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; }
-    .status-resolved { background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; }
-    .dispute-type { padding: 4px 8px; background: var(--panel-2); border-radius: 4px; font-size: 11px; }
-  </style>
+  <link rel="stylesheet" href="./css/admin-disputes.css" />
 </head>
 <body>
 <div class="layout">
@@ -74,7 +69,7 @@
         </div>
         <label class="search">
           <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><circle cx="11" cy="11" r="7" stroke="#7f95bd"/><path d="M21 21l-3.5-3.5" stroke="#7f95bd"/></svg>
-          <input placeholder="Tìm kiếm..." />
+          <input placeholder="Tìm kiếm..." id="disputesSearch" />
         </label>
       </div>
     </div>
@@ -99,63 +94,9 @@
               <th>Hành động</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>#D1234</td>
-              <td><span class="dispute-type">Hàng không đúng mô tả</span></td>
-              <td>Nguyễn Văn A</td>
-              <td>Shop ABC</td>
-              <td>#ORD5678</td>
-              <td class="price">450,000đ</td>
-              <td><span class="status-pending">Chờ xử lý</span></td>
-              <td>
-                <div class="act">
-                  <div class="pill view" onclick="viewDispute(1)">
-                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="12" cy="12" r="3" stroke="currentColor"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="currentColor"/></svg>
-                  </div>
-                  <div class="pill edit" onclick="resolveDispute(1)">
-                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2"/></svg>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>#D1235</td>
-              <td><span class="dispute-type">Hoàn tiền</span></td>
-              <td>Lê Thị B</td>
-              <td>Shop XYZ</td>
-              <td>#ORD5679</td>
-              <td class="price">1,250,000đ</td>
-              <td><span class="status-processing">Đang xử lý</span></td>
-              <td>
-                <div class="act">
-                  <div class="pill view" onclick="viewDispute(2)">
-                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="12" cy="12" r="3" stroke="currentColor"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="currentColor"/></svg>
-                  </div>
-                  <div class="pill edit" onclick="decideRefund(2)">
-                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/></svg>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>#D1236</td>
-              <td><span class="dispute-type">Giao hàng chậm</span></td>
-              <td>Trần Văn C</td>
-              <td>Shop 123</td>
-              <td>#ORD5680</td>
-              <td class="price">890,000đ</td>
-              <td><span class="status-resolved">Đã giải quyết</span></td>
-              <td>
-                <div class="act">
-                  <div class="pill view" onclick="viewDispute(3)">
-                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="12" cy="12" r="3" stroke="currentColor"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="currentColor"/></svg>
-                  </div>
-                </div>
-              </td>
-            </tr>
+          <tbody id="disputesTableBody">
           </tbody>
-        </table>
+          </table>
       </div>
 
       <div style="text-align:center;padding:24px 0;color:var(--muted);font-size:13px">
@@ -167,31 +108,55 @@
   </section>
 </div>
 
-<script>
-  function toggleSidebar() {
-    document.querySelector('.layout').classList.toggle('collapsed');
-    localStorage.setItem('sidebarCollapsed', document.querySelector('.layout').classList.contains('collapsed'));
-  }
+<!-- Modal chi tiết khiếu nại -->
+<div class="modal-backdrop" id="dispute-detail-backdrop" style="display:none">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="dispute-detail-title">Chi tiết khiếu nại</div>
+      <button type="button" class="modal-close" onclick="closeDisputeDetail()">✕</button>
+    </div>
+    <div class="modal-form">
+      <div class="modal-field">
+        <label>ID khiếu nại</label>
+        <div id="detail-dispute-id" class="sub"></div>
+      </div>
+      <div class="modal-row">
+        <div class="modal-field">
+          <label>Loại</label>
+          <div id="detail-type" class="sub"></div>
+        </div>
+        <div class="modal-field">
+          <label>Giá trị</label>
+          <div id="detail-amount" class="sub"></div>
+        </div>
+      </div>
+      <div class="modal-row">
+        <div class="modal-field">
+          <label>Người mua</label>
+          <div id="detail-buyer" class="sub"></div>
+        </div>
+        <div class="modal-field">
+          <label>Người bán</label>
+          <div id="detail-seller" class="sub"></div>
+        </div>
+      </div>
+      <div class="modal-field">
+        <label>Đơn hàng liên quan</label>
+        <div id="detail-order" class="sub"></div>
+      </div>
+      <div class="modal-field">
+        <label>Trạng thái</label>
+        <span id="detail-status" class="status-badge"></span>
+      </div>
+      <div class="modal-field">
+        <label>Ghi chú hoàn tiền</label>
+        <div id="detail-refund-note" class="sub"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  if (localStorage.getItem('sidebarCollapsed') === 'true') {
-    document.querySelector('.layout').classList.add('collapsed');
-  }
-
-  function viewDispute(id) {
-    alert('Xem chi tiết khiếu nại #' + id);
-  }
-
-  function resolveDispute(id) {
-    alert('Xử lý khiếu nại #' + id);
-  }
-
-  function decideRefund(id) {
-    const type = prompt('Chọn loại hoàn tiền:\n1 - Hoàn tiền một bên (người mua)\n2 - Hoàn tiền đa bên (người mua + người bán)');
-    if (type) {
-      alert('Đã quyết định hoàn tiền loại ' + type);
-    }
-  }
-</script>
+<script src="./js/admin-disputes.js"></script>
 </body>
 </html>
 
