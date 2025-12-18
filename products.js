@@ -126,7 +126,30 @@ const PRODUCTS_DATA = [
 ];
 
 // Kho sản phẩm trong localStorage
-const PRODUCT_STORAGE_KEY = 'larkon_products';
+const PRODUCT_STORAGE_KEY = 'shopvn_products';
+
+// Mapping danh mục: code -> tên hiển thị tiếng Việt
+const CATEGORY_NAMES = {
+  'Fashion': 'Thời trang',
+  'Hand Bag': 'Túi xách',
+  'Cap': 'Mũ & Kính',
+  'Electronics': 'Điện tử',
+  'Shoes': 'Giày dép',
+  'Wallet': 'Ví',
+  'Watch': 'Đồng hồ',
+  'Furniture': 'Nội thất',
+  'Headphone': 'Tai nghe',
+  'Beauty': 'Làm đẹp & Sức khỏe'
+};
+
+// Lấy tên hiển thị của danh mục
+function getCategoryDisplayName(categoryCode) {
+  return CATEGORY_NAMES[categoryCode] || categoryCode;
+}
+
+// Export to global scope
+window.getCategoryDisplayName = getCategoryDisplayName;
+window.CATEGORY_NAMES = CATEGORY_NAMES;
 
 // Đọc toàn bộ sản phẩm từ localStorage, nếu chưa có thì seed từ PRODUCTS_DATA
 function getAllProducts() {
@@ -239,54 +262,249 @@ function initProductGrid() {
   }
   
   // Search functionality
+  let searchTerm = '';
   if (searchInput) {
     searchInput.addEventListener('input', function(e) {
-      const allProducts = getAllProducts();
-      const searchTerm = e.target.value.toLowerCase();
-      const filtered = allProducts.filter(function (p) {
-        return (
-          (p.name || '').toLowerCase().includes(searchTerm) ||
-          (p.category || '').toLowerCase().includes(searchTerm)
-        );
-      });
-      currentProducts = filtered;
-      renderProducts(currentProducts);
+      searchTerm = e.target.value.toLowerCase();
+      applyFilters();
     });
   }
   
   // Sort functionality
   if (sortSelect) {
     sortSelect.addEventListener('change', function(e) {
-      let sorted = currentProducts.slice();
-      switch(e.target.value) {
-        case 'Giá: Thấp đến Cao':
-          sorted.sort(function (a, b) { return (a.price || 0) - (b.price || 0); });
-          break;
-        case 'Giá: Cao đến Thấp':
-          sorted.sort(function (a, b) { return (b.price || 0) - (a.price || 0); });
-          break;
-        case 'Đánh giá cao nhất':
-          sorted.sort(function (a, b) { return (b.rating || 0) - (a.rating || 0); });
-          break;
-        default:
-          // trả về danh sách đầy đủ từ kho
-          sorted = getAllProducts();
-          currentProducts = sorted.slice();
+      applyFilters();
+    });
+  }
+  
+  // Apply search to filtered products
+  function applySearch(products) {
+    if (!searchTerm) return products;
+    return products.filter(function (p) {
+      return (
+        (p.name || '').toLowerCase().includes(searchTerm) ||
+        (p.category || '').toLowerCase().includes(searchTerm)
+      );
+    });
+  }
+  
+  // Apply sort to filtered products
+  function applySort(products) {
+    if (!sortSelect) return products;
+    const sorted = products.slice();
+    switch(sortSelect.value) {
+      case 'Giá: Thấp đến Cao':
+        sorted.sort(function (a, b) { return (a.price || 0) - (b.price || 0); });
+        break;
+      case 'Giá: Cao đến Thấp':
+        sorted.sort(function (a, b) { return (b.price || 0) - (a.price || 0); });
+        break;
+      case 'Đánh giá cao nhất':
+        sorted.sort(function (a, b) { return (b.rating || 0) - (a.rating || 0); });
+        break;
+      default:
+        // Mới nhất - giữ nguyên thứ tự
+        break;
+    }
+    return sorted;
+  }
+  
+  // Update category counts
+  function updateCategoryCounts() {
+    const allProducts = getAllProducts();
+    const categoryMap = {};
+    
+    // Count products by category
+    allProducts.forEach(product => {
+      const cat = product.category || 'Other';
+      categoryMap[cat] = (categoryMap[cat] || 0) + 1;
+    });
+    
+    // Update all category count
+    const allCountEl = document.getElementById('count-all');
+    if (allCountEl) {
+      allCountEl.textContent = allProducts.length.toLocaleString('vi-VN');
+    }
+    
+    // Update individual category counts
+    document.querySelectorAll('[data-category-count]').forEach(el => {
+      const category = el.getAttribute('data-category-count');
+      const count = categoryMap[category] || 0;
+      el.textContent = count.toLocaleString('vi-VN');
+    });
+  }
+  
+  // Get all unique categories from products
+  function getAllCategoriesFromProducts() {
+    const products = getAllProducts();
+    const categorySet = new Set();
+    products.forEach(product => {
+      if (product.category) {
+        categorySet.add(product.category);
       }
-      renderProducts(sorted);
+    });
+    return Array.from(categorySet);
+  }
+  
+  // Update price range counts
+  function updatePriceCounts() {
+    const allProducts = getAllProducts();
+    const priceRanges = {
+      '0-200': 0,
+      '200-500': 0,
+      '500-800': 0,
+      '800-1000': 0,
+      '1000-1100': 0
+    };
+    
+    allProducts.forEach(product => {
+      const price = product.price || 0;
+      if (price < 200) priceRanges['0-200']++;
+      else if (price < 500) priceRanges['200-500']++;
+      else if (price < 800) priceRanges['500-800']++;
+      else if (price < 1000) priceRanges['800-1000']++;
+      else if (price <= 1100) priceRanges['1000-1100']++;
+    });
+    
+    Object.keys(priceRanges).forEach(range => {
+      const el = document.querySelector(`[data-price-count="${range}"]`);
+      if (el) {
+        el.textContent = `(${priceRanges[range].toLocaleString('vi-VN')})`;
+      }
     });
   }
   
   // Filter functionality
-  const filterCheckboxes = document.querySelectorAll('.filter-checkbox input[type="checkbox"]');
-  filterCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', applyFilters);
-  });
-  
   function applyFilters() {
-    // This is a simple implementation
-    // You can enhance it based on your needs
+    const allProducts = getAllProducts();
+    let filtered = allProducts.slice();
+    
+    // Category filter
+    const allCategoriesCheckbox = document.getElementById('filter-all-categories');
+    const categoryCheckboxes = document.querySelectorAll('[data-category]:not([data-category="all"])');
+    const selectedCategories = [];
+    
+    if (allCategoriesCheckbox && allCategoriesCheckbox.checked) {
+      // All categories selected
+    } else {
+      categoryCheckboxes.forEach(cb => {
+        if (cb.checked) {
+          selectedCategories.push(cb.getAttribute('data-category'));
+        }
+      });
+      
+      if (selectedCategories.length > 0) {
+        filtered = filtered.filter(p => selectedCategories.includes(p.category));
+      } else {
+        // No category selected, show nothing
+        filtered = [];
+      }
+    }
+    
+    // Price range filter
+    const allPricesCheckbox = document.getElementById('filter-all-prices');
+    const priceCheckboxes = document.querySelectorAll('[data-price-range]:not([data-price-range="all"])');
+    const selectedPriceRanges = [];
+    
+    if (allPricesCheckbox && allPricesCheckbox.checked) {
+      // All prices selected
+    } else {
+      priceCheckboxes.forEach(cb => {
+        if (cb.checked) {
+          selectedPriceRanges.push(cb.getAttribute('data-price-range'));
+        }
+      });
+      
+      if (selectedPriceRanges.length > 0) {
+        filtered = filtered.filter(p => {
+          const price = p.price || 0;
+          return selectedPriceRanges.some(range => {
+            const [min, max] = range.split('-').map(Number);
+            return price >= min && price < (max || Infinity);
+          });
+        });
+      } else {
+        // No price range selected, show nothing
+        filtered = [];
+      }
+    }
+    
+    // Custom price range filter
+    const priceMin = document.getElementById('priceMin');
+    const priceMax = document.getElementById('priceMax');
+    if (priceMin && priceMin.value) {
+      const min = Number(priceMin.value);
+      filtered = filtered.filter(p => (p.price || 0) >= min);
+    }
+    if (priceMax && priceMax.value) {
+      const max = Number(priceMax.value);
+      filtered = filtered.filter(p => (p.price || 0) <= max);
+    }
+    
+    // Apply search
+    filtered = applySearch(filtered);
+    
+    // Apply sort
+    filtered = applySort(filtered);
+    
+    currentProducts = filtered;
     renderProducts(currentProducts);
+  }
+  
+  // Setup filter event listeners (will be called after renderCategoryFilters)
+  function setupFilterListeners() {
+    // Use event delegation to handle dynamically added checkboxes
+    const filterSidebar = document.querySelector('.filter-sidebar');
+    if (!filterSidebar) return;
+    
+    // Remove old listeners and add new one using delegation
+    filterSidebar.addEventListener('change', function(e) {
+      if (e.target.type === 'checkbox') {
+        const checkbox = e.target;
+        
+        // Handle "all categories" checkbox
+        if (checkbox.id === 'filter-all-categories') {
+          if (checkbox.checked) {
+            document.querySelectorAll('[data-category]:not([data-category="all"])').forEach(cb => {
+              cb.checked = false;
+            });
+          }
+        } else if (checkbox.getAttribute('data-category')) {
+          // If a specific category is checked, uncheck "all categories"
+          const allCatCheckbox = document.getElementById('filter-all-categories');
+          if (allCatCheckbox && checkbox.checked) {
+            allCatCheckbox.checked = false;
+          }
+        }
+        
+        // Handle "all prices" checkbox
+        if (checkbox.id === 'filter-all-prices') {
+          if (checkbox.checked) {
+            document.querySelectorAll('[data-price-range]:not([data-price-range="all"])').forEach(cb => {
+              cb.checked = false;
+            });
+          }
+        } else if (checkbox.getAttribute('data-price-range')) {
+          // If a specific price range is checked, uncheck "all prices"
+          const allPriceCheckbox = document.getElementById('filter-all-prices');
+          if (allPriceCheckbox && checkbox.checked) {
+            allPriceCheckbox.checked = false;
+          }
+        }
+        
+        applyFilters();
+      }
+    });
+  }
+  
+  // Custom price range inputs
+  const priceMin = document.getElementById('priceMin');
+  const priceMax = document.getElementById('priceMax');
+  if (priceMin) {
+    priceMin.addEventListener('input', applyFilters);
+  }
+  if (priceMax) {
+    priceMax.addEventListener('input', applyFilters);
   }
   
   // View toggle
@@ -299,7 +517,34 @@ function initProductGrid() {
     });
   });
   
+  // Render category filters dynamically
+  function renderCategoryFilters() {
+    const categories = getAllCategoriesFromProducts();
+    const container = document.getElementById('categoryFiltersList');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    categories.forEach(categoryCode => {
+      const displayName = getCategoryDisplayName(categoryCode);
+      const label = document.createElement('label');
+      label.className = 'filter-checkbox';
+      label.innerHTML = `
+        <input type="checkbox" data-category="${categoryCode}" />
+        <span>${displayName}</span>
+        <span class="filter-count" data-category-count="${categoryCode}">0</span>
+      `;
+      container.appendChild(label);
+    });
+  }
+  
+  // Setup filter listeners once
+  setupFilterListeners();
+  
   // Initial render
+  renderCategoryFilters();
+  updateCategoryCounts();
+  updatePriceCounts();
   renderProducts();
 }
 

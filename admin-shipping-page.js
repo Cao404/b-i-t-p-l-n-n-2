@@ -1,4 +1,4 @@
-var SHIPPING_PARTNERS_KEY = 'larkon_shipping_partners';
+var SHIPPING_PARTNERS_KEY = 'shopvn_shipping_partners';
 
 var shippingPartners = [];
 var currentSearch = '';

@@ -1,4 +1,4 @@
-var DISPUTES_KEY = 'larkon_disputes';
+var DISPUTES_KEY = 'shopvn_disputes';
 
 var disputes = [];
 var disputesSearch = '';

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lưới Sản Phẩm - Larkon</title>
+  <title>shop vn</title>
   <link rel="stylesheet" href="./css/product.css" />
   <style>
     /* Custom styles for grid layout */
@@ -11,7 +11,7 @@
       display: grid;
       grid-template-columns: 280px 1fr;
       gap: 24px;
-      padding: 18px;
+      padding: 18px 18px 0 18px;
     }
     
     /* Filter Sidebar */
@@ -308,7 +308,7 @@
   <aside class="sidebar">
     <div class="brand">
       <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="#f9a44d" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="#f9a44d" stroke-width="1.5"/></svg>
-      <span class="brand-text">Larkon</span>
+      <span class="brand-text">shop vn</span>
       <div class="toggle-btn" onclick="toggleSidebar()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M15 18l-6-6 6-6"/>
@@ -338,9 +338,7 @@
       </div>
       
       <h6>DANH MỤC</h6>
-      <a href="category-list.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor"/></svg><span>Danh sách</span></a>
-      <a href="category-edit.html"><svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor"/></svg><span>Sửa đổi</span></a>
-      <a href="category-add.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v16m8-8H4" stroke="currentColor"/></svg><span>Tạo</span></a>
+      <a href="category-list.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor"/></svg><span>Quản lý danh mục</span></a>
       
       <h6>QUẢN TRỊ</h6>
       <a href="admin-seller-approval.html"><svg viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M20 8v6M23 11h-6" stroke="currentColor" stroke-width="2"/></svg><span>Duyệt Người Bán</span></a>
@@ -394,6 +392,7 @@
     </div>
 
     <!-- CONTENT -->
+    <div class="content">
     <div class="grid-layout">
       <!-- FILTER SIDEBAR -->
       <div class="filter-sidebar">
@@ -403,42 +402,13 @@
             Danh mục
           </div>
           <label class="filter-checkbox">
-            <input type="checkbox" checked />
+            <input type="checkbox" checked id="filter-all-categories" data-category="all" />
             <span>Tất cả danh mục</span>
-            <span class="filter-count">5,786</span>
+            <span class="filter-count" id="count-all">0</span>
           </label>
-          <label class="filter-checkbox">
-            <input type="checkbox" />
-            <span>Thời trang Nam, Nữ & Trẻ em</span>
-          </label>
-          <label class="filter-checkbox">
-            <input type="checkbox" />
-            <span>Đồ mặt & Kính râm</span>
-          </label>
-          <label class="filter-checkbox">
-            <input type="checkbox" />
-            <span>Đồng hồ</span>
-          </label>
-          <label class="filter-checkbox">
-            <input type="checkbox" />
-            <span>Vật phẩm điện tử</span>
-          </label>
-          <label class="filter-checkbox">
-            <input type="checkbox" />
-            <span>Nội thất</span>
-          </label>
-          <label class="filter-checkbox">
-            <input type="checkbox" />
-            <span>Tai nghe</span>
-          </label>
-          <label class="filter-checkbox">
-            <input type="checkbox" />
-            <span>Lắm đẹp & Sức khỏe</span>
-          </label>
-          <label class="filter-checkbox">
-            <input type="checkbox" />
-            <span>Đồ chân</span>
-          </label>
+          <div id="categoryFiltersList">
+            <!-- Categories will be dynamically generated from product data -->
+          </div>
         </div>
 
         <div class="filter-section">
@@ -447,33 +417,33 @@
             Giá Sản Phẩm
           </div>
           <label class="filter-checkbox">
-            <input type="checkbox" />
+            <input type="checkbox" checked id="filter-all-prices" data-price-range="all" />
             <span>Tất cả giá</span>
           </label>
           <label class="filter-checkbox">
-            <input type="checkbox" />
+            <input type="checkbox" data-price-range="0-200" />
             <span>Dưới $200</span>
-            <span class="filter-count">(145)</span>
+            <span class="filter-count" data-price-count="0-200">0</span>
           </label>
           <label class="filter-checkbox">
-            <input type="checkbox" />
+            <input type="checkbox" data-price-range="200-500" />
             <span>$200 - $500</span>
-            <span class="filter-count">(1,885)</span>
+            <span class="filter-count" data-price-count="200-500">0</span>
           </label>
           <label class="filter-checkbox">
-            <input type="checkbox" />
+            <input type="checkbox" data-price-range="500-800" />
             <span>$500 - $800</span>
-            <span class="filter-count">(2,276)</span>
+            <span class="filter-count" data-price-count="500-800">0</span>
           </label>
           <label class="filter-checkbox">
-            <input type="checkbox" />
+            <input type="checkbox" data-price-range="800-1000" />
             <span>$800 - $1000</span>
-            <span class="filter-count">(12,676)</span>
+            <span class="filter-count" data-price-count="800-1000">0</span>
           </label>
           <label class="filter-checkbox">
-            <input type="checkbox" />
+            <input type="checkbox" data-price-range="1000-1100" />
             <span>$1000 - $1100</span>
-            <span class="filter-count">(13,123)</span>
+            <span class="filter-count" data-price-count="1000-1100">0</span>
           </label>
         </div>
 
@@ -483,8 +453,8 @@
             Phạm vi giá túy chỉnh
           </div>
           <div style="display: flex; gap: 8px; margin-top: 12px;">
-            <input type="number" placeholder="Min" style="width: 100%; padding: 8px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; color: var(--text); outline: none;" />
-            <input type="number" placeholder="Max" style="width: 100%; padding: 8px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; color: var(--text); outline: none;" />
+            <input type="number" id="priceMin" placeholder="Min" style="width: 100%; padding: 8px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; color: var(--text); outline: none;" />
+            <input type="number" id="priceMax" placeholder="Max" style="width: 100%; padding: 8px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; color: var(--text); outline: none;" />
           </div>
         </div>
       </div>
@@ -492,8 +462,8 @@
       <!-- PRODUCTS AREA -->
       <div>
         <div class="header-actions">
-          <div class="results-info">
-            Hiển thị tất cả <strong>5,786</strong> kết quả items
+          <div class="results-info" id="resultsInfo">
+            Hiển thị tất cả <strong>0</strong> kết quả items
           </div>
           <div style="display: flex; gap: 12px; align-items: center;">
             <select class="sort-select" id="sortSelect">
@@ -517,6 +487,7 @@
           <!-- Products will be rendered here by JavaScript -->
         </div>
       </div>
+    </div>
     </div>
 
   </section>

@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Chỉnh Sửa Sản Phẩm - Larkon</title>
+  <title>shop vn</title>
   <link rel="stylesheet" href="./css/product.css" />
   <style>
     /* Product Edit/Create Styles */
     .edit-content {
-      padding: 18px;
+      padding: 18px 18px 0 18px;
       max-width: 1400px;
       margin: 0 auto;
     }
@@ -340,7 +340,7 @@
   <aside class="sidebar">
     <div class="brand">
       <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="#f9a44d" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="#f9a44d" stroke-width="1.5"/></svg>
-      <span class="brand-text">Larkon</span>
+      <span class="brand-text">shop vn</span>
       <div class="toggle-btn" onclick="toggleSidebar()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M15 18l-6-6 6-6"/>
@@ -371,8 +371,6 @@
       
       <h6>DANH MỤC</h6>
       <a href="category-list.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor"/></svg><span>Danh sách</span></a>
-      <a href="category-edit.html"><svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor"/></svg><span>Sửa đổi</span></a>
-      <a href="category-add.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v16m8-8H4" stroke="currentColor"/></svg><span>Tạo</span></a>
       
       <h6>QUẢN TRỊ</h6>
       <a href="admin-seller-approval.html"><svg viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M20 8v6M23 11h-6" stroke="currentColor" stroke-width="2"/></svg><span>Duyệt Người Bán</span></a>
@@ -410,7 +408,7 @@
 
     <!-- TOPBAR -->
     <div class="topbar">
-      <div class="title">PRODUCT EDIT</div>
+      <div class="title">CHỈNH SỬA SẢN PHẨM</div>
       <div class="actions">
         <div class="icon-btn" title="Chế độ tối">
           <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M21 12a9 9 0 1 1-8-8 7 7 0 0 0 8 8z" stroke="#b9c7e5"/></svg>
@@ -445,9 +443,9 @@
               <div class="discount-badge" id="previewDiscount">20% OFF</div>
             </div>
             
-            <div style="margin: 16px 0;">
-              <div style="font-size: 11px; color: var(--muted); margin-bottom: 8px;">Size :</div>
-              <div class="preview-sizes" id="previewSizes">
+            <div style="margin: 16px 0;" id="previewSizeContainer">
+              <div id="previewSizeLabel" style="font-size: 11px; color: var(--muted); margin-bottom: 8px; display:none">Kích thước:</div>
+              <div class="preview-sizes" id="previewSizes" style="display:none">
                 <div class="size-pill">S</div>
                 <div class="size-pill active">M</div>
                 <div class="size-pill">L</div>
@@ -456,7 +454,7 @@
             </div>
             
             <div>
-              <div style="font-size: 11px; color: var(--muted); margin-bottom: 8px;">Colors :</div>
+              <div style="font-size: 11px; color: var(--muted); margin-bottom: 8px;">Màu sắc:</div>
               <div class="preview-colors" id="previewColors">
                 <div class="color-circle" style="background: #1a1a1a;"></div>
                 <div class="color-circle" style="background: #fbbf24;"></div>
@@ -471,14 +469,14 @@
           
           <!-- Upload Photo Section -->
           <div class="form-section">
-            <div class="section-title">Add Product Photo</div>
+            <div class="section-title">Thêm Ảnh Sản Phẩm</div>
             <div class="upload-area" onclick="document.getElementById('fileInput').click()">
               <svg class="upload-icon" viewBox="0 0 24 24" fill="none">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2"/>
                 <polyline points="17 8 12 3 7 8" stroke="currentColor" stroke-width="2"/>
                 <line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="2"/>
               </svg>
-              <div class="upload-text">Drop your images here, or <span style="color: var(--accent);">click to browse</span></div>
+              <div class="upload-text">Kéo thả ảnh vào đây, hoặc <span style="color: var(--accent);">click để duyệt</span></div>
               <div class="upload-hint">1600 x 1200 (4:3) recommended. PNG, JPG and GIF files are allowed</div>
             </div>
             <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFileSelect(event)" />
@@ -486,7 +484,7 @@
 
           <!-- Product Information -->
           <div class="form-section">
-            <div class="section-title">Product Information</div>
+            <div class="section-title">Thông Tin Sản Phẩm</div>
             
             <div class="form-row">
               <div class="form-group">
@@ -494,13 +492,10 @@
                 <input type="text" class="form-input" value="Men Black Slim Fit T-shirt" id="productName" oninput="updatePreview()" />
               </div>
               <div class="form-group">
-                <label class="form-label">Product Categories</label>
-                <select class="form-select" id="productCategory" onchange="updatePreview()">
-                  <option value="Fashion" selected>Fashion</option>
-                  <option value="Electronics">Electronics</option>
-                  <option value="Shoes">Shoes</option>
-                  <option value="Hand Bag">Hand Bag</option>
-                  <option value="Wallet">Wallet</option>
+                <label class="form-label">Danh Mục Sản Phẩm</label>
+                <select class="form-select" id="productCategory" onchange="updatePreview(); toggleGenderField(); updateProductTags();">
+                  <option value="" disabled>Chọn danh mục</option>
+                  <!-- Categories will be loaded dynamically -->
                 </select>
               </div>
             </div>
@@ -508,25 +503,25 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Brand</label>
-                <input type="text" class="form-input" value="Larkon Fashion" placeholder="Enter brand name" />
+                <input type="text" class="form-input" value="shop vn Fashion" placeholder="Nhập tên thương hiệu" />
               </div>
               <div class="form-group">
                 <label class="form-label">Weight</label>
-                <input type="text" class="form-input" value="300gm" placeholder="e.g., 500g" />
+                <input type="text" class="form-input" value="300gm" placeholder="Ví dụ: 500g" />
               </div>
-              <div class="form-group">
-                <label class="form-label">Gender</label>
-                <select class="form-select">
-                  <option value="Men" selected>Men</option>
-                  <option value="Women">Women</option>
+              <div class="form-group" id="genderField" style="display:none">
+                <label class="form-label">Giới Tính</label>
+                <select class="form-select" id="productGender">
+                  <option value="Men" selected>Nam</option>
+                  <option value="Women">Nữ</option>
                   <option value="Unisex">Unisex</option>
                 </select>
               </div>
             </div>
 
-            <div class="form-row single">
+            <div class="form-row single" id="sizeField" style="display:none">
               <div class="form-group">
-                <label class="form-label">Size :</label>
+                <label class="form-label">Kích Thước:</label>
                 <div class="size-options" id="sizeOptions">
                   <div class="option-btn" onclick="toggleOption(this)">XS</div>
                   <div class="option-btn active" onclick="toggleOption(this)">S</div>
@@ -540,7 +535,7 @@
 
             <div class="form-row single">
               <div class="form-group">
-                <label class="form-label">Colors :</label>
+                <label class="form-label">Màu Sắc:</label>
                 <div class="color-options" id="colorOptions">
                   <div class="color-picker active" style="background: #1a1a1a;" onclick="toggleColor(this)"></div>
                   <div class="color-picker" style="background: #fbbf24;" onclick="toggleColor(this)"></div>
@@ -556,8 +551,8 @@
 
             <div class="form-row single">
               <div class="form-group">
-                <label class="form-label">Description</label>
-                <textarea class="form-textarea" placeholder="Product description...">Top in sweatshirt fabric made from a cotton blend with a soft brushed inside. Relaxed fit with dropped shoulders, long sleeves and ribbing around the neckline, cuffs and hem. Small metal text applique.</textarea>
+                <label class="form-label">Mô Tả</label>
+                <textarea class="form-textarea" placeholder="Mô tả sản phẩm...">Áo thun chất liệu nỉ được làm từ hỗn hợp cotton với lớp lót mềm mại bên trong. Kiểu dáng rộng rãi với vai rủ, tay dài và viền quanh cổ, cổ tay và gấu. Phụ kiện chữ kim loại nhỏ.</textarea>
               </div>
             </div>
           </div>
@@ -569,17 +564,16 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Tag Number</label>
-                <input type="text" class="form-input" value="36294007" placeholder="e.g., SKU123" />
+                <input type="text" class="form-input" value="36294007" placeholder="Ví dụ: SKU123" />
               </div>
               <div class="form-group">
-                <label class="form-label">Stock</label>
-                <input type="number" class="form-input" value="485" placeholder="Quantity" />
+                <label class="form-label">Tồn Kho</label>
+                <input type="number" class="form-input" value="485" placeholder="Số lượng" />
               </div>
               <div class="form-group">
-                <label class="form-label">Tag</label>
-                <div style="padding: 10px 12px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; display: inline-flex; gap: 6px;">
-                  <span style="background: var(--accent); color: #2b1606; padding: 2px 10px; border-radius: 4px; font-size: 12px; font-weight: 600;">Fashion</span>
-                  <span style="background: #3b82f6; color: white; padding: 2px 10px; border-radius: 4px; font-size: 12px; font-weight: 600;">New</span>
+                <label class="form-label">Thẻ</label>
+                <div id="productTags" style="padding: 10px 12px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; display: inline-flex; gap: 6px; min-height: 36px;">
+                  <span style="background: var(--muted); color: var(--text); padding: 2px 10px; border-radius: 4px; font-size: 12px; font-weight: 600;">Chưa chọn danh mục</span>
                 </div>
               </div>
             </div>
@@ -591,21 +585,21 @@
             
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Price</label>
+                <label class="form-label">Giá</label>
                 <div style="position: relative;">
                   <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted);">$</span>
                   <input type="number" class="form-input" value="80" style="padding-left: 32px;" id="productPrice" oninput="updatePreview()" />
                 </div>
               </div>
               <div class="form-group">
-                <label class="form-label">Discount</label>
+                <label class="form-label">Giảm Giá</label>
                 <div style="position: relative;">
                   <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted);">%</span>
                   <input type="number" class="form-input" value="30" style="padding-left: 32px;" id="productDiscount" oninput="updatePreview()" />
                 </div>
               </div>
               <div class="form-group">
-                <label class="form-label">Tax</label>
+                <label class="form-label">Thuế</label>
                 <div style="position: relative;">
                   <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted);">%</span>
                   <input type="number" class="form-input" value="5" style="padding-left: 32px;" />
@@ -617,7 +611,7 @@
           <!-- Form Actions -->
           <div class="form-actions">
             <button class="btn-secondary" onclick="window.location.href='product-list.html'">Reset</button>
-            <button class="btn-primary" onclick="saveProduct()">Save</button>
+            <button class="btn-primary" onclick="saveProduct()">Lưu</button>
           </div>
 
         </div>
@@ -650,6 +644,187 @@
         document.querySelector('#previewImage img').src = e.target.result;
       };
       reader.readAsDataURL(file);
+    }
+  }
+
+  // Load categories from localStorage and populate dropdown
+  function loadCategoriesIntoDropdown() {
+    const categorySelect = document.getElementById('productCategory');
+    if (!categorySelect) return;
+    
+    try {
+      // Load categories from localStorage
+      const categoriesRaw = localStorage.getItem('shopvn_categories');
+      const categories = categoriesRaw ? JSON.parse(categoriesRaw) : [];
+      
+      // Category code to display name mapping
+      const categoryMapping = {
+        'Fashion': 'Thời trang',
+        'Electronics': 'Điện tử',
+        'Shoes': 'Giày dép',
+        'Hand Bag': 'Túi xách',
+        'Wallet': 'Ví',
+        'Cap': 'Mũ & Kính',
+        'Watch': 'Đồng hồ',
+        'Furniture': 'Nội thất',
+        'Headphone': 'Tai nghe',
+        'Beauty': 'Làm đẹp & Sức khỏe'
+      };
+      
+      // Get main categories (no parent) from localStorage
+      const mainCategories = categories.filter(function(cat) {
+        return !cat.parentId;
+      });
+      
+      // Also include default categories if no categories in localStorage
+      const defaultCategories = [
+        { name: 'Fashion', code: 'Fashion' },
+        { name: 'Electronics', code: 'Electronics' },
+        { name: 'Shoes', code: 'Shoes' },
+        { name: 'Hand Bag', code: 'Hand Bag' },
+        { name: 'Wallet', code: 'Wallet' },
+        { name: 'Cap', code: 'Cap' }
+      ];
+      
+      // Use categories from localStorage if available, otherwise use defaults
+      let categoriesToShow = [];
+      if (mainCategories.length > 0) {
+        // Map category names to codes
+        categoriesToShow = mainCategories.map(function(cat) {
+          // Try to find matching code from category name
+          let code = cat.name;
+          // Check if name matches any code
+          for (let key in categoryMapping) {
+            if (categoryMapping[key] === cat.name || key === cat.name) {
+              code = key;
+              break;
+            }
+          }
+          return {
+            name: cat.name,
+            code: code
+          };
+        });
+      } else {
+        categoriesToShow = defaultCategories;
+      }
+      
+      // Clear existing options except the first one
+      const firstOption = categorySelect.querySelector('option[value=""]');
+      categorySelect.innerHTML = '';
+      if (firstOption) {
+        categorySelect.appendChild(firstOption);
+      } else {
+        categorySelect.innerHTML = '<option value="" disabled>Chọn danh mục</option>';
+      }
+      
+      // Add categories to dropdown
+      categoriesToShow.forEach(function(cat) {
+        const option = document.createElement('option');
+        option.value = cat.code;
+        option.textContent = categoryMapping[cat.code] || cat.name;
+        categorySelect.appendChild(option);
+      });
+      
+    } catch (e) {
+      console.error('Error loading categories:', e);
+      // Fallback to default categories
+      const defaultOptions = [
+        { value: 'Fashion', text: 'Thời trang' },
+        { value: 'Electronics', text: 'Điện tử' },
+        { value: 'Shoes', text: 'Giày dép' },
+        { value: 'Hand Bag', text: 'Túi xách' },
+        { value: 'Wallet', text: 'Ví' },
+        { value: 'Cap', text: 'Mũ & Kính' }
+      ];
+      
+      defaultOptions.forEach(function(opt) {
+        const option = document.createElement('option');
+        option.value = opt.value;
+        option.textContent = opt.text;
+        categorySelect.appendChild(option);
+      });
+    }
+  }
+
+  // Update product tags based on category
+  function updateProductTags() {
+    const categorySelect = document.getElementById('productCategory');
+    const tagsContainer = document.getElementById('productTags');
+    
+    if (!categorySelect || !tagsContainer) return;
+    
+    const category = categorySelect.value;
+    
+    // Category to tag mapping
+    const categoryTagMap = {
+      'Fashion': 'Thời trang',
+      'Electronics': 'Điện tử',
+      'Shoes': 'Giày dép',
+      'Hand Bag': 'Túi xách',
+      'Wallet': 'Ví',
+      'Cap': 'Mũ & Kính',
+      'Watch': 'Đồng hồ',
+      'Furniture': 'Nội thất',
+      'Headphone': 'Tai nghe',
+      'Beauty': 'Làm đẹp & Sức khỏe'
+    };
+    
+    // Tag colors
+    const tagColors = [
+      { bg: 'var(--accent)', color: '#2b1606' }, // Orange
+      { bg: '#3b82f6', color: 'white' }, // Blue
+      { bg: '#10b981', color: 'white' }, // Green
+      { bg: '#f59e0b', color: 'white' }, // Yellow
+      { bg: '#ef4444', color: 'white' }, // Red
+      { bg: '#8b5cf6', color: 'white' }  // Purple
+    ];
+    
+    if (category && categoryTagMap[category]) {
+      const categoryName = categoryTagMap[category];
+      const colorIndex = Object.keys(categoryTagMap).indexOf(category) % tagColors.length;
+      const tagColor = tagColors[colorIndex];
+      
+      tagsContainer.innerHTML = '<span style="background: ' + tagColor.bg + '; color: ' + tagColor.color + '; padding: 2px 10px; border-radius: 4px; font-size: 12px; font-weight: 600;">' + categoryName + '</span>';
+    } else {
+      tagsContainer.innerHTML = '<span style="background: var(--muted); color: var(--text); padding: 2px 10px; border-radius: 4px; font-size: 12px; font-weight: 600;">Chưa chọn danh mục</span>';
+    }
+  }
+
+  // Toggle gender and size fields based on category
+  function toggleGenderField() {
+    const categorySelect = document.getElementById('productCategory');
+    const genderField = document.getElementById('genderField');
+    const sizeField = document.getElementById('sizeField');
+    const previewSizes = document.getElementById('previewSizes');
+    const previewSizeLabel = document.getElementById('previewSizeLabel');
+    
+    if (!categorySelect) return;
+    
+    const category = categorySelect.value;
+    // Categories that need gender and size: Fashion, Hand Bag, Shoes, Cap, Wallet
+    const categoriesWithSizeAndGender = ['Fashion', 'Hand Bag', 'Shoes', 'Cap', 'Wallet'];
+    
+    if (categoriesWithSizeAndGender.includes(category)) {
+      // Show gender field
+      if (genderField) genderField.style.display = 'block';
+      // Show size field
+      if (sizeField) sizeField.style.display = 'block';
+      // Show preview sizes
+      if (previewSizes) previewSizes.style.display = 'flex';
+      if (previewSizeLabel) previewSizeLabel.style.display = 'block';
+    } else {
+      // Hide gender field
+      if (genderField) {
+        genderField.style.display = 'none';
+        const genderSelect = document.getElementById('productGender');
+        if (genderSelect) genderSelect.value = '';
+      }
+      // Hide size field
+      if (sizeField) sizeField.style.display = 'none';
+      // Hide preview sizes
+      if (previewSizes) previewSizes.style.display = 'none';
+      if (previewSizeLabel) previewSizeLabel.style.display = 'none';
     }
   }
 
@@ -794,6 +969,9 @@
 
   // Khi DOM sẵn sàng, đọc sản phẩm được chọn và đổ vào form
   document.addEventListener('DOMContentLoaded', function () {
+    // Load categories into dropdown first
+    loadCategoriesIntoDropdown();
+    
     const idRaw = localStorage.getItem('selectedProductId');
     const id = idRaw ? Number(idRaw) : NaN;
     let product = null;
@@ -845,9 +1023,23 @@
     const discountInput = document.getElementById('productDiscount');
 
     if (nameInput) nameInput.value = product.name || '';
-    if (categorySelect && product.category) categorySelect.value = product.category;
+    if (categorySelect && product.category) {
+      categorySelect.value = product.category;
+      toggleGenderField(); // Update gender field visibility
+      updateProductTags(); // Update tags based on category
+    } else {
+      // Call even if no category to set initial state
+      toggleGenderField();
+      updateProductTags();
+    }
     if (priceInput) priceInput.value = product.price || 0;
     if (discountInput) discountInput.value = product.discount || 0;
+    
+    // Set gender if exists
+    const genderSelect = document.getElementById('productGender');
+    if (genderSelect && product.gender) {
+      genderSelect.value = product.gender;
+    }
   });
 </script>
 </body>

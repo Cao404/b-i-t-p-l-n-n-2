@@ -7,36 +7,10 @@ if (localStorage.getItem('sidebarCollapsed') === 'true') {
   document.querySelector('.layout').classList.add('collapsed');
 }
 
-var CATEGORY_STORAGE_KEY = 'larkon_categories';
-var ATTRIBUTE_STORAGE_KEY = 'larkon_attribute_groups';
+var ATTRIBUTE_STORAGE_KEY = 'shopvn_attribute_groups';
 
-var categories = [];
 var attributeGroups = [];
-var editingCategoryId = null;
 var editingAttributeId = null;
-
-function loadCategories() {
-  try {
-    var raw = localStorage.getItem(CATEGORY_STORAGE_KEY);
-    if (!raw) {
-      categories = [];
-      return;
-    }
-    var parsed = JSON.parse(raw);
-    categories = Array.isArray(parsed) ? parsed : [];
-  } catch (e) {
-    console.error('Không thể đọc danh mục', e);
-    categories = [];
-  }
-}
-
-function saveCategories() {
-  try {
-    localStorage.setItem(CATEGORY_STORAGE_KEY, JSON.stringify(categories));
-  } catch (e) {
-    console.error('Không thể lưu danh mục', e);
-  }
-}
 
 function loadAttributeGroups() {
   try {
@@ -59,61 +33,6 @@ function saveAttributeGroups() {
   } catch (e) {
     console.error('Không thể lưu nhóm thuộc tính', e);
   }
-}
-
-function buildCategoryTree(parentId) {
-  return categories
-    .filter(function (c) { return (c.parentId || null) === (parentId || null); })
-    .sort(function (a, b) { return (a.name || '').localeCompare(b.name || ''); });
-}
-
-function renderCategoryTree() {
-  var container = document.getElementById('category-tree');
-  if (!container) return;
-
-  if (!categories || categories.length === 0) {
-    container.innerHTML = '<div class="empty-state">Chưa có danh mục nào. Bấm "Thêm Danh Mục" để tạo danh mục gốc.</div>';
-    return;
-  }
-
-  function renderNodes(parentId) {
-    var nodes = buildCategoryTree(parentId);
-    if (!nodes.length) return '';
-
-    return nodes
-      .map(function (c) {
-        var children = buildCategoryTree(c.id);
-        var hasChildren = children.length > 0;
-        var productText = (c.productCount || 0) + ' sản phẩm';
-
-        var item = [
-          '<div class="tree-item ' + (hasChildren ? 'has-children' : '') + '" data-id="' + c.id + '">',
-          '  <span>' + (c.name || '') + '</span>',
-          '  <span style="margin-left:auto;color:var(--muted);font-size:12px">' + productText + '</span>',
-          '  <div class="inline-actions">',
-          '    <button class="inline-action-btn" type="button" onclick="event.stopPropagation(); openCategoryModal(' + c.id + ')">Sửa</button>',
-          '    <button class="inline-action-btn" type="button" onclick="event.stopPropagation(); deleteCategory(' + c.id + ')">Xóa</button>',
-          '  </div>',
-          '</div>'
-        ].join('');
-
-        var childrenHtml = '';
-        if (hasChildren) {
-          childrenHtml = '<div class="tree-children">' + renderNodes(c.id) + '</div>';
-        }
-        return item + childrenHtml;
-      })
-      .join('');
-  }
-
-  container.innerHTML = renderNodes(null);
-
-  container.querySelectorAll('.tree-item.has-children').forEach(function (el) {
-    el.addEventListener('click', function (e) {
-      if (e.target.closest('.inline-actions')) return;
-      el.classList.toggle('expanded');
-    });
-  });
 }
 
 function renderAttributeGroups() {
@@ -163,45 +82,6 @@ function renderAttributeGroups() {
     .join('');
 }
 
-function openCategoryModal(id) {
-  var backdrop = document.getElementById('category-modal-backdrop');
-  var title = document.getElementById('category-modal-title');
-  var nameInput = document.getElementById('category-name');
-  var parentSelect = document.getElementById('category-parent');
-  var countInput = document.getElementById('category-product-count');
-  if (!backdrop || !title || !nameInput || !parentSelect) return;
-
-  parentSelect.innerHTML = '<option value="">(Không có)</option>' +
-    categories
-      .filter(function (c) { return !id || c.id !== id; })
-      .map(function (c) { return '<option value="' + c.id + '">' + (c.name || '') + '</option>'; })
-      .join('');
-
-  if (id) {
-    var cat = categories.find(function (c) { return c.id === id; });
-    if (!cat) return;
-    editingCategoryId = id;
-    title.textContent = 'Chỉnh sửa danh mục';
-    nameInput.value = cat.name || '';
-    parentSelect.value = cat.parentId || '';
-    countInput.value = cat.productCount || '';
-  } else {
-    editingCategoryId = null;
-    title.textContent = 'Thêm danh mục';
-    nameInput.value = '';
-    parentSelect.value = '';
-    countInput.value = '';
-  }
-
-  backdrop.style.display = 'flex';
-}
-
-function closeCategoryModal() {
-  var backdrop = document.getElementById('category-modal-backdrop');
-  if (backdrop) backdrop.style.display = 'none';
-  editingCategoryId = null;
-}
-
 function openAttributeModal(id) {
   var backdrop = document.getElementById('attribute-modal-backdrop');
   var title = document.getElementById('attribute-modal-title');
@@ -235,24 +115,6 @@ function closeAttributeModal() {
   editingAttributeId = null;
 }
 
-function deleteCategory(id) {
-  if (!confirm('Xóa danh mục này? Các danh mục con cũng sẽ bị xóa.')) return;
-  var collectIds = [id];
-  function collectChildren(parentId) {
-    categories
-      .filter(function (c) { return c.parentId === parentId; })
-      .forEach(function (c) {
-        collectIds.push(c.id);
-        collectChildren(c.id);
-      });
-  }
-  collectChildren(id);
-
-  categories = categories.filter(function (c) { return collectIds.indexOf(c.id) === -1; });
-  saveCategories();
-  renderCategoryTree();
-}
-
 function deleteAttributeGroup(id) {
   if (!confirm('Xóa nhóm thuộc tính này?')) return;
   attributeGroups = attributeGroups.filter(function (g) { return g.id !== id; });
@@ -269,22 +131,7 @@ function removeAttributeValue(groupId, valueIndex) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  loadCategories();
   loadAttributeGroups();
-
-  if (!categories || categories.length === 0) {
-    var now = Date.now();
-    categories = [
-      { id: 1, name: 'Thời Trang', parentId: null, productCount: 1234, createdAt: now },
-      { id: 2, name: 'Thời Trang Nam', parentId: 1, productCount: 456, createdAt: now + 1 },
-      { id: 3, name: 'Thời Trang Nữ', parentId: 1, productCount: 678, createdAt: now + 2 },
-      { id: 4, name: 'Điện Tử', parentId: null, productCount: 890, createdAt: now + 3 },
-      { id: 5, name: 'Điện Thoại', parentId: 4, productCount: 234, createdAt: now + 4 },
-      { id: 6, name: 'Laptop', parentId: 4, productCount: 456, createdAt: now + 5 },
-      { id: 7, name: 'Nội Thất', parentId: null, productCount: 567, createdAt: now + 6 }
-    ];
-    saveCategories();
-  }
 
   if (!attributeGroups || attributeGroups.length === 0) {
     attributeGroups = [
@@ -313,7 +160,6 @@ document.addEventListener('DOMContentLoaded', function () {
     saveAttributeGroups();
   }
 
-  renderCategoryTree();
   renderAttributeGroups();
 
   var categoryForm = document.getElementById('category-form');
@@ -346,6 +192,12 @@ document.addEventListener('DOMContentLoaded', function () {
           createdAt: Date.now()
         });
       }
+      // Auto-update product count from actual product data before saving
+      var actualCount = calculateProductCountForCategory(name);
+      if (actualCount > 0) {
+        productCount = actualCount;
+      }
+      
       saveCategories();
       renderCategoryTree();
       closeCategoryModal();
@@ -393,13 +245,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  var catBackdrop = document.getElementById('category-modal-backdrop');
-  if (catBackdrop) {
-    catBackdrop.addEventListener('click', function (event) {
-      if (event.target === catBackdrop) closeCategoryModal();
-    });
-  }
-
   var attrBackdrop = document.getElementById('attribute-modal-backdrop');
   if (attrBackdrop) {
     attrBackdrop.addEventListener('click', function (event) {
@@ -415,19 +260,6 @@ function toggleTree(element) {
   // Toggle expand/collapse cho node cây danh mục tĩnh
   if (!element) return;
   element.classList.toggle('expanded');
-}
-
-function addCategory() {
-  // Sau này có thể gọi openCategoryModal(null) nếu bạn thêm modal vào HTML
-  if (typeof openCategoryModal === 'function') {
-    openCategoryModal(null);
-  }
-}
-
-function editCategory(id) {
-  if (typeof openCategoryModal === 'function') {
-    openCategoryModal(id);
-  }
 }
 
 function addAttributeGroup() {

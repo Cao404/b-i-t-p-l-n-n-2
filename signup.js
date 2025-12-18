@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
     localStorage.setItem('userName', name);
     
     // Hiển thị thông báo
-    alert(`Đăng ký thành công! Chào mừng ${name} đến với Larkon!`);
+    alert(`Đăng ký thành công! Chào mừng ${name} đến với shop vn!`);
     
     // Chuyển hướng đến Dashboard
     window.location.href = 'dashboard.html';
@@ -155,4 +155,5 @@ document.addEventListener('DOMContentLoaded', function() {
     return { text: 'Mạnh', color: '#10b981' };
   }
 });
+
 

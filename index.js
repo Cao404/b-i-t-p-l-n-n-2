@@ -1,7 +1,7 @@
-// Add some interactivity
+// Thêm một số tương tác
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🛍️ Welcome to Larkon E-commerce Platform!');
-  console.log('📄 Available pages:');
+  console.log('🛍️ Chào mừng đến với Nền Tảng Thương Mại Điện Tử shop vn!');
+  console.log('📄 Các trang có sẵn:');
   console.log('  - login.html');
   console.log('  - signup.html');
   console.log('  - reset-password.html');

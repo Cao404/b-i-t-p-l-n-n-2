@@ -1,4 +1,4 @@
-var INVENTORY_ORDERS_KEY='larkon_inventory_orders';
+var INVENTORY_ORDERS_KEY='shopvn_inventory_orders';
 
 var inventoryOrders=[];
 

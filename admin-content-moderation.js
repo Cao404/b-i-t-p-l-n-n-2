@@ -6,7 +6,7 @@ function toggleSidebar() {
 if (localStorage.getItem('sidebarCollapsed') === 'true') {
   document.querySelector('.layout').classList.add('collapsed');
 }
-var MODERATION_ITEMS_KEY = 'larkon_moderation_items';
+var MODERATION_ITEMS_KEY = 'shopvn_moderation_items';
 
 var moderationItems = [];
 var currentFilter = 'all';

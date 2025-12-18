@@ -1,4 +1,4 @@
-var INVENTORY_WAREHOUSE_KEY='larkon_warehouses';
+var INVENTORY_WAREHOUSE_KEY='shopvn_warehouses';
 
 var warehouses=[];
 

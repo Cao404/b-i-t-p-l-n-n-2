@@ -1,5 +1,5 @@
-var FINANCE_RECON_KEY = 'larkon_finance_reconciliations';
-var FINANCE_PAYOUT_KEY = 'larkon_finance_payouts';
+var FINANCE_RECON_KEY = 'shopvn_finance_reconciliations';
+var FINANCE_PAYOUT_KEY = 'shopvn_finance_payouts';
 
 var reconciliations = [];
 var payouts = [];

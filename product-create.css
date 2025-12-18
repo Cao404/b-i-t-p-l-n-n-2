@@ -1,5 +1,5 @@
 .edit-content {
-  padding: 18px;
+  padding: 18px 18px 0 18px;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -274,7 +274,9 @@
   gap: 12px;
   justify-content: flex-end;
   margin-top: 24px;
+  margin-bottom: 0;
   padding-top: 24px;
+  padding-bottom: 0;
   border-top: 1px solid var(--line);
 }
 
