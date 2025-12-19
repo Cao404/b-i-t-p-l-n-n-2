@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="utf-8" />
@@ -9,228 +9,8 @@
     window.location.replace('category-list.html');
   </script>
   <link rel="stylesheet" href="./css/product.css" />
+  <link rel="stylesheet" href="./css/category-add.css" />
   <script src="./js/auth-guard.js"></script>
-  <style>
-    .edit-layout {
-      padding: 24px;
-      padding-bottom: 24px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    
-    .edit-grid {
-      display: grid;
-      grid-template-columns: 420px 1fr;
-      gap: 24px;
-      margin-bottom: 0;
-    }
-    
-    .preview-card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 24px;
-      height: fit-content;
-      position: sticky;
-      top: 24px;
-    }
-    
-    .preview-title {
-      font-weight: 700;
-      font-size: 15px;
-      margin-bottom: 16px;
-      color: var(--text);
-    }
-    
-    .preview-image {
-      width: 100%;
-      height: 280px;
-      background: linear-gradient(135deg, var(--panel-2) 0%, #1a2842 100%);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-      overflow: hidden;
-    }
-    
-    .preview-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    
-    .preview-info {
-      padding: 12px 0;
-    }
-    
-    .preview-label {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 4px;
-    }
-    
-    .preview-value {
-      color: var(--text);
-      font-weight: 600;
-      font-size: 14px;
-    }
-    
-    .form-card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 24px;
-      margin-bottom: 20px;
-    }
-    
-    .form-card:last-of-type {
-      margin-bottom: 0;
-    }
-    
-    .form-section-title {
-      font-weight: 700;
-      font-size: 16px;
-      margin-bottom: 20px;
-      color: var(--text);
-    }
-    
-    .upload-area {
-      border: 2px dashed var(--line);
-      border-radius: 12px;
-      padding: 48px 24px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-bottom: 20px;
-    }
-    
-    .upload-area:hover {
-      border-color: var(--accent);
-      background: rgba(255, 143, 61, 0.05);
-    }
-    
-    .upload-icon {
-      width: 48px;
-      height: 48px;
-      margin: 0 auto 16px;
-      color: var(--accent);
-    }
-    
-    .upload-text {
-      font-size: 15px;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-    
-    .upload-text .highlight {
-      color: var(--accent);
-      font-weight: 600;
-    }
-    
-    .upload-hint {
-      font-size: 13px;
-      color: var(--muted);
-    }
-    
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-    
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    
-    .form-label {
-      font-weight: 600;
-      font-size: 14px;
-      color: var(--text);
-    }
-    
-    .form-input {
-      background: var(--panel-2);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 12px 14px;
-      color: var(--text);
-      font-size: 14px;
-      transition: all 0.2s;
-    }
-    
-    .form-input:focus {
-      outline: none;
-      border-color: var(--accent);
-      background: var(--panel);
-    }
-    
-    .form-input::placeholder {
-      color: var(--muted);
-    }
-    
-    textarea.form-input {
-      resize: vertical;
-      min-height: 100px;
-      font-family: inherit;
-    }
-    
-    select.form-input {
-      cursor: pointer;
-    }
-    
-    .action-buttons {
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-      padding: 20px 0 0 0;
-      margin-bottom: 0;
-    }
-    
-    .btn-secondary {
-      background: transparent;
-      border: 1px solid var(--line);
-      color: var(--text);
-      font-weight: 600;
-      padding: 12px 24px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    
-    .btn-secondary:hover {
-      background: var(--panel-2);
-      border-color: var(--muted);
-    }
-    
-    .btn-primary {
-      background: var(--accent);
-      border: none;
-      color: #2b1606;
-      font-weight: 700;
-      padding: 12px 32px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    
-    .btn-primary:hover {
-      filter: brightness(1.1);
-      transform: translateY(-1px);
-    }
-    
-    @media (max-width: 1024px) {
-      .edit-grid {
-        grid-template-columns: 1fr;
-      }
-      .preview-card {
-        position: static;
-      }
-    }
-  </style>
 </head>
 <body>
 <div class="layout">
@@ -251,22 +31,10 @@
       <h6>TỔNG HỢP</h6>
       <a href="dashboard.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l9-8 9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8z" stroke="currentColor"/></svg><span>Bảng điều khiển</span></a>
       
-      <div class="nav-item">
-        <a onclick="toggleSubmenu(this)">
-          <div style="display:flex;align-items:center;gap:10px">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg>
-            <span>Sản phẩm</span>
-          </div>
-          <svg class="nav-toggle" viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="m18 15-6-6-6 6" stroke="currentColor" stroke-width="2"/></svg>
-        </a>
-        <div class="submenu">
-          <a href="product-list.html">Danh sách</a>
-          <a href="product-grid.html">Lưới</a>
-          <a href="product-details.html">Chi tiết</a>
-          <a href="product-edit.html">Sửa đổi</a>
-          <a href="product-create.html">Tạo</a>
-        </div>
-      </div>
+      <h6>Sản phẩm</h6>
+      <a href="product-list.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg><span>Danh sách</span></a>
+      <a href="product-grid.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg><span>Lưới</span></a>
+      <a href="product-details.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg><span>Chi tiết</span></a>
       
       <h6>DANH MỤC</h6>
       <a href="category-list.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor"/></svg><span>Danh sách</span></a>
@@ -276,7 +44,6 @@
       <h6>QUẢN TRỊ</h6>
       <a href="admin-seller-approval.html"><svg viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M20 8v6M23 11h-6" stroke="currentColor" stroke-width="2"/></svg><span>Duyệt Người Bán</span></a>
       <a href="admin-content-moderation.html"><svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 0 0 1.946-.806 3.42 3.42 0 0 1 3.438 0 3.42 3.42 0 0 0 1.946.806 3.42 3.42 0 0 1 3.138 3.138 3.42 3.42 0 0 0 .806 1.946 3.42 3.42 0 0 1 0 3.438 3.42 3.42 0 0 0-.806 1.946 3.42 3.42 0 0 1-3.138 3.138 3.42 3.42 0 0 0-1.946.806 3.42 3.42 0 0 1-3.438 0 3.42 3.42 0 0 0-1.946-.806 3.42 3.42 0 0 1-3.138-3.138 3.42 3.42 0 0 0-.806-1.946 3.42 3.42 0 0 1 0-3.438 3.42 3.42 0 0 0 .806-1.946 3.42 3.42 0 0 1 3.138-3.138z" stroke="currentColor" stroke-width="2"/></svg><span>Kiểm Duyệt Nội Dung</span></a>
-      <a href="admin-category-attributes.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2"/></svg><span>Danh Mục & Thuộc Tính</span></a>
       <a href="admin-promotions.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/></svg><span>Khuyến Mãi</span></a>
       <a href="admin-shipping.html"><svg viewBox="0 0 24 24" fill="none"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z" stroke="currentColor" stroke-width="2"/><circle cx="5.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="2"/><circle cx="18.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="2"/></svg><span>Vận Chuyển</span></a>
       <a href="admin-finance.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/></svg><span>Tài Chính</span></a>
@@ -287,10 +54,6 @@
       <h6>HÀNG TỒN KHO</h6>
       <a href="inventory-warehouse.html"><svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor"/></svg><span>Kho hàng</span></a>
       <a href="inventory-received-orders.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.5 6M17 13l2.5 6M9.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM17.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" stroke="currentColor"/></svg><span>Đã nhận được đơn đặt hàng</span></a>
-      
-      <h6>NGƯỜI DÙNG</h6>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor"/><path d="M4 20c2-4 6-4 8-4s6 0 8 4" stroke="currentColor"/></svg><span>Hồ sơ</span></a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor"/></svg><span>Vai trò</span></a>
     </nav>
 
     <div class="grow"></div>
@@ -470,70 +233,8 @@
 
 </div>
 
-<script>
-  // Upload area drag and drop
-  const uploadArea = document.getElementById('uploadArea');
-  
-  uploadArea.addEventListener('click', () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          document.querySelector('#previewImage img').src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    };
-    input.click();
-  });
-  
-  uploadArea.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    uploadArea.style.borderColor = 'var(--accent)';
-    uploadArea.style.background = 'rgba(255, 143, 61, 0.05)';
-  });
-  
-  uploadArea.addEventListener('dragleave', () => {
-    uploadArea.style.borderColor = '';
-    uploadArea.style.background = '';
-  });
-  
-  uploadArea.addEventListener('drop', (e) => {
-    e.preventDefault();
-    uploadArea.style.borderColor = '';
-    uploadArea.style.background = '';
-    
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        document.querySelector('#previewImage img').src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  // Toggle sidebar
-  function toggleSidebar() {
-    document.querySelector('.layout').classList.toggle('collapsed');
-    localStorage.setItem('sidebarCollapsed', document.querySelector('.layout').classList.contains('collapsed'));
-  }
-
-  // Toggle submenu
-  function toggleSubmenu(element) {
-    const navItem = element.parentElement;
-    navItem.classList.toggle('open');
-  }
-
-  // Restore sidebar state on load
-  if (localStorage.getItem('sidebarCollapsed') === 'true') {
-    document.querySelector('.layout').classList.add('collapsed');
-  }
-</script>
+<script src="./js/common.js"></script>
+<script src="./js/category-add-page.js"></script>
 <script src="./js/category-add.js"></script>
 </body>
 </html>

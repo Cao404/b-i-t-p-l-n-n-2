@@ -1,8 +1,3 @@
-// Toggle size/option selection
-function toggleOption(element) {
-  element.classList.toggle('active');
-}
-
 // Toggle color selection
 function toggleColor(element) {
   element.classList.toggle('active');
@@ -27,6 +22,13 @@ function handleFileSelect(event) {
 }
 
 // Update preview
+// Format price to VND
+function formatPrice(price) {
+  if (!price) return '0 ₫';
+  const numPrice = parseFloat(price) || 0;
+  return numPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' ₫';
+}
+
 function updatePreview() {
   const name = document.getElementById('productName').value;
   const category = document.getElementById('productCategory').value;
@@ -35,12 +37,12 @@ function updatePreview() {
   
   document.getElementById('previewTitle').textContent = name;
   document.getElementById('previewSubtitle').textContent = '(' + category + ')';
-  document.getElementById('previewPriceNew').textContent = '$' + price;
+  document.getElementById('previewPriceNew').textContent = formatPrice(price);
   
   if (discount > 0) {
     const oldPrice = Math.round(price / (1 - discount / 100));
-    document.getElementById('previewPriceOld').textContent = '$' + oldPrice;
-    document.getElementById('previewDiscount').textContent = discount + '% OFF';
+    document.getElementById('previewPriceOld').textContent = formatPrice(oldPrice);
+    document.getElementById('previewDiscount').textContent = 'Giảm ' + discount + '%';
     document.getElementById('previewPriceOld').style.display = 'block';
     document.getElementById('previewDiscount').style.display = 'block';
   } else {
@@ -78,10 +80,6 @@ function createProduct() {
     .find(function (el) { return el.placeholder === 'Quantity'; });
   const stock = stockInput ? Number(stockInput.value || 0) : 0;
 
-  // Lấy danh sách size được chọn
-  const sizeButtons = document.querySelectorAll('#sizeOptions .option-btn.active');
-  const sizes = Array.prototype.slice.call(sizeButtons).map(function (btn) { return btn.textContent.trim(); });
-
   // Lấy danh sách màu được chọn
   const colorPickers = document.querySelectorAll('#colorOptions .color-picker.active');
   const colors = Array.prototype.slice.call(colorPickers).map(function (el) {
@@ -112,7 +110,7 @@ function createProduct() {
     sold: 0,
     image: image || 'https://via.placeholder.com/400x400?text=Product',
     category: category,
-    sizes: sizes.length ? sizes : ['S', 'M', 'L'],
+    sizes: [],
     colors: colors.length ? colors : ['#1a1a1a']
   };
 
@@ -200,3 +198,192 @@ function toggleSubmenu(element) {
 if (localStorage.getItem('sidebarCollapsed') === 'true') {
   document.querySelector('.layout').classList.add('collapsed');
 }
+
+// Load categories from localStorage and populate dropdown
+function loadCategoriesIntoSelect() {
+  const categorySelect = document.getElementById('productCategory');
+  if (!categorySelect) {
+    console.warn('Category select element not found');
+    return;
+  }
+  
+  try {
+    // Load categories from localStorage
+    const categoriesRaw = localStorage.getItem('shopvn_categories');
+    const categories = categoriesRaw ? JSON.parse(categoriesRaw) : [];
+    
+    // Category name to code mapping (Vietnamese -> English code)
+    const categoryNameToCode = {
+      'Thời Trang': 'Fashion',
+      'Thời Trang Nam': 'Fashion',
+      'Thời Trang Nữ': 'Fashion',
+      'Điện Tử': 'Electronics',
+      'Điện tử': 'Electronics',
+      'Điện Thoại': 'Electronics',
+      'Laptop': 'Electronics',
+      'Linh kiện': 'Electronics',
+      'RAM': 'Electronics',
+      'CPU': 'Electronics',
+      'VGA': 'Electronics',
+      'Main': 'Electronics',
+      'Giày dép': 'Shoes',
+      'Giày Dép': 'Shoes',
+      'Túi xách': 'Hand Bag',
+      'Túi Xách': 'Hand Bag',
+      'Ví': 'Wallet',
+      'Mũ & Kính': 'Cap',
+      'Mũ & kính': 'Cap',
+      'Đồng hồ': 'Watch',
+      'Đồng Hồ': 'Watch',
+      'Nội Thất': 'Furniture',
+      'Nội thất': 'Furniture',
+      'Tai nghe': 'Headphone',
+      'Tai Nghe': 'Headphone',
+      'Làm đẹp & Sức khỏe': 'Beauty',
+      'Làm Đẹp & Sức Khỏe': 'Beauty'
+    };
+    
+    // Also support direct code mapping
+    const directCodeMap = {
+      'Fashion': 'Fashion',
+      'Electronics': 'Electronics',
+      'Shoes': 'Shoes',
+      'Hand Bag': 'Hand Bag',
+      'Wallet': 'Wallet',
+      'Cap': 'Cap',
+      'Watch': 'Watch',
+      'Furniture': 'Furniture',
+      'Headphone': 'Headphone',
+      'Beauty': 'Beauty'
+    };
+    
+    // Get current selected value
+    const currentValue = categorySelect.value;
+    
+    // Clear existing options except the first placeholder
+    const placeholder = categorySelect.querySelector('option[value=""][disabled]');
+    categorySelect.innerHTML = '';
+    if (placeholder) {
+      categorySelect.appendChild(placeholder);
+    } else {
+      categorySelect.innerHTML = '<option value="" disabled selected>Chọn danh mục</option>';
+    }
+    
+    // If no categories in localStorage, use default categories
+    if (!categories || categories.length === 0) {
+      const defaultCategories = [
+        { name: 'Thời trang', code: 'Fashion' },
+        { name: 'Điện tử', code: 'Electronics' },
+        { name: 'Giày dép', code: 'Shoes' },
+        { name: 'Túi xách', code: 'Hand Bag' },
+        { name: 'Ví', code: 'Wallet' },
+        { name: 'Mũ & Kính', code: 'Cap' }
+      ];
+      
+      defaultCategories.forEach(function(cat) {
+        const option = document.createElement('option');
+        option.value = cat.code;
+        option.textContent = cat.name;
+        categorySelect.appendChild(option);
+      });
+    } else {
+      // Group categories by parent
+      const mainCategories = [];
+      const subCategories = {};
+      
+      categories.forEach(function(cat) {
+        if (!cat.parentId) {
+          mainCategories.push(cat);
+        } else {
+          if (!subCategories[cat.parentId]) {
+            subCategories[cat.parentId] = [];
+          }
+          subCategories[cat.parentId].push(cat);
+        }
+      });
+      
+      // Sort main categories
+      mainCategories.sort(function(a, b) {
+        return a.name.localeCompare(b.name);
+      });
+      
+      // Add main categories and their subcategories
+      mainCategories.forEach(function(cat) {
+        // Get category code
+        let categoryCode = categoryNameToCode[cat.name] || directCodeMap[cat.name] || cat.name;
+        
+        // Add main category
+        const mainOption = document.createElement('option');
+        mainOption.value = categoryCode;
+        mainOption.textContent = cat.name;
+        categorySelect.appendChild(mainOption);
+        
+        // Add subcategories if any
+        if (subCategories[cat.id] && subCategories[cat.id].length > 0) {
+          subCategories[cat.id].sort(function(a, b) {
+            return a.name.localeCompare(b.name);
+          });
+          
+          subCategories[cat.id].forEach(function(subCat) {
+            const subOption = document.createElement('option');
+            subOption.value = categoryNameToCode[subCat.name] || directCodeMap[subCat.name] || subCat.name;
+            subOption.textContent = cat.name + ' > ' + subCat.name;
+            categorySelect.appendChild(subOption);
+          });
+        }
+      });
+    }
+    
+    // Restore selected value if it exists
+    if (currentValue) {
+      categorySelect.value = currentValue;
+    }
+    
+  } catch (e) {
+    console.error('Error loading categories:', e);
+    // Fallback to default categories on error
+    const defaultCategories = [
+      { name: 'Thời trang', code: 'Fashion' },
+      { name: 'Điện tử', code: 'Electronics' },
+      { name: 'Giày dép', code: 'Shoes' },
+      { name: 'Túi xách', code: 'Hand Bag' },
+      { name: 'Ví', code: 'Wallet' },
+      { name: 'Mũ & Kính', code: 'Cap' }
+    ];
+    
+    defaultCategories.forEach(function(cat) {
+      const option = document.createElement('option');
+      option.value = cat.code;
+      option.textContent = cat.name;
+      categorySelect.appendChild(option);
+    });
+  }
+}
+
+// Toggle gender field based on category
+function toggleCategorySpecificFields() {
+  const categorySelect = document.getElementById('productCategory');
+  const genderField = document.getElementById('genderField');
+  
+  if (!categorySelect) return;
+  
+  const category = categorySelect.value;
+  // Categories that need gender: Fashion, Hand Bag, Shoes, Cap, Wallet
+  const categoriesWithGender = ['Fashion', 'Hand Bag', 'Shoes', 'Cap', 'Wallet'];
+  
+  const shouldShow = categoriesWithGender.includes(category);
+  
+  if (genderField) genderField.style.display = shouldShow ? 'block' : 'none';
+  
+  // Reset values if hidden
+  if (!shouldShow) {
+    const genderSelect = document.getElementById('productGender');
+    if (genderSelect) genderSelect.value = '';
+  }
+}
+
+// Load categories when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  loadCategoriesIntoSelect();
+  toggleCategorySpecificFields();
+});

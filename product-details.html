@@ -1,589 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>shop vn</title>
   <link rel="stylesheet" href="./css/product.css" />
-  <style>
-    /* Custom styles for product details */
-    .detail-layout {
-      padding: 18px 18px 0 18px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    
-    .breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 20px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-    
-    .breadcrumb a {
-      color: var(--muted);
-      transition: color 0.2s;
-    }
-    
-    .breadcrumb a:hover {
-      color: var(--accent);
-    }
-    
-    .product-main {
-      display: grid;
-      grid-template-columns: 480px 1fr;
-      gap: 32px;
-      margin-bottom: 32px;
-    }
-    
-    .image-gallery {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 20px;
-    }
-    
-    .main-image {
-      width: 100%;
-      height: 450px;
-      background: linear-gradient(135deg, #1a2435 0%, #202e49 100%);
-      border-radius: 12px;
-      margin-bottom: 16px;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-    }
-    
-    .main-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .thumbnail-list {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-    }
-    
-    .thumbnail {
-      height: 100px;
-      background: var(--panel-2);
-      border: 2px solid var(--line);
-      border-radius: 8px;
-      cursor: pointer;
-      overflow: hidden;
-      transition: all 0.2s;
-    }
-    
-    .thumbnail:hover,
-    .thumbnail.active {
-      border-color: var(--accent);
-    }
-    
-    .thumbnail img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .product-details {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 24px;
-    }
-    
-    .product-title {
-      font-size: 24px;
-      font-weight: 800;
-      margin-bottom: 12px;
-      line-height: 1.3;
-    }
-    
-    .rating-section {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--line);
-      margin-bottom: 20px;
-    }
-    
-    .rating-stars {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    
-    .rating-stars svg {
-      width: 18px;
-      height: 18px;
-    }
-    
-    .rating-text {
-      font-weight: 700;
-      font-size: 16px;
-    }
-    
-    .reviews-count {
-      color: var(--muted);
-      font-size: 14px;
-    }
-    
-    .price-section {
-      margin-bottom: 24px;
-    }
-    
-    .price-row {
-      display: flex;
-      align-items: baseline;
-      gap: 12px;
-      margin-bottom: 8px;
-    }
-    
-    .current-price {
-      font-size: 32px;
-      font-weight: 800;
-      color: var(--accent);
-    }
-    
-    .old-price {
-      font-size: 20px;
-      color: var(--muted);
-      text-decoration: line-through;
-    }
-    
-    .discount-badge {
-      background: linear-gradient(135deg, #ef4444, #dc2626);
-      color: white;
-      padding: 4px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 700;
-    }
-    
-    .description {
-      color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
-    
-    .options-section {
-      margin-bottom: 24px;
-    }
-    
-    .option-label {
-      font-weight: 700;
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
-    
-    .size-options,
-    .color-options {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    
-    .size-btn,
-    .color-btn {
-      padding: 10px 18px;
-      background: var(--panel-2);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-weight: 600;
-      min-width: 50px;
-      text-align: center;
-    }
-    
-    .size-btn:hover,
-    .color-btn:hover {
-      border-color: var(--accent);
-      background: rgba(255, 143, 61, 0.1);
-    }
-    
-    .size-btn.active,
-    .color-btn.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #2b1606;
-    }
-    
-    .color-btn {
-      width: 44px;
-      height: 44px;
-      padding: 0;
-      border-radius: 50%;
-      position: relative;
-    }
-    
-    .color-btn.active::after {
-      content: '✓';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 18px;
-      font-weight: 900;
-    }
-    
-    .quantity-section {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    
-    .quantity-control {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-      background: var(--panel-2);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    
-    .qty-btn {
-      width: 40px;
-      height: 40px;
-      background: transparent;
-      border: none;
-      color: var(--text);
-      cursor: pointer;
-      font-size: 18px;
-      font-weight: 700;
-      transition: background 0.2s;
-    }
-    
-    .qty-btn:hover {
-      background: var(--line);
-    }
-    
-    .qty-input {
-      width: 60px;
-      height: 40px;
-      background: transparent;
-      border: none;
-      text-align: center;
-      color: var(--text);
-      font-weight: 700;
-      outline: none;
-    }
-    
-    .action-buttons {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-    
-    .add-cart-btn {
-      padding: 14px 24px;
-      background: linear-gradient(135deg, var(--accent), #ff9f5d);
-      border: none;
-      border-radius: 10px;
-      color: #2b1606;
-      font-weight: 700;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    
-    .add-cart-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(255, 143, 61, 0.4);
-    }
-    
-    .wishlist-btn {
-      width: 52px;
-      height: 52px;
-      background: var(--panel-2);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    
-    .wishlist-btn:hover {
-      background: rgba(239, 68, 68, 0.1);
-      border-color: #ef4444;
-    }
-    
-    .wishlist-btn.active {
-      background: rgba(239, 68, 68, 0.2);
-      border-color: #ef4444;
-    }
-    
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      padding-top: 20px;
-      border-top: 1px solid var(--line);
-    }
-    
-    .info-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px;
-      background: var(--panel-2);
-      border-radius: 8px;
-    }
-    
-    .info-icon {
-      width: 40px;
-      height: 40px;
-      background: rgba(255, 143, 61, 0.1);
-      border-radius: 8px;
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-    }
-    
-    .info-icon svg {
-      width: 20px;
-      height: 20px;
-      color: var(--accent);
-    }
-    
-    .info-text {
-      font-size: 13px;
-    }
-    
-    .info-label {
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
-    
-    .info-value {
-      color: var(--muted);
-      font-size: 12px;
-    }
-    
-    /* Specifications & Reviews Section */
-    .tabs-section {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-    
-    .tabs-header {
-      display: flex;
-      border-bottom: 1px solid var(--line);
-      background: var(--panel-2);
-    }
-    
-    .tab-btn {
-      padding: 16px 28px;
-      background: transparent;
-      border: none;
-      color: var(--muted);
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
-    }
-    
-    .tab-btn:hover {
-      color: var(--text);
-    }
-    
-    .tab-btn.active {
-      color: var(--accent);
-    }
-    
-    .tab-btn.active::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: var(--accent);
-    }
-    
-    .tab-content {
-      padding: 24px;
-    }
-    
-    .tab-pane {
-      display: none;
-    }
-    
-    .tab-pane.active {
-      display: block;
-    }
-    
-    .specs-grid {
-      display: grid;
-      gap: 16px;
-    }
-    
-    .spec-row {
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--line);
-    }
-    
-    .spec-row:last-child {
-      border-bottom: none;
-    }
-    
-    .spec-label {
-      color: var(--muted);
-      font-size: 14px;
-    }
-    
-    .spec-value {
-      font-weight: 600;
-    }
-    
-    .reviews-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-    }
-    
-    .reviews-summary {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    
-    .avg-rating {
-      font-size: 48px;
-      font-weight: 800;
-      color: var(--accent);
-    }
-    
-    .review-card {
-      padding: 20px;
-      background: var(--panel-2);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      margin-bottom: 16px;
-    }
-    
-    .review-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-    
-    .reviewer-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    }
-    
-    .reviewer-info {
-      flex: 1;
-    }
-    
-    .reviewer-name {
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    
-    .review-date {
-      color: var(--muted);
-      font-size: 12px;
-    }
-    
-    .review-rating {
-      display: flex;
-      gap: 4px;
-      margin-bottom: 8px;
-    }
-    
-    .review-rating svg {
-      width: 16px;
-      height: 16px;
-    }
-    
-    .review-text {
-      line-height: 1.7;
-      color: var(--text);
-      margin-bottom: 12px;
-    }
-    
-    .review-quality {
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    
-    .review-footer {
-      display: flex;
-      gap: 16px;
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid var(--line);
-    }
-    
-    .review-action {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--muted);
-      font-size: 13px;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-    
-    .review-action:hover {
-      color: var(--text);
-    }
-    
-    .review-action svg {
-      width: 16px;
-      height: 16px;
-    }
-    
-    @media (max-width: 1024px) {
-      .product-main {
-        grid-template-columns: 1fr;
-      }
-      
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .spec-row {
-        grid-template-columns: 1fr;
-        gap: 4px;
-      }
-      
-      .details-grid {
-        grid-template-columns: 1fr !important;
-      }
-    }
-    
-    /* Hide reviews summary on mobile */
-    @media (max-width: 768px) {
-      .reviews-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="./css/product-details.css" />
 </head>
 <body>
 <div class="layout">
@@ -604,22 +26,10 @@
       <h6>TỔNG HỢP</h6>
       <a href="dashboard.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l9-8 9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8z" stroke="currentColor"/></svg><span>Bảng điều khiển</span></a>
       
-      <div class="nav-item open">
-        <a onclick="toggleSubmenu(this)">
-          <div style="display:flex;align-items:center;gap:10px">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg>
-            <span>Sản phẩm</span>
-          </div>
-          <svg class="nav-toggle" viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="m18 15-6-6-6 6" stroke="currentColor" stroke-width="2"/></svg>
-        </a>
-        <div class="submenu">
-          <a href="product-list.html">Danh sách</a>
-          <a href="product-grid.html">Lưới</a>
-          <a href="product-details.html" class="active">Chi tiết</a>
-          <a href="product-edit.html">Sửa đổi</a>
-          <a href="product-create.html">Tạo</a>
-        </div>
-      </div>
+      <h6>Sản phẩm</h6>
+      <a href="product-list.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg><span>Danh sách</span></a>
+      <a href="product-grid.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg><span>Lưới</span></a>
+      <a href="product-details.html" class="active"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg><span>Chi tiết</span></a>
       
       <h6>DANH MỤC</h6>
       <a href="category-list.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor"/></svg><span>Danh sách</span></a>
@@ -627,7 +37,6 @@
       <h6>QUẢN TRỊ</h6>
       <a href="admin-seller-approval.html"><svg viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M20 8v6M23 11h-6" stroke="currentColor" stroke-width="2"/></svg><span>Duyệt Người Bán</span></a>
       <a href="admin-content-moderation.html"><svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 0 0 1.946-.806 3.42 3.42 0 0 1 3.438 0 3.42 3.42 0 0 0 1.946.806 3.42 3.42 0 0 1 3.138 3.138 3.42 3.42 0 0 0 .806 1.946 3.42 3.42 0 0 1 0 3.438 3.42 3.42 0 0 0-.806 1.946 3.42 3.42 0 0 1-3.138 3.138 3.42 3.42 0 0 0-1.946.806 3.42 3.42 0 0 1-3.438 0 3.42 3.42 0 0 0-1.946-.806 3.42 3.42 0 0 1-3.138-3.138 3.42 3.42 0 0 0-.806-1.946 3.42 3.42 0 0 1 0-3.438 3.42 3.42 0 0 0 .806-1.946 3.42 3.42 0 0 1 3.138-3.138z" stroke="currentColor" stroke-width="2"/></svg><span>Kiểm Duyệt Nội Dung</span></a>
-      <a href="admin-category-attributes.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2"/></svg><span>Danh Mục & Thuộc Tính</span></a>
       <a href="admin-promotions.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/></svg><span>Khuyến Mãi</span></a>
       <a href="admin-shipping.html"><svg viewBox="0 0 24 24" fill="none"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z" stroke="currentColor" stroke-width="2"/><circle cx="5.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="2"/><circle cx="18.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="2"/></svg><span>Vận Chuyển</span></a>
       <a href="admin-finance.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/></svg><span>Tài Chính</span></a>
@@ -638,10 +47,6 @@
       <h6>HÀNG TỒN KHO</h6>
       <a href="inventory-warehouse.html"><svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor"/></svg><span>Kho hàng</span></a>
       <a href="inventory-received-orders.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.5 6M17 13l2.5 6M9.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM17.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" stroke="currentColor"/></svg><span>Đã nhận được đơn đặt hàng</span></a>
-      
-      <h6>NGƯỜI DÙNG</h6>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor"/><path d="M4 20c2-4 6-4 8-4s6 0 8 4" stroke="currentColor"/></svg><span>Hồ sơ</span></a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor"/></svg><span>Vai trò</span></a>
     </nav>
 
     <div class="grow"></div>
@@ -727,27 +132,14 @@
 
           <div class="price-section">
             <div class="price-row">
-              <div class="current-price">$80.00</div>
-              <div class="old-price">$100.00</div>
-              <div class="discount-badge">Giảm 30%</div>
+              <div class="current-price" id="productPrice">80.000 ₫</div>
+              <div class="old-price" id="productOldPrice" style="display: none;">100.000 ₫</div>
+              <div class="discount-badge" id="productDiscount" style="display: none;">Giảm 30%</div>
             </div>
           </div>
 
           <div class="description">
             Được đánh giá tại Canada vào ngày 16 tháng 11 năm 2023. Đỗ dày thêm binh. Không có lại sau khi xưa. Đỗ dần hỏi tốt (Good elasticity). Kích thước XL. Hoàn toàn phù hợp với chiều cao 5,10 và thân nặng. Không phải sau khi xưa, chỉ đánh cho áo phông màu tối đổ, hiểu áo thụm nhật đi trong lúc đầu liền những không phát.
-          </div>
-
-          <!-- Size Selection -->
-          <div class="options-section">
-            <div class="option-label">Kích cỡ</div>
-            <div class="size-options">
-              <div class="size-btn">XS</div>
-              <div class="size-btn">S</div>
-              <div class="size-btn active">M</div>
-              <div class="size-btn">L</div>
-              <div class="size-btn">XL</div>
-              <div class="size-btn">XXL</div>
-            </div>
           </div>
 
           <!-- Color Selection -->
@@ -812,7 +204,7 @@
               </div>
               <div class="info-text">
                 <div class="info-label">Giảm giá đặc biệt</div>
-                <div class="info-value">Phiếu giảm giá đến $ 100</div>
+                <div class="info-value">Phiếu giảm giá đến 100.000 ₫</div>
               </div>
             </div>
             <div class="info-item">
@@ -848,70 +240,16 @@
         
         <!-- Left: Items Detail -->
         <div class="tabs-section">
-          <div class="tabs-header" style="border-bottom: 1px solid var(--line);">
-            <div class="chart-title" style="padding: 16px 24px;">Items Detail</div>
+          <div class="tabs-header" style="border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">
+            <div class="chart-title" style="padding: 16px 24px;">Thông Tin Chi Tiết Sản Phẩm</div>
+            <button class="btn" onclick="openAddSpecModal()" style="margin-right: 16px; padding: 8px 16px; font-size: 13px;">+ Thêm</button>
           </div>
-          <div class="tab-content">
-            <div class="specs-grid">
-              <div class="spec-row">
-                <div class="spec-label">Kích thước Sản phẩm</div>
-                <div class="spec-value">53,3 x 40,6 x 6,4 cm; 500 gram</div>
-              </div>
-              <div class="spec-row">
-                <div class="spec-label">Ngày đầu tiên có sẵn</div>
-                <div class="spec-value">22 tháng 9 năm 2023</div>
-              </div>
-              <div class="spec-row">
-                <div class="spec-label">Phòng ban</div>
-                <div class="spec-value">Đàn ông</div>
-              </div>
-              <div class="spec-row">
-                <div class="spec-label">Nhà sản xuất</div>
-                <div class="spec-value">Greensboro, NC 27401 Prospa-Pal</div>
-              </div>
-              <div class="spec-row">
-                <div class="spec-label">ASIN</div>
-                <div class="spec-value">B0CJMML118</div>
-              </div>
-              <div class="spec-row">
-                <div class="spec-label">Số mã hình mục</div>
-                <div class="spec-value">1137AZ</div>
-              </div>
-              <div class="spec-row">
-                <div class="spec-label">Nước xuất xứ</div>
-                <div class="spec-value">HOA KỲ</div>
-              </div>
-              <div class="spec-row">
-                <div class="spec-label">Nhà sản xuất</div>
-                <div class="spec-value">Suste 941 89157 Lượt xem Baumbach, Gilbertmouth, TX 31542-2135</div>
-              </div>
-              <div class="spec-row">
-                <div class="spec-label">Đóng gói</div>
-                <div class="spec-value">Thích hợp. 726 80915 Suối Hưng, Rowelown, WV 44364</div>
-              </div>
-              <div class="spec-row">
-                <div class="spec-label">Nhà nhập khẩu</div>
-                <div class="spec-value">Thích hợp. 726 80915 Suối Hưng, Rowelown, WV 44364</div>
-              </div>
-              <div class="spec-row">
-                <div class="spec-label">Mục Trọng lượng</div>
-                <div class="spec-value">500 g</div>
-              </div>
-              <div class="spec-row">
-                <div class="spec-label">Mục Kích thước LxWxH</div>
-                <div class="spec-value">53.3 x 40.6 x 6.4 cm</div>
-              </div>
-              <div class="spec-row">
-                <div class="spec-label">Tên chung</div>
-                <div class="spec-value">Áo thun</div>
-              </div>
-              <div class="spec-row">
-                <div class="spec-label">Xếp hạng bán chạy nhất</div>
-                <div class="spec-value">#13 trong Quần áo & Phụ kiện</div>
-              </div>
+          <div class="tab-content" style="padding: 24px;">
+            <div class="specs-grid" id="specsGrid">
+              <!-- Specs will be rendered dynamically here -->
             </div>
-            <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line);">
-              <a href="#" style="color: var(--accent); text-decoration: none; font-weight: 600;">View More Details →</a>
+            <div id="emptySpecs" style="text-align: center; padding: 40px; color: var(--muted); display: none;">
+              Chưa có thông tin chi tiết. Nhấn "Thêm" để thêm thông tin.
             </div>
           </div>
         </div>
@@ -1020,98 +358,41 @@
   </section>
 </div>
 
+<!-- Add/Edit Spec Modal -->
+<div id="specModalBackdrop" class="modal-backdrop" onclick="closeSpecModal(event)" style="display: none;">
+  <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 500px;">
+    <div class="modal-header">
+      <div id="specModalTitle" style="font-weight:700;font-size:18px">Thêm Thông Tin Chi Tiết</div>
+      <div class="icon-btn" onclick="closeSpecModal()" title="Đóng">
+        <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </div>
+    </div>
+    
+    <form id="specForm" onsubmit="saveSpec(event)">
+      <div class="modal-body">
+        <div class="form-field" style="margin-bottom: 16px;">
+          <label for="spec-label">Tên trường *</label>
+          <input id="spec-label" type="text" required placeholder="Ví dụ: Kích thước, Nhà sản xuất, RAM..." />
+        </div>
+        <div class="form-field" style="margin-bottom: 16px;">
+          <label for="spec-value">Giá trị *</label>
+          <input id="spec-value" type="text" required placeholder="Nhập giá trị" />
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeSpecModal()">Hủy</button>
+        <button type="submit" class="btn">Lưu</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script src="./js/products.js"></script>
-<script>
-  // Change main image
-  function changeImage(src, thumbnail) {
-    document.querySelector('#mainImage img').src = src;
-    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-    thumbnail.classList.add('active');
-  }
-
-  // Size selection
-  document.querySelectorAll('.size-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-    });
-  });
-
-  // Color selection
-  document.querySelectorAll('.color-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-    });
-  });
-
-  // Quantity control
-  function changeQty(delta) {
-    const input = document.getElementById('qtyInput');
-    const newValue = parseInt(input.value) + delta;
-    if (newValue >= 1) {
-      input.value = newValue;
-    }
-  }
-
-  // Add to cart
-  function addToCart() {
-    const qty = document.getElementById('qtyInput').value;
-    const size = document.querySelector('.size-btn.active').textContent;
-    alert(`Đã thêm ${qty} sản phẩm (Size ${size}) vào giỏ hàng!`);
-  }
-
-  // Toggle wishlist
-  function toggleWishlist(btn) {
-    btn.classList.toggle('active');
-    const svg = btn.querySelector('svg path');
-    if (btn.classList.contains('active')) {
-      svg.setAttribute('fill', '#ef4444');
-      svg.setAttribute('stroke', '#ef4444');
-    } else {
-      svg.setAttribute('fill', 'none');
-      svg.setAttribute('stroke', '#d7e0f0');
-    }
-  }
-
-  // Tabs removed - now using side-by-side layout (no switchTab needed)
-
-  // Smooth scroll animation
-  document.addEventListener('DOMContentLoaded', function() {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'translateY(0)';
-        }
-      });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.review-card').forEach(card => {
-      card.style.opacity = '0';
-      card.style.transform = 'translateY(20px)';
-      card.style.transition = 'all 0.5s ease';
-      observer.observe(card);
-    });
-  });
-
-  // Toggle sidebar
-  function toggleSidebar() {
-    document.querySelector('.layout').classList.toggle('collapsed');
-    localStorage.setItem('sidebarCollapsed', document.querySelector('.layout').classList.contains('collapsed'));
-  }
-
-  // Toggle submenu
-  function toggleSubmenu(element) {
-    const navItem = element.parentElement;
-    navItem.classList.toggle('open');
-  }
-
-  // Restore sidebar state on load
-  if (localStorage.getItem('sidebarCollapsed') === 'true') {
-    document.querySelector('.layout').classList.add('collapsed');
-  }
-</script>
+<script src="./js/common.js"></script>
+<script src="./js/product-details-page.js"></script>
 </body>
 </html>
 

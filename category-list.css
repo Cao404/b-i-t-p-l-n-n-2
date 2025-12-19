@@ -50,4 +50,49 @@
   font-size: 13px;
 }
 
+/* KPI CARDS (giống ok/) */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.kpi-card {
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+}
+
+.kpi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.kpi-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.kpi-footer {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.kpi-footer.up {
+  color: #10b981;
+}
+
+.kpi-footer.down {
+  color: var(--danger);
+}
+
+
 

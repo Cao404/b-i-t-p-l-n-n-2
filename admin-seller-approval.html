@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="utf-8" />
@@ -6,112 +6,7 @@
   <title>shop vn</title>
   <link rel="stylesheet" href="./css/product.css" />
   <script src="./js/auth-guard.js"></script>
-  <style>
-    .status-badge {
-      padding: 4px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      display: inline-block;
-    }
-    .status-submitted { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
-    .status-approved { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-    .status-rejected { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-    .status-suspended { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-    .status-locked { background: rgba(107, 114, 128, 0.2); color: #6b7280; }
-    
-    .filter-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-      padding: 4px;
-      background: var(--panel-2);
-      border-radius: 10px;
-    }
-    .filter-tab {
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 13px;
-      transition: all 0.2s;
-      border: none;
-      background: transparent;
-      color: var(--muted);
-    }
-    .filter-tab.active {
-      background: var(--accent);
-      color: #2b1606;
-    }
-    
-    .kyc-info {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 12px;
-      margin-top: 12px;
-      padding: 12px;
-      background: var(--panel-2);
-      border-radius: 8px;
-    }
-    .kyc-item {
-      font-size: 13px;
-    }
-    .kyc-label {
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 4px;
-    }
-    .kyc-value {
-      font-weight: 600;
-    }
-    
-    .action-buttons {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .btn-small {
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      transition: all 0.2s;
-    }
-    .btn-approve {
-      background: rgba(16, 185, 129, 0.2);
-      color: #10b981;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-    .btn-approve:hover {
-      background: rgba(16, 185, 129, 0.3);
-    }
-    .btn-reject {
-      background: rgba(239, 68, 68, 0.2);
-      color: #ef4444;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-    .btn-reject:hover {
-      background: rgba(239, 68, 68, 0.3);
-    }
-    .btn-suspend {
-      background: rgba(245, 158, 11, 0.2);
-      color: #f59e0b;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-    }
-    .btn-suspend:hover {
-      background: rgba(245, 158, 11, 0.3);
-    }
-    .btn-lock {
-      background: rgba(107, 114, 128, 0.2);
-      color: #6b7280;
-      border: 1px solid rgba(107, 114, 128, 0.3);
-    }
-    .btn-lock:hover {
-      background: rgba(107, 114, 128, 0.3);
-    }
-  </style>
+  <link rel="stylesheet" href="./css/admin-seller-approval.css" />
 </head>
 <body>
 <div class="layout">
@@ -132,22 +27,10 @@
       <h6>TỔNG HỢP</h6>
       <a href="dashboard.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l9-8 9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8z" stroke="currentColor"/></svg><span>Bảng điều khiển</span></a>
       
-      <div class="nav-item">
-        <a onclick="toggleSubmenu(this)">
-          <div style="display:flex;align-items:center;gap:10px">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg>
-            <span>Sản phẩm</span>
-          </div>
-          <svg class="nav-toggle" viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="m18 15-6-6-6 6" stroke="currentColor" stroke-width="2"/></svg>
-        </a>
-        <div class="submenu">
-          <a href="product-list.html">Danh sách</a>
-          <a href="product-grid.html">Lưới</a>
-          <a href="product-details.html">Chi tiết</a>
-          <a href="product-edit.html">Sửa đổi</a>
-          <a href="product-create.html">Tạo</a>
-        </div>
-      </div>
+      <h6>Sản phẩm</h6>
+      <a href="product-list.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg><span>Danh sách</span></a>
+      <a href="product-grid.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg><span>Lưới</span></a>
+      <a href="product-details.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg><span>Chi tiết</span></a>
       
       <h6>DANH MỤC</h6>
       <a href="category-list.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor"/></svg><span>Danh sách</span></a>
@@ -155,7 +38,6 @@
       <h6>QUẢN TRỊ</h6>
       <a href="admin-seller-approval.html" class="active"><svg viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M20 8v6M23 11h-6" stroke="currentColor" stroke-width="2"/></svg><span>Duyệt Người Bán</span></a>
       <a href="admin-content-moderation.html"><svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 0 0 1.946-.806 3.42 3.42 0 0 1 3.438 0 3.42 3.42 0 0 0 1.946.806 3.42 3.42 0 0 1 3.138 3.138 3.42 3.42 0 0 0 .806 1.946 3.42 3.42 0 0 1 0 3.438 3.42 3.42 0 0 0-.806 1.946 3.42 3.42 0 0 1-3.138 3.138 3.42 3.42 0 0 0-1.946.806 3.42 3.42 0 0 1-3.438 0 3.42 3.42 0 0 0-1.946-.806 3.42 3.42 0 0 1-3.138-3.138 3.42 3.42 0 0 0-.806-1.946 3.42 3.42 0 0 1 0-3.438 3.42 3.42 0 0 0 .806-1.946 3.42 3.42 0 0 1 3.138-3.138z" stroke="currentColor" stroke-width="2"/></svg><span>Kiểm Duyệt Nội Dung</span></a>
-      <a href="admin-category-attributes.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2"/></svg><span>Danh Mục & Thuộc Tính</span></a>
       <a href="admin-promotions.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/></svg><span>Khuyến Mãi</span></a>
       <a href="admin-shipping.html"><svg viewBox="0 0 24 24" fill="none"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z" stroke="currentColor" stroke-width="2"/><circle cx="5.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="2"/><circle cx="18.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="2"/></svg><span>Vận Chuyển</span></a>
       <a href="admin-finance.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/></svg><span>Tài Chính</span></a>
@@ -475,64 +357,7 @@
   </section>
 </div>
 
-<script>
-  function toggleSidebar() {
-    document.querySelector('.layout').classList.toggle('collapsed');
-    localStorage.setItem('sidebarCollapsed', document.querySelector('.layout').classList.contains('collapsed'));
-  }
-
-  if (localStorage.getItem('sidebarCollapsed') === 'true') {
-    document.querySelector('.layout').classList.add('collapsed');
-  }
-
-  function toggleSubmenu(element) {
-    const navItem = element.parentElement;
-    navItem.classList.toggle('open');
-  }
-
-  function filterSellers(status) {
-    document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
-    event.target.classList.add('active');
-    // Filter logic here
-    console.log('Filter by:', status);
-  }
-
-  function approveSeller(id) {
-    if (confirm('Bạn có chắc muốn duyệt người bán này?')) {
-      alert('Đã duyệt người bán thành công!');
-      // Update status logic here
-    }
-  }
-
-  function rejectSeller(id) {
-    const reason = prompt('Nhập lý do từ chối:');
-    if (reason) {
-      alert('Đã từ chối người bán. Lý do: ' + reason);
-      // Update status logic here
-    }
-  }
-
-  function suspendSeller(id) {
-    const days = prompt('Nhập số ngày tạm ngưng (hoặc để trống cho vô thời hạn):');
-    if (confirm('Bạn có chắc muốn tạm ngưng người bán này?')) {
-      alert('Đã tạm ngưng người bán ' + (days ? days + ' ngày' : 'vô thời hạn'));
-      // Update status logic here
-    }
-  }
-
-  function lockSeller(id) {
-    if (confirm('Bạn có chắc muốn khóa tài khoản người bán này? Hành động này không thể hoàn tác.')) {
-      alert('Đã khóa tài khoản người bán!');
-      // Update status logic here
-    }
-  }
-
-  // Search
-  document.getElementById('searchInput').addEventListener('input', function(e) {
-    const query = e.target.value.toLowerCase();
-    // Search logic here
-    console.log('Search:', query);
-  });
-</script>
+<script src="./js/common.js"></script>
+<script src="./js/admin-seller-approval-page.js"></script>
 </body>
 </html>

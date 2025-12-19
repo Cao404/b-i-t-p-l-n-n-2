@@ -1,27 +1,8 @@
-function toggleSidebar() {
-  document.querySelector('.layout').classList.toggle('collapsed');
-  localStorage.setItem('sidebarCollapsed', document.querySelector('.layout').classList.contains('collapsed'));
-}
-
-if (localStorage.getItem('sidebarCollapsed') === 'true') {
-  document.querySelector('.layout').classList.add('collapsed');
-}
 var MODERATION_ITEMS_KEY = 'shopvn_moderation_items';
 
 var moderationItems = [];
 var currentFilter = 'all';
 var currentSearch = '';
-
-function toggleSidebar() {
-  document.querySelector('.layout').classList.toggle('collapsed');
-  localStorage.setItem('sidebarCollapsed', document.querySelector('.layout').classList.contains('collapsed'));
-}
-
-if (localStorage.getItem('sidebarCollapsed') === 'true') {
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelector('.layout').classList.add('collapsed');
-  });
-}
 
 function loadModerationItems() {
   try {

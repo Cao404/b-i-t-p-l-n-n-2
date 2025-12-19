@@ -1,6 +1,13 @@
 // Products JavaScript
 // Dùng cho product-grid.html, product-list.html, product-details.html
 
+// Format price to VND
+function formatPrice(price) {
+  if (!price) return '0 ₫';
+  const numPrice = parseFloat(price) || 0;
+  return numPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' ₫';
+}
+
 // Sample product data (dùng làm dữ liệu khởi tạo cho kho localStorage)
 const PRODUCTS_DATA = [
   {
@@ -209,7 +216,7 @@ function initProductGrid() {
     // Update results count
     const resultsInfo = document.querySelector('.results-info');
     if (resultsInfo) {
-      resultsInfo.innerHTML = `Hiển thị tất cả <strong>${products.length}</strong> kết quả items`;
+      resultsInfo.innerHTML = `Hiển thị tất cả <strong>${products.length}</strong> kết quả`;
     }
   }
   
@@ -245,8 +252,8 @@ function initProductGrid() {
           ${product.rating} <span style="color: var(--muted)">· ${product.reviews} Đánh giá</span>
         </div>
         <div class="product-price">
-          <div class="current-price">$${product.price}</div>
-          ${product.oldPrice ? `<div class="old-price">$${product.oldPrice}</div>` : ''}
+          <div class="current-price">${formatPrice(product.price)}</div>
+          ${product.oldPrice ? `<div class="old-price">${formatPrice(product.oldPrice)}</div>` : ''}
         </div>
         <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(${product.id})">
           <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
@@ -350,20 +357,20 @@ function initProductGrid() {
   function updatePriceCounts() {
     const allProducts = getAllProducts();
     const priceRanges = {
-      '0-200': 0,
-      '200-500': 0,
-      '500-800': 0,
-      '800-1000': 0,
-      '1000-1100': 0
+      '0-200000': 0,
+      '200000-500000': 0,
+      '500000-800000': 0,
+      '800000-1000000': 0,
+      '1000000-1100000': 0
     };
     
     allProducts.forEach(product => {
       const price = product.price || 0;
-      if (price < 200) priceRanges['0-200']++;
-      else if (price < 500) priceRanges['200-500']++;
-      else if (price < 800) priceRanges['500-800']++;
-      else if (price < 1000) priceRanges['800-1000']++;
-      else if (price <= 1100) priceRanges['1000-1100']++;
+      if (price < 200000) priceRanges['0-200000']++;
+      else if (price < 500000) priceRanges['200000-500000']++;
+      else if (price < 800000) priceRanges['500000-800000']++;
+      else if (price < 1000000) priceRanges['800000-1000000']++;
+      else if (price <= 1100000) priceRanges['1000000-1100000']++;
     });
     
     Object.keys(priceRanges).forEach(range => {
@@ -608,16 +615,16 @@ function displayProductDetails(product) {
   }
 
   // Giá hiện tại
-  const priceElement = document.querySelector('.current-price');
+  const priceElement = document.querySelector('.current-price') || document.getElementById('productPrice');
   if (priceElement) {
-    priceElement.textContent = `$${product.price || 0}`;
+    priceElement.textContent = formatPrice(product.price || 0);
   }
 
   // Giá cũ (nếu có)
-  const oldPriceElement = document.querySelector('.price-section .old-price');
+  const oldPriceElement = document.querySelector('.price-section .old-price') || document.getElementById('productOldPrice');
   if (oldPriceElement) {
     if (product.oldPrice) {
-      oldPriceElement.textContent = `$${product.oldPrice}`;
+      oldPriceElement.textContent = formatPrice(product.oldPrice);
       oldPriceElement.style.display = 'inline-block';
     } else {
       oldPriceElement.style.display = 'none';
