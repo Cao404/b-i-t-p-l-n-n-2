@@ -1,0 +1,6 @@
+@SellerHub.Api_HostAddress = http://localhost:5118
+
+GET {{SellerHub.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
