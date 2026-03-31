@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="utf-8" />
@@ -30,12 +30,16 @@
       <a href="product-list.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg><span>Danh sách</span></a>
       <a href="product-grid.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg><span>Lưới</span></a>
       <a href="product-details.html" class="active"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18l-2 11a2 2 0 0 1-2 1H7a2 2 0 0 1-2-1L3 7Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.5"/></svg><span>Chi tiết</span></a>
-      
+
+      <h6>MUA SẮM</h6>
+      <a href="cart.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.5 6M17 13l2.5 6M9.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM17.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" stroke="currentColor"/></svg><span>Giỏ hàng</span><span class="cart-badge" id="sidebarCartBadge" style="display:none">0</span></a>
+
       <h6>DANH MỤC</h6>
-      <a href="category-list.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor"/></svg><span>Danh sách</span></a>
+      <a href="category-list.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor"/></svg><span>Quản lý danh mục</span></a>
       
       <h6>QUẢN TRỊ</h6>
       <a href="admin-seller-approval.html"><svg viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M20 8v6M23 11h-6" stroke="currentColor" stroke-width="2"/></svg><span>Duyệt Người Bán</span></a>
+      <a href="admin-users.html"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 20c2-4 6-4 8-4s6 0 8 4" stroke="currentColor" stroke-width="2"/></svg><span>Quản lý người dùng</span></a>
       <a href="admin-content-moderation.html"><svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 0 0 1.946-.806 3.42 3.42 0 0 1 3.438 0 3.42 3.42 0 0 0 1.946.806 3.42 3.42 0 0 1 3.138 3.138 3.42 3.42 0 0 0 .806 1.946 3.42 3.42 0 0 1 0 3.438 3.42 3.42 0 0 0-.806 1.946 3.42 3.42 0 0 1-3.138 3.138 3.42 3.42 0 0 0-1.946.806 3.42 3.42 0 0 1-3.438 0 3.42 3.42 0 0 0-1.946-.806 3.42 3.42 0 0 1-3.138-3.138 3.42 3.42 0 0 0-.806-1.946 3.42 3.42 0 0 1 0-3.438 3.42 3.42 0 0 0 .806-1.946 3.42 3.42 0 0 1 3.138-3.138z" stroke="currentColor" stroke-width="2"/></svg><span>Kiểm Duyệt Nội Dung</span></a>
       <a href="admin-promotions.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/></svg><span>Khuyến Mãi</span></a>
       <a href="admin-shipping.html"><svg viewBox="0 0 24 24" fill="none"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z" stroke="currentColor" stroke-width="2"/><circle cx="5.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="2"/><circle cx="18.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="2"/></svg><span>Vận Chuyển</span></a>
@@ -166,7 +170,7 @@
 
           <!-- Action Buttons -->
           <div class="action-buttons">
-            <button class="add-cart-btn" onclick="addToCart()">
+            <button class="add-cart-btn" onclick="addToCartFromDetails()">
               <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
                 <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" stroke="currentColor" stroke-width="2"/>
                 <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2"/>
